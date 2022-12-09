@@ -8,12 +8,12 @@ classes:
 parameters:
   target_name: mindwm
 
-  kapitan:
-    dependencies:
-      - type: http
-        output_path: ./freeplane/freeplane.zip
-        source: https://sourceforge.net/projects/freeplane/files/freeplane%20stable/freeplane_bin-1.10.6.zip/download
-        unpack: true
+#  kapitan:
+#    dependencies:
+#      - type: http
+#        output_path: ./freeplane/freeplane.zip
+#        source: https://sourceforge.net/projects/freeplane/files/freeplane%20stable/freeplane_bin-1.10.6.zip/download
+#        unpack: true
 
 
   context:  
