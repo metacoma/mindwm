@@ -1,0 +1,8 @@
+---
+parameters:
+  kapitan:
+    compile:
+      - input_paths: 
+          - templates/mindwm/context_match.py
+        output_path: .
+        input_type: jinja2

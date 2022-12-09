@@ -1,0 +1,4 @@
+---
+parameters:
+  mindwm_root: /home/bebebeko/mindwm # ugly
+  compiled_dir: ${mindwm_root}/compiled/${target_name}/

@@ -1,0 +1,11 @@
+---
+classes:
+  - freeplane.scripts.fifo_control
+parameters:
+  kapitan:
+    compile:
+      - input_type: jinja2
+        input_paths:
+          - templates/mindwm/shell    
+        output_path: shell
+

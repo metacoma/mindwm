@@ -1,0 +1,4 @@
+---
+parameters:
+  terminal: 
+    emulator: xterm -e

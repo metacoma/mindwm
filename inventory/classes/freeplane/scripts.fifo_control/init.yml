@@ -1,0 +1,7 @@
+---
+parameters:
+  freeplane:
+    scripts:
+      fifo_control:
+        fifo_path: /tmp/freeplane_fifo
+
