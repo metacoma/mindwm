@@ -35,8 +35,12 @@ input_match = input_p.match(stdin_data)
 {% endif %}
 
 {% if 'output' in ctx %}
+output_match = []
 output_p = re.compile("{{ ctx.output }}")
-output_match = output_p.match(stdout_data)
+for line in stdout_data.split("\n"):
+  m = output_p.match(line)
+  if (m):
+    output_match.append(m)
 {% endif %}
 
 if (
@@ -47,32 +51,34 @@ if (
   and 
 {%- endif -%}
 {%- if 'output' in ctx -%}
-   output_match
+   len(output_match)
 {%- endif -%}
   ): 
 
-{% if "print" in ctx %}
+{% if "groovy" in ctx %}
 
   if (input_match): 
     for k,v in input_match.groupdict().items():
-      print("def %(key)s = '%(value)s'\n" % {'key': k, 'value': v})
-
-  if (output_match): 
-    for k,v in output_match.groupdict().items():
-      print("def %(key)s = '%(value)s'\n" % {'key': k, 'value': v})
+      print("%(key)s = '%(value)s'\n" % {'key': k, 'value': v})
+{% if 'output' in ctx %}
+  if (len(output_match)): 
+    for m in output_match:
+      for k,v in m.groupdict().items():
+        print("%(key)s = '%(value)s'\n" % {'key': k, 'value': v})
+{% endif %}
 
   
     #print("def %(key) = '%(value)'" % {'key': k, 'value': v})
 
   print('''
-def stdin_data = """
+stdin_data = """
 %(stdin_data)s
 """
-def stdout_data = """
+stdout_data = """
 %(stdout_data)s
 """
-{{ ctx.print }}
+{{ ctx.groovy }}
 ''' % { 'stdin_data' : stdin_data, 'stdout_data':  stdout_data})
-{%- endif -%}
+{%- endif -%} {# groovy #}
 
 {%- endfor -%}

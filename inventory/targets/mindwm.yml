@@ -1,0 +1,30 @@
+classes:
+  - common
+  - mindwm.common
+  - mindwm.shell
+  - mindwm.context
+  - terminal.emulator.xterm
+
+parameters:
+  target_name: mindwm
+
+  kapitan:
+    dependencies:
+      - type: http
+        output_path: ./freeplane/freeplane.zip
+        source: https://sourceforge.net/projects/freeplane/files/freeplane%20stable/freeplane_bin-1.10.6.zip/download
+        unpack: true
+
+
+  context:  
+    - input: '^ssh (?P<SSH_HOST>.*)$'
+      groovy: |
+        node = node.createChild(SSH_HOST)
+        node.details = stdout_data
+        node.icons.add('ssh')
+        c.select(node)
+
+    - output: 'Welcome to Ubuntu (?P<UBUNTU_RELEASE>[^ ]+)'
+      groovy: | 
+        node['ubuntu'] = UBUNTU_RELEASE
+        node.icons.add('ubuntu')
