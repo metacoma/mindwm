@@ -1,0 +1,23 @@
+---
+parameters:
+  context:
+    - input: 'docker ps.*'
+      output: '^CONTAINER.*$'
+      shell: | 
+        awk '
+          function createNode(nodeName) {
+            printf("%s = node.createChild(\\"%s\\")\\n", nodeName, nodeName)
+          } 
+          function nodeAttr(nodeName, attr, value) {
+            printf("%s[\\"%s\\"] = \\"%s\\"\\n", nodeName, attr, value)
+          } 
+          function nodeName(containerName) {
+            return gensub(/\\-/, "_", "g", containerName)
+          }
+          !/^CONTAINER/ {
+            node = nodeName($NF)
+            createNode(node)
+            nodeAttr(node, "id", $1)
+            nodeAttr(node, "image", $2)
+          }
+        '

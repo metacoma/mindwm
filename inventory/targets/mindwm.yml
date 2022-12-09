@@ -3,6 +3,7 @@ classes:
   - mindwm.common
   - mindwm.shell
   - mindwm.context
+  - mindwm.docker.context
   - terminal.emulator.xterm
 
 parameters:
