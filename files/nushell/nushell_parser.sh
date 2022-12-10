@@ -2,7 +2,7 @@
 
 NODENAME_NUM_IN_TABLE=${1:-11}
 
-docker exec -i nushell nu --stdin -c 'detect columns | table -w 1000' | awk -F"│" -vNODENAME_NUM_IN_TABLE=10 '
+docker exec -i nushell nu --stdin -c 'detect columns | table -w 1000' | sed 's/"//g;s/…/.../g' | awk -F"│" -vNODENAME_NUM_IN_TABLE=10 '
 function createNode(nodeName) {
   printf("%s = node.createChild(\"%s\")\n", nodeName, nodeName)
 } 
@@ -10,7 +10,7 @@ function nodeAttr(nodeName, attr, value) {
   printf("%s[\"%s\"] = \"%s\"\n", nodeName, attr, value)
 } 
 function nodeName(name) {
-  return gensub(/\\-/, "_", "g", name)
+  return gensub(/\-/, "_", "g", name)
 }
 
 (NR == 2) {

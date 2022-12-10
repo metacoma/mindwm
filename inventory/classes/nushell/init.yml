@@ -1,5 +1,8 @@
 ---
 parameters:
+  nushell:
+    image: metacoma/latest
+    parser_path: "${compiled_dir}/nushell_parser.sh"
   kapitan:
     compile:
       - input_paths:

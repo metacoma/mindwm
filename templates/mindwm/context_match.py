@@ -80,6 +80,9 @@ stdout_data = """
 {{ ctx.groovy }}
 ''' % { 'stdin_data' : stdin_data, 'stdout_data':  stdout_data})
 {%- endif -%} {# groovy #}
+
+# SHELL
+
 {% if "shell" in ctx %} 
   file_path = "/tmp/context_shell%(pid)s.bash" % { 'pid': os.getpid() }
   f = open(file_path, "w")
@@ -119,6 +122,14 @@ test -f ${KAPITAN_COMPILED}/function.bash &&
     for line in p.stdout:
         print(line, end='')
 {% endif %} {# if "shell" in ctx #}
+
+# NUSHELL 
+
+{% if "nushell" in ctx and ctx.nushell == True %} 
+  with Popen(['bash', '-c', 'cat %(stdout_file)s | bash %(file_path)s' % {'stdout_file': args['stdout'], 'file_path': '{{ p.nushell.parser_path }}' }], stdout=PIPE, bufsize=1, universal_newlines=True) as p:
+    for line in p.stdout:
+        print(line, end='')
+{% endif %}
 
 
 {%- endfor -%} {# for ctx in context #} 
