@@ -1,0 +1,9 @@
+---
+parameters:
+  kapitan:
+    compile:
+      - input_paths:
+          - files/nushell/nushell_parser.sh
+        output_path: .
+        input_type: copy
+          
