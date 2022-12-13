@@ -13,7 +13,11 @@ Thank you for this.
 
 ---------------------------------------------------
 
-## Mindmap shell
+## MindWM shell
 
 https://user-images.githubusercontent.com/5146707/204148432-64405b7e-262d-4f6c-b07d-75895eb45a83.mp4
+
+## MindWM log visualizer
+
+https://user-images.githubusercontent.com/5146707/207204251-b239675e-fad9-498c-88ed-ec6421fe72aa.mp4
 
