@@ -1,0 +1,11 @@
+jobs:
+  terraform_setup:
+    name: Terraform 
+    runs-on: ubuntu-latest
+    container:
+      image: kapicorp/kapitan:latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - name: Kapitan compile
+        run: |
+          kapitan compile --fetch
