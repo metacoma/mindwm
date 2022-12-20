@@ -1,7 +1,0 @@
----
-parameters:
-  mindwm:
-    root: ${kapitan_root} # ugly
-    runtime:
-      root: /tmp/mindwm
-      tmux_dir: ${mindwm:runtime:root}/tmux

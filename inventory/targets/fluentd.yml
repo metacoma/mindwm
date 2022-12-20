@@ -1,0 +1,29 @@
+---
+classes:
+  - common
+  - mindwm
+  - vim
+  - tmuxinator
+  - bash.kapitan
+  - tmuxinator
+  - tmuxinator.kapitan
+#  - tmuxp
+
+parameters:
+
+  target_name: fluentd
+
+
+  tmuxinator:
+    name: ${target_name}
+    root: ${compiled_dir}
+
+    windows:
+      - shell:
+          layout: main-vertical
+          # TODO (@metacoma) move 'pre' section in jsonnet template
+          pre:
+            - |
+              . ${compiled_dir}/functions.bash
+          panes:
+            - |
