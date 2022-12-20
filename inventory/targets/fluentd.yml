@@ -13,6 +13,23 @@ parameters:
 
   target_name: fluentd
 
+  bash:
+    functions:
+      kapitan_compile: |
+        cd ${kapitan_root}
+        ./kapitan.sh compile --fetch -t ${target_name}
+
+
+  fluentd_named_pipe_plugin: files/git/metacoma/fluent-plugin-named_pipe
+
+  kapitan:
+    dependencies:
+      # workaround for https://github.com/sonots/fluent-plugin-named_pipe/pull/9
+      - type: git
+        output_path: ${fluentd_named_pipe_plugin}
+        source: https://github.com/metacoma/fluent-plugin-named_pipe.git
+        ref: without_mkfifo_dependency
+
 
   tmuxinator:
     name: ${target_name}
