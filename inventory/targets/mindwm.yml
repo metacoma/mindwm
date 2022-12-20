@@ -1,9 +1,18 @@
 classes:
   - common
+
   - nushell
   - mindwm.shell
+
   - mindwm.context
+
   - mindwm.docker.context
+
+  - vim
+  - tmuxinator
+  - bash.kapitan
+  - tmuxinator.kapitan
+
   - terminal.emulator.xterm
 
 parameters:
@@ -15,6 +24,13 @@ parameters:
 #        output_path: ./freeplane/freeplane.zip
 #        source: https://sourceforge.net/projects/freeplane/files/freeplane%20stable/freeplane_bin-1.10.6.zip/download
 #        unpack: true
+
+#  kapitan:
+#    - compile:
+#        input_paths:
+#          templates/mindwm/start_freeplane_node_shell.sh
+#        output_path: .
+#        input_type: jinja2
 
 
   context:  
@@ -29,3 +45,6 @@ parameters:
       groovy: | 
         node['ubuntu'] = UBUNTU_RELEASE
         node.icons.add('ubuntu')
+
+#    tmuxinator:
+#      name: ${target_name}
