@@ -21,7 +21,7 @@ parameters:
   fifo_umask: 0000
 
   tmuxinator:
-    name: freeplane-node-${node_id}  
+#     name: freeplane-node-${node_id}  
     root: ${compiled_dir}
 
     startup_window: shell
