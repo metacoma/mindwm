@@ -7,9 +7,24 @@ Also, I'll use this repository to get feedback, please, if you find mistakes or 
 **if you like what I do - please click on watch button**
 ![screenshot](https://user-images.githubusercontent.com/5146707/204149638-56cdeb1e-4493-44a4-a8e4-12a629c05341.png)
 
-
-
 Thank you for this.
+
+How-to (WIP)
+
+---------------------------------------------------
+
+```bash
+$ cd ~
+$ git clone https://github.com/metacoma/mindwm
+$ cd mindwm
+$ ./kapitan compile --fetch
+$ . compiled/logstash/functions.bash
+$ logstash_build
+$ tmux_session_start 
+$ <Ctrl-b + d> #detach from tmux session
+$ . compiled/fluentd/function.bash
+$ tmux_session_start
+```
 
 ---------------------------------------------------
 
