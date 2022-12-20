@@ -24,6 +24,8 @@ parameters:
     name: freeplane-node-${node_id}  
     root: ${compiled_dir}
 
+    startup_window: shell
+
     windows:
       - shell:
           layout: main-vertical
@@ -37,4 +39,3 @@ parameters:
               test -p ${tmux_fifo} -o -f ${tmux_fifo} && rm -v ${tmux_fifo}
               mkfifo -m ${fifo_umask} ${tmux_fifo}
               tmux pipe-pane -IO -t ${tmuxinator:name}:1 "cat > ${tmux_fifo}"
-        
