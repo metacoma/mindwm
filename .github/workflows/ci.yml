@@ -6,13 +6,14 @@ on:
   pull_request:
 
 jobs:
-  terraform_setup:
+  kapitan:
     name: Terraform 
     runs-on: ubuntu-latest
     container:
       image: kapicorp/kapitan:latest
     steps:
-      - uses: actions/checkout@v2.3.4
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Kapitan compile
         run: |
           kapitan compile --fetch
