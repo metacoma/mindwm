@@ -1,0 +1,95 @@
+---
+classes:
+  - common
+  - mindwm
+  - vim
+  - tmuxinator
+  - bash.kapitan
+  - tmuxinator
+  - tmuxinator.kapitan
+#  - tmuxp
+
+parameters:
+
+
+
+  target_name: fluentd
+
+  fluentd_named_pipe_plugin: files/git/metacoma/fluent-plugin-named_pipe
+  fluentd_rawtcp_plugin: files/git/Ultinous/fluent-plugin-out_rawtcp
+
+  fluentd:
+    version: 1.15
+    etc_dir: fluentd_etc
+    docker:
+      image:
+        repo: fluent/fluentd
+        tag: v${fluentd:version}-debian-1
+
+  bash:
+    functions:
+      kapitan_compile: |
+        cd ${kapitan_root}
+        ./kapitan.sh compile --fetch -t ${target_name}
+      fluentd_start: |
+        # TODO @metacoma hardcode /etc/fluentd/tmux.conf
+        docker run --rm -it \
+          -u $(id -u) \
+          --network host \
+          -v ${kapitan_root}/${fluentd_named_pipe_plugin}:/tmp/fluent-named-pipe-plugin \
+          -v ${kapitan_root}/${fluentd_rawtcp_plugin}:/tmp/fluent-plugin-out_rawtcp \
+          -v ${mindwm:runtime:root}:${mindwm:runtime:root} \
+          -v ${compiled_dir}/${fluentd:etc_dir}/tmux.conf:/etc/fluentd/tmux.conf \
+          ${fluentd:docker:image:repo}:${fluentd:docker:image:tag} \
+          -p /tmp/fluent-named-pipe-plugin/lib/fluent/plugin \
+          -p /tmp/fluent-plugin-out_rawtcp/lib/fluent/plugin \
+          -c /etc/fluentd/tmux.conf
+
+      fluentd_stop:
+        echo fluentd_stop
+      fluentd_restart:
+        echo fluentd_restart
+
+
+  kapitan:
+    dependencies:
+      - type: git
+        output_path: ${fluentd_rawtcp_plugin}
+        source: https://github.com/uken/fluent-plugin-out_rawtcp
+        ref: 6aaf6806a468bb90aeac8e74029011727ddf4673
+      # workaround for https://github.com/sonots/fluent-plugin-named_pipe/pull/9
+     
+
+      - type: git
+        output_path: ${fluentd_named_pipe_plugin}
+        source: https://github.com/metacoma/fluent-plugin-named_pipe.git
+        ref: without_mkfifo_dependency
+      
+    compile:
+      - input_type: jinja2
+        input_paths:
+          - templates/fluentd/tmux.conf
+        # ${mindwm_root}/compiled/${target_name}/${fluentd:etc_di} ->
+        # ${fluentd:etc_dir} in docker container
+        # for example
+        # /home/bebebeko/mindwm/compiled/fluentd/fluentd_dir will be mount to ->
+        # /etc/fluentd/ directory inside fluentd container FS
+        output_path: ${fluentd:etc_dir}
+
+
+  tmuxinator:
+    name: ${target_name}
+    root: ${compiled_dir}
+    
+    startup_window: fluentd
+
+    windows:
+      - fluentd:
+          layout: main-vertical
+          # TODO (@metacoma) move 'pre' section in jsonnet template
+          pre:
+            - |
+              . ${compiled_dir}/functions.bash
+          panes:
+            - |
+              fluentd_start
