@@ -1,7 +1,6 @@
 classes:
   - common
   - nushell
-  - mindwm.common
   - mindwm.shell
   - mindwm.context
   - mindwm.docker.context
