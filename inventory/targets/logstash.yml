@@ -1,0 +1,46 @@
+---
+classes:
+  - common
+  - mindwm
+  - vim
+  - tmuxinator
+  - bash.kapitan
+  - tmuxinator
+  - tmuxinator.kapitan
+#  - tmuxp
+
+parameters:
+
+
+
+  target_name: logstash
+
+  bash:
+    functions:
+      kapitan_compile: |
+        cd ${kapitan_root}
+        ./kapitan.sh compile --fetch -t ${target_name}
+      logstash_start:
+        echo logstash start
+      logstash_stop:
+        echo logstash stop
+      logstash_reload:
+        echo logstash reload
+
+
+  tmuxinator:
+    name: ${target_name}
+    root: ${compiled_dir}
+    
+    startup_window: logstash
+
+    windows:
+      - logstash:
+          layout: main-vertical
+          # TODO (@metacoma) move 'pre' section in jsonnet template
+          pre:
+            - |
+              . ${compiled_dir}/functions.bash
+          panes:
+            - |
+              logstash_start
