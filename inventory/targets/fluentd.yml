@@ -11,16 +11,35 @@ classes:
 
 parameters:
 
+
+
   target_name: fluentd
+
+  fluentd_named_pipe_plugin: files/git/metacoma/fluent-plugin-named_pipe
+
+  fluentd:
+    version: 1.15
+    docker:
+      image:
+        repo: fluent/fluentd
+        tag: v${fluentd:version}-debian-1
 
   bash:
     functions:
       kapitan_compile: |
         cd ${kapitan_root}
         ./kapitan.sh compile --fetch -t ${target_name}
+      fluentd_start: |
+        docker run --rm -it \
+          --network host \
+          -v ${kapitan_root}/${fluentd_named_pipe_plugin}:/tmp/fluentd_named_pipe_lugin \
+          -v ${mindwm:runtime:root}:${mindwm:runtime:root} \
+          ${fluentd:docker:image:repo}:${fluentd:docker:image:tag}
+      fluentd_stop:
+        echo fluentd_stop
+      fluentd_restart:
+        echo fluentd_restart
 
-
-  fluentd_named_pipe_plugin: files/git/metacoma/fluent-plugin-named_pipe
 
   kapitan:
     dependencies:
@@ -44,3 +63,4 @@ parameters:
               . ${compiled_dir}/functions.bash
           panes:
             - |
+              fluentd_start
