@@ -25,13 +25,14 @@ parameters:
 #        source: https://sourceforge.net/projects/freeplane/files/freeplane%20stable/freeplane_bin-1.10.6.zip/download
 #        unpack: true
 
-#  kapitan:
-#    - compile:
-#        input_paths:
-#          templates/mindwm/start_freeplane_node_shell.sh
-#        output_path: .
-#        input_type: jinja2
+  kapitan:
+    compile:
+      - input_paths:
+          - templates/mindwm/start_freeplane_node_shell.sh
+        output_path: .
+        input_type: jinja2
 
+  
 
   context:  
     - input: '^ssh (?P<SSH_HOST>.*)$'
