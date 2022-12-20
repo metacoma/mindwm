@@ -1,0 +1,17 @@
+---
+classes:
+  - bash.functions
+parameters:
+  bash:
+    functions:
+      kapitan_compile: >
+        (
+          cd ${kapitan_root}
+          ./kapitan.sh compile -t ${target_name} 
+        ) 
+      kapitan_edit_target: >
+        (
+          cd ${kapitan_root}
+          editor `find inventory/targets -type f -name ${target_name}.yml | head -n1`
+        )
+      
