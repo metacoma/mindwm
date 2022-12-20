@@ -5,7 +5,6 @@ parameters:
       tmux_session_start: >
         TMUXINATOR_CONFIG=${compiled_dir} tmuxinator start tmuxinator
         tmux attach -t ${target_name}
-
   kapitan:
     compile:
       - input_type: jsonnet
@@ -13,3 +12,5 @@ parameters:
           - jsonnet/tmuxinator.jsonnet
         output_path: .
         output_type: "yml"
+  tmuxinator:
+    name: ${target_name}
