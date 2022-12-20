@@ -1,0 +1,9 @@
+---
+parameters:
+  kapitan:
+    compile:
+      - input_paths: 
+          - templates/docker
+        output_path: .
+        input_type: jinja2 
+        

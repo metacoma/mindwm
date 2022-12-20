@@ -1,0 +1,8 @@
+---
+parameters:
+  kapitan:
+    compile:
+      - input_type: jinja2
+        input_paths:
+          - templates/bash/functions.bash
+        output_path: .
