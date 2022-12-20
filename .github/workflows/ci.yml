@@ -1,3 +1,10 @@
+name: Kapitan Compile
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
 jobs:
   terraform_setup:
     name: Terraform 
