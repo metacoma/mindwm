@@ -1,0 +1,85 @@
+---
+classes:
+  - common
+  - mindwm
+  - vim
+  - tmuxinator
+  - bash.kapitan
+  - tmuxinator
+  - tmuxinator.kapitan
+#  - tmuxp
+
+parameters:
+
+#  logstash:
+#    plugins:
+#      - logstash-output-opensearch
+#      - logstash-input-opensearch
+#
+
+  #docker_image_name: mindwm/logstash
+  docker_image_name: bitnami/logstash
+  docker_image_tag: latest
+
+  target_name: logstash
+
+  logstash_config_dir: logstash/config
+  logstash_pipeline_dir: logstash/pipeline
+
+  bash:
+    functions:
+      kapitan_compile: |
+        cd ${kapitan_root}
+        ./kapitan.sh compile --fetch -t ${target_name}
+      logstash_start: |
+        docker run \
+          --user \${UID}:\${GID} \
+          --network host \
+          --env LOGSTASH_ENABLE_MULTIPLE_PIPELINES=true \
+          -v ${mindwm:runtime:root}/${mindwm:runtime:root} \
+          -v ${compiled_dir}/${logstash_config_dir}:/bitnami/logstash/config  \
+          -v ${compiled_dir}/${logstash_pipeline_dir}:/bitnami/logstash/pipeline  \
+          ${docker_image_name}:${docker_image_tag}       
+      logstash_stop:
+        echo logstash stop
+      logstash_reload:
+        echo logstash reload
+      # TODO @metacoma pin logstash Dockerfile version
+      logstash_build: |
+        docker build \
+         --build-arg LOGSTASH_PLUGINS=logstash-output-opensearch,logstash-input-opensearch \
+        -t ${docker_image_name}:${docker_image_tag} \
+           'https://github.com/bitnami/containers.git#main:bitnami/logstash/8/debian-11'
+
+       
+  kapitan:
+    compile:
+      - input_paths:
+          - templates/logstash/pipeline/
+        output_path: ${logstash_pipeline_dir}
+        input_type: jinja2
+      - input_paths:
+          - templates/logstash/config/
+        output_path: ${logstash_config_dir}
+        input_type: jinja2
+
+
+
+  tmuxinator:
+    name: ${target_name}
+    root: ${compiled_dir}
+    
+    startup_window: logstash
+
+    windows:
+      - logstash:
+          layout: main-vertical
+          # TODO (@metacoma) move 'pre' section in jsonnet template
+          pre:
+            - |
+              . ${compiled_dir}/functions.bash
+          panes:
+            - |
+              logstash_start
+            - | 
+              cd ${kapitan_root}/files/logstash
