@@ -1,0 +1,37 @@
+---
+classes:
+  - common
+  - mindwm
+  - vim
+  - tmuxinator
+  - bash.kapitan
+  - tmuxinator
+  - tmuxinator.kapitan
+#  - tmuxp
+
+parameters:
+
+  target_name: freeplane-node
+  node_id: ${target_name}
+
+  # fifo
+  tmux_fifo: ${mindwm:runtime:tmux_dir}/tmux-${node_id}.fifo
+
+  tmuxinator:
+    name: freeplane-node-${node_id}  
+    root: ${compiled_dir}
+
+    windows:
+      - shell:
+          layout: main-vertical
+          # TODO (@metacoma) move 'pre' section in jsonnet template
+          pre:
+            - |
+              . ${compiled_dir}/functions.bash
+          panes:
+            - |
+              mkdir -p ${mindwm:runtime:tmux_dir}
+              test -p ${tmux_fifo} -o -f ${tmux_fifo} && rm -v ${tmux_fifo}
+              mkfifo ${tmux_fifo} 
+              tmux pipe-pane -IO -t ${tmuxinator:name}:1 "cat > ${tmux_fifo}"
+        

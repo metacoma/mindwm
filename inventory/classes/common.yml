@@ -1,4 +1,8 @@
 parameters:
+  # TODO(metacoma) create PR to pass compiled_dir into inventory
   kapitan:
     vars:
       target: ${target_name}
+
+  kapitan_root: /home/bebebeko/mindwm
+  compiled_dir: ${kapitan_root}/compiled/${kapitan:vars:target}

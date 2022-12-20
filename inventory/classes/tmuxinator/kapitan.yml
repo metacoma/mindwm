@@ -1,0 +1,14 @@
+parameters:  
+  tmuxinator:
+    root: ${compiled_dir}
+    windows:
+      - kapitan:
+          layout: main-vertical
+          pre:
+            - |
+              . ${compiled_dir}/functions.bash
+          panes:
+            - |
+              kapitan_edit_target
+            - |
+              kapitan_compile
