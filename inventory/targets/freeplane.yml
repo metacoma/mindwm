@@ -14,13 +14,19 @@ parameters:
       kapitan_compile: |
         cd ${kapitan_root}
         ./kapitan.sh compile --fetch --cache -t ${target_name}
+      freeplane_start: |
+        cd ${freeplane_root}
+        sed -i 's,^userfpdir=.*,userfpdir="${freeplane_root}"' ./freeplane.sh
+        bash ./freeplane.sh
+
 
   freeplane_version: 1.10.6
+  freeplane_root: ${kapitan_root}/freeplane-${freeplane_version}
 
   kapitan:
     dependencies:
       - type: http
-        output_path: ./freeplane
+        output_path: .
         source: https://sourceforge.net/projects/freeplane/files/freeplane%20stable/freeplane_bin-${freeplane_version}.zip/download
         unpack: true
 
@@ -28,6 +34,10 @@ parameters:
     windows:
       - freeplane:
           panes:
-            - cd ${kapitan_root}/freeplane
-            - cd ${kapitan_root}/freeplane
+            - cd ${freeplane_root}/
+            - cd ${freeplane_root}/
+      - scripts:
+          panes:
+            - cd ${freeplane_root}/scripts
+            - cd ${freeplane_root}/scripts
 
