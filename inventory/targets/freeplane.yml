@@ -1,0 +1,18 @@
+classes:
+  - common
+  - vim
+  - tmuxinator
+  - bash.kapitan
+  - tmuxinator.kapitan
+  - terminal.emulator.xterm
+
+parameters:
+  target_name: freeplane
+
+#  kapitan:
+#    dependencies:
+#      - type: http
+#        output_path: ./freeplane/freeplane.zip
+#        source: https://sourceforge.net/projects/freeplane/files/freeplane%20stable/freeplane_bin-1.10.6.zip/download
+#        unpack: true
+
