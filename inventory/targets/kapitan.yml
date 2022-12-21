@@ -1,8 +1,6 @@
 ---
 classes:
   - common
-  - docker.image
-
   - vim
   - tmuxinator
   - bash.kapitan
@@ -12,23 +10,37 @@ parameters:
 
   kapitan:
     dependencies:
+      # workaround for https://github.com/kapicorp/kapitan/pull/912
       - type: git
-        output_path: compiled/${target_name}/kapitan
+        output_path: files/kapitan
         source: https://github.com/metacoma/kapitan
+        ref: kapitan_fetch_zip_fix
         #subdir: relative/path/from/repo/root (optional)
         #ref: tag, commit, branch etc. (optional)
-
+        #
   docker:
-
-    from:
-      image: alpine
-      tag: 3.17.0
-
     image:
-      name: kapitan
+      name: mindwm/kapitan
       tag: mindwm
 
-    # Dockerfile
-    file: |
-      echo "hello world"
-       
+  bash:
+    functions:
+      kapitan_compile: |
+        cd ${kapitan_root}
+        ./kapitan.sh compile --fetch --cache -t ${target_name}
+      kapitan_build: |
+        cd ${kapitan_root}/files/kapitan
+        docker build -t ${docker:image:name}:${docker:image:tag} .
+
+
+  tmuxinator:
+    windows:
+      - docker:
+          pre:
+            - . ${kapitan_root}/compiled/${target_name}/functions.bash
+          panes:
+            -
+              cd ${kapitan_root}/files/kapitan
+            - |
+              cd ${kapitan_root}/files/kapitan
+              echo kapitan_build
