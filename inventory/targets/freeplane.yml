@@ -9,10 +9,25 @@ classes:
 parameters:
   target_name: freeplane
 
-#  kapitan:
-#    dependencies:
-#      - type: http
-#        output_path: ./freeplane/freeplane.zip
-#        source: https://sourceforge.net/projects/freeplane/files/freeplane%20stable/freeplane_bin-1.10.6.zip/download
-#        unpack: true
+  bash:
+    functions:
+      kapitan_compile: |
+        cd ${kapitan_root}
+        ./kapitan.sh compile --fetch --cache -t ${target_name}
+
+  freeplane_version: 1.10.6
+
+  kapitan:
+    dependencies:
+      - type: http
+        output_path: ./freeplane
+        source: https://sourceforge.net/projects/freeplane/files/freeplane%20stable/freeplane_bin-${freeplane_version}.zip/download
+        unpack: true
+
+  tmuxinator:
+    windows:
+      - freeplane:
+          panes:
+            - cd ${kapitan_root}/freeplane
+            - cd ${kapitan_root}/freeplane
 
