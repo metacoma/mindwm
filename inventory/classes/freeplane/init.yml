@@ -1,0 +1,6 @@
+---
+parameters:
+  freeplane_version: 1.10.6
+  freeplane_root: ${kapitan_root}/freeplane-${freeplane_version}
+  freeplane_config: ${freeplane_root}/1.10.x/
+
