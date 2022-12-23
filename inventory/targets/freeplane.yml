@@ -1,10 +1,13 @@
 classes:
   - common
+  - mindwm
+  - freeplane
   - vim
   - tmuxinator
   - bash.kapitan
   - tmuxinator.kapitan
   - terminal.emulator.xterm
+  - freeplane.scripts.kapitan-node
 
 parameters:
   target_name: freeplane
@@ -16,12 +19,13 @@ parameters:
         ./kapitan.sh compile --fetch --cache -t ${target_name}
       freeplane_start: |
         cd ${freeplane_root}
-        sed -i 's,^userfpdir=.*,userfpdir="${freeplane_root}"' ./freeplane.sh
+        sed -i 's,^userfpdir=.*,userfpdir="${freeplane_root}",' ./freeplane.sh
         bash ./freeplane.sh
 
 
-  freeplane_version: 1.10.6
-  freeplane_root: ${kapitan_root}/freeplane-${freeplane_version}
+#  freeplane_version: 1.10.6
+#  freeplane_root: ${kapitan_root}/freeplane-${freeplane_version}
+#  freeplane_config: ${freeplane_root}/1.10.x/
 
   kapitan:
     dependencies:
