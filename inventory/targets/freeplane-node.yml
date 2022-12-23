@@ -16,12 +16,13 @@ parameters:
 
   # fifo
   tmux_fifo: ${mindwm:runtime:tmux_dir}/tmux-${node_id}.fifo
+  node_fifo: ${mindwm:runtime:node_dir}/node-${node_id}.fifo
   # for some reason, fluentd will fail with other umask
   # 2022-12-20 05:14:10 +0000 [error]: config error file="/etc/fluentd/tmux.conf" error_class=Fluent::ConfigError error="Errno::EACCES: Permission denied @ rb_sysopen - /tmp/mindwm/tmux/tmux-ID_184313.fifo"
   fifo_umask: 0000
 
   tmuxinator:
-#     name: freeplane-node-${node_id}  
+#     name: freeplane-node-${node_id}
     root: ${compiled_dir}
 
     startup_window: shell
@@ -35,7 +36,9 @@ parameters:
               . ${compiled_dir}/functions.bash
           panes:
             - |
-              mkdir -p ${mindwm:runtime:tmux_dir}
+              mkdir -p ${mindwm:runtime:tmux_dir} ${mindwm:runtime:node_dir}
               test -p ${tmux_fifo} -o -f ${tmux_fifo} && rm -v ${tmux_fifo}
+              test -p ${node_fifo} -o -f ${node_fifo} && rm -v ${node_fifo}
               mkfifo -m ${fifo_umask} ${tmux_fifo}
+              mkfifo ${node_fifo}
               tmux pipe-pane -IO -t ${tmuxinator:name}:1 "cat > ${tmux_fifo}"
