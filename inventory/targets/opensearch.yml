@@ -1,0 +1,58 @@
+---
+classes:
+  - common
+  - mindwm
+  - vim
+  - tmuxinator
+  - bash.kapitan
+  - tmuxinator
+  - tmuxinator.kapitan
+#  - tmuxp
+
+parameters:
+
+  docker_image_name: opensearchproject/opensearch
+  docker_image_tag: 2.4.1
+
+  docker_dashboards_image_name: opensearchproject/opensearch-dashboards
+  docker_dashboards_image_tag: 2.4.1
+
+
+  target_name: opensearch
+
+  bash:
+    functions:
+      opensearch_start: |
+        docker run --network host --name opensearch-node1 -v opensearch-data1:/usr/share/opensearch/data -it -e "discovery.type=single-node" ${docker_image_name}:${docker_image_tag}
+      opensearch_stop: |
+        echo opensearch stop
+      opensearch_reload: |
+        echo opensearch reload
+
+      opensearch_dashboards_start: |
+        docker run --network host -it -e OPENSEARCH_HOSTS='["http://127.0.0.1:9200"]' ${docker_dashboards_image_name}:${docker_dashboards_image_tag}
+
+      opensearch_dashboards_stop: |
+        echo opensearch_dashboards_stop
+      opensearch_dashboards_reload: |
+        echo opensearch_dashboards_reload
+
+
+  tmuxinator:
+    name: ${target_name}
+    root: ${compiled_dir}
+
+    startup_window: opensearch
+
+    windows:
+      - opensearch:
+          layout: main-vertical
+          # TODO (@metacoma) move 'pre' section in jsonnet template
+          pre:
+            - |
+              . ${compiled_dir}/functions.bash
+          panes:
+            - |
+              opensearch_start
+            - |
+              opensearch_dashboards_start
