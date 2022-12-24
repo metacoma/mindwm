@@ -7,6 +7,7 @@ classes:
   - bash.kapitan
   - tmuxinator
   - tmuxinator.kapitan
+  - logstash
 #  - tmuxp
 
 parameters:
@@ -78,6 +79,9 @@ parameters:
       - input_type: external
         input_paths:
           - ${kapitan_root}/files/fluentd/generate-fluentd-conf.sh
+        env_vars:
+          LOGSTASH_HOST: "127.0.0.1"
+          LOGSTASH_PORT: "1123"
         args:
           - "${mindwm:runtime:tmux_dir}"
           - ">"
