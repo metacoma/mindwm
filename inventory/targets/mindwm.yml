@@ -25,9 +25,9 @@ parameters:
         output_path: .
         input_type: jinja2
 
-  
 
-  context:  
+
+  context:
     - input: '^ssh (?P<SSH_HOST>.*)$'
       groovy: |
         node = node.createChild(SSH_HOST)
@@ -36,7 +36,7 @@ parameters:
         c.select(node)
 
     - output: 'Welcome to Ubuntu (?P<UBUNTU_RELEASE>[^ ]+)'
-      groovy: | 
+      groovy: |
         node['ubuntu'] = UBUNTU_RELEASE
         node.icons.add('ubuntu')
 

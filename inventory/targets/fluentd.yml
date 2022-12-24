@@ -27,6 +27,8 @@ parameters:
         repo: fluent/fluentd
         tag: v${fluentd:version}-debian-1
 
+  fluentd_container_name: mindwm-fluentd
+
   bash:
     functions:
       kapitan_compile: |
@@ -34,7 +36,9 @@ parameters:
         ./kapitan.sh compile --fetch -t ${target_name}
       fluentd_start: |
         # TODO @metacoma hardcode /etc/fluentd/fluentd.conf
+        while :; do
         docker run --rm -it \
+          --name ${fluentd_container_name} \
           -u $(id -u) \
           --network host \
           -v ${kapitan_root}/${fluentd_named_pipe_plugin}:/tmp/fluent-named-pipe-plugin \
@@ -45,12 +49,13 @@ parameters:
           -p /tmp/fluent-named-pipe-plugin/lib/fluent/plugin \
           -p /tmp/fluent-plugin-out_rawtcp/lib/fluent/plugin \
           -c /etc/fluentd/fluentd.conf
+          sleep 1
+        done
 
-      fluentd_stop:
-        echo fluentd_stop
-      fluentd_restart:
-        echo fluentd_restart
-
+      fluentd_stop: |
+        docker rm -f ${fluentd_container_name}
+      fluentd_restart: |
+        fluentd_stop
 
   kapitan:
     dependencies:
@@ -68,20 +73,22 @@ parameters:
 
     compile:
       - input_type: jinja2
+        prune: false
         input_paths:
           - templates/fluentd/tmux.conf
-        # ${mindwm_root}/compiled/${target_name}/${fluentd:etc_dir} ->
-        # ${fluentd:etc_dir} in docker container
-        # for example
-        # /home/bebebeko/mindwm/compiled/fluentd/fluentd_dir will be mount to ->
-        # /etc/fluentd/ directory inside fluentd container FS
+#        # ${mindwm_root}/compiled/${target_name}/${fluentd:etc_dir} ->
+#        # ${fluentd:etc_dir} in docker container
+#        # for example
+#        # /home/bebebeko/mindwm/compiled/fluentd/fluentd_dir will be mount to ->
+#        # /etc/fluentd/ directory inside fluentd container FS
         output_path: ${fluentd:etc_dir}
       - input_type: external
         input_paths:
           - ${kapitan_root}/files/fluentd/generate-fluentd-conf.sh
+        prune: false
         env_vars:
-          LOGSTASH_HOST: "127.0.0.1"
-          LOGSTASH_PORT: "1123"
+          LOGSTASH_HOST: "${logstash:input:tmux:host}"
+          LOGSTASH_PORT: "${logstash:input:tmux:port}"
         args:
           - "${mindwm:runtime:tmux_dir}"
           - ">"
