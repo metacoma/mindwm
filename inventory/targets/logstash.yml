@@ -18,8 +18,8 @@ parameters:
 #      - logstash-input-opensearch
 #
 
-  #docker_image_name: mindwm/logstash
-  docker_image_name: bitnami/logstash
+  docker_image_name: mindwm/logstash
+  #docker_image_name: bitnami/logstash
   docker_image_tag: latest
 
   target_name: logstash
@@ -48,7 +48,7 @@ parameters:
       # TODO @metacoma pin logstash Dockerfile version
       logstash_build: |
         docker build \
-         --build-arg LOGSTASH_PLUGINS=logstash-output-opensearch,logstash-input-opensearch \
+         --build-arg LOGSTASH_PLUGINS=logstash-output-opensearch \
         -t ${docker_image_name}:${docker_image_tag} \
            'https://github.com/bitnami/containers.git#main:bitnami/logstash/8/debian-11'
 
