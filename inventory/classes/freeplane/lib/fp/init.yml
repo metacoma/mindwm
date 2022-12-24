@@ -1,0 +1,26 @@
+parameters:
+  freeplane:
+    # https://docs.freeplane.org/attic/old-mediawiki-content/Your_own_utility_script_library.html
+    lib:
+      # groovy code with parametrized by inventory variables from reclass
+      MindWM: |
+        def static runShell(nodeName) {
+          ("${kapitan_root}/compiled/mindwm/start_freeplane_node_shell.sh " + nodeName).execute()
+        }
+
+#        # groovy code with parametrized inventory variables from reclass
+#        runShell:
+#          args:
+#            - nodeName
+#          code: |
+#            ("xterm -e " + home() + "/compiled/mindwm/start_freeplane_node_shell.sh " + nodeName).execute()
+
+  kapitan:
+    compile:
+      - input_paths:
+          - jsonnet/freeplane-lib.jsonnet
+        output_path: ${freeplane_config}/lib
+        output_type: plain
+        input_type: jsonnet
+        prune: false
+

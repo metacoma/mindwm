@@ -37,8 +37,15 @@ parameters:
           panes:
             - |
               mkdir -p ${mindwm:runtime:tmux_dir} ${mindwm:runtime:node_dir}
+              chmod a+rwx ${mindwm:runtime:tmux_dir} ${mindwm:runtime:node_dir}
               test -p ${tmux_fifo} -o -f ${tmux_fifo} && rm -v ${tmux_fifo}
               test -p ${node_fifo} -o -f ${node_fifo} && rm -v ${node_fifo}
-              mkfifo -m ${fifo_umask} ${tmux_fifo}
+              mkfifo ${tmux_fifo}
               mkfifo ${node_fifo}
-              tmux pipe-pane -IO -t ${tmuxinator:name}:1 "cat > ${tmux_fifo}"
+              chmod a+rw ${tmux_fifo} ${node_fifo}
+              . ${kapitan_root}/compiled/fluentd/functions.bash
+              kapitan_compile
+              fluentd_restart
+              sleep 5
+              . ${compiled_dir}/functions.bash
+              tmux pipe-pane -IO -t :1 'cat > ${tmux_fifo}'

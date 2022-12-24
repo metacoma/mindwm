@@ -11,9 +11,9 @@ parameters:
             - |
               kapitan_edit_target
             - |
-              kapitan_compile
+              echo kapitan_compile
             # TODO metacoma nix-shell XXX
             - |
               nix-shell -p entr
               cd ${kapitan_root}
-              find ${kapitan_root}/inventory/targets/ -type f -iname "${target_name}.yml" | entr -c sh -c "./kapitan.sh compile -t ${target_name}"
+              find ${kapitan_root}/inventory/targets/ -type f -iname "${target_name}.yml" | entr -p -c sh -c "./kapitan.sh compile -t ${target_name}"

@@ -7,6 +7,7 @@ classes:
   - bash.kapitan
   - tmuxinator
   - tmuxinator.kapitan
+  - logstash
 #  - tmuxp
 
 parameters:
@@ -39,7 +40,7 @@ parameters:
           -v ${mindwm:runtime:root}/${mindwm:runtime:root} \
           -v ${compiled_dir}/${logstash_config_dir}:/bitnami/logstash/config  \
           -v ${compiled_dir}/${logstash_pipeline_dir}:/bitnami/logstash/pipeline  \
-          ${docker_image_name}:${docker_image_tag}       
+          ${docker_image_name}:${docker_image_tag}
       logstash_stop:
         echo logstash stop
       logstash_reload:
@@ -51,7 +52,7 @@ parameters:
         -t ${docker_image_name}:${docker_image_tag} \
            'https://github.com/bitnami/containers.git#main:bitnami/logstash/8/debian-11'
 
-       
+
   kapitan:
     compile:
       - input_paths:
@@ -68,7 +69,7 @@ parameters:
   tmuxinator:
     name: ${target_name}
     root: ${compiled_dir}
-    
+
     startup_window: logstash
 
     windows:
@@ -81,5 +82,5 @@ parameters:
           panes:
             - |
               logstash_start
-            - | 
+            - |
               cd ${kapitan_root}/files/logstash

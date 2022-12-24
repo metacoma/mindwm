@@ -15,19 +15,22 @@ Thread.currentThread().getThreadGroup().enumerate(threads)
 /******************************************************************/
 def name = node.id 
 new Thread(() -> { 
-  FP.runShell(node.id)
+  MindWM.runShell(node.id)
   Thread.sleep(10000)
 
-  def pipeLog = new BufferedReader(new FileReader(new File("{{ p.mindwm.runtime.node_dir }}/" + name + ".fifo")));
+  def pipeLog = new BufferedReader(new FileReader(new File("{{ p.mindwm.runtime.node_dir }}/node-fp-shell_" + name + ".fifo")));
   while (true) {
     while ((groovy_code_base64 = pipeLog.readLine()) != null) {
         String groovy_code = new String(groovy_code_base64.decodeBase64())
     	println groovy_code
     	String groovy_script = """
 {{ p.kapitan_node.groovy_begin }}
-""" + groovy_code + "\n{{ p.kapitan_node.groovy_end }}"; 
-    println groovy_script
-    EventQueue.invokeAndWait(() -> Eval.me(groovy_script))
+""" + groovy_code + """
+// end section
+{{ p.kapitan_node.groovy_end }}
+""";
+    	println groovy_script
+    	EventQueue.invokeAndWait(() -> Eval.me(groovy_script))
          
     }
   } 

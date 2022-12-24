@@ -25,10 +25,16 @@ cat inventory/targets/freeplane-node.yml | sed "
   s,target_name: .*,target_name: ${NEW_KTARGET_NAME},;
 " | tee inventory/targets/freeplane-node-sh/${NEW_KTARGET_NAME}.yml
 
+
+
 ./kapitan.sh compile --fetch --cache -t ${NEW_KTARGET_NAME}
 
 . compiled/${NEW_KTARGET_NAME}/functions.bash
-tmux_session_start
+TMUXINATOR_CONFIG={{ p.kapitan_root }}/compiled/${NEW_KTARGET_NAME} tmuxinator start --name ${NEW_KTARGET_NAME} --no-attach tmuxinator
+xterm -e "tmux attach -t ${NEW_KTARGET_NAME}" &
 # for some reason, tmuxinator attach fails to tmux attach 
-tmux attach -t $NEW_KTARGET_NAME
+# tmux attach -t $NEW_KTARGET_NAME
 
+#./kapitan.sh compile -t fluentd
+#. compiled/fluentd/functions.bash
+#fluentd_restart

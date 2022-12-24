@@ -6,6 +6,6 @@ parameters:
     compile:
       - input_type: jinja2
         input_paths:
-          - templates/mindwm/shell    
+          - templates/mindwm/shell
         output_path: shell
 

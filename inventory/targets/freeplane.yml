@@ -7,6 +7,7 @@ classes:
   - bash.kapitan
   - tmuxinator.kapitan
   - terminal.emulator.xterm
+  - freeplane.lib.fp
   - freeplane.scripts.kapitan-node
 
 parameters:
@@ -22,10 +23,6 @@ parameters:
         sed -i 's,^userfpdir=.*,userfpdir="${freeplane_root}",' ./freeplane.sh
         bash ./freeplane.sh
 
-
-#  freeplane_version: 1.10.6
-#  freeplane_root: ${kapitan_root}/freeplane-${freeplane_version}
-#  freeplane_config: ${freeplane_root}/1.10.x/
 
   kapitan:
     dependencies:

@@ -1,0 +1,22 @@
+---
+classes:
+  - freeplane
+parameters:
+  kapitan:
+    compile:
+      - input_paths:
+          - templates/freeplane/scripts/kapitan-node.groovy
+        output_path: ${freeplane_config}/scripts/
+        input_type: jinja2
+        prune: false
+  kapitan_node:
+    groovy_begin: |
+      // begin section
+      import org.freeplane.plugin.script.proxy.ScriptUtils;
+      def c = ScriptUtils.c();
+      def node = ScriptUtils.node();
+      //node.children.each{ it.delete() }
+
+    groovy_end: |
+      // end section
+
