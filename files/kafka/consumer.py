@@ -3,6 +3,7 @@ import pyte
 import json
 import pprint
 from kafka import KafkaConsumer
+from kafka import KafkaProducer
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=1914843
 
@@ -14,26 +15,55 @@ def pyte_fix(s):
   text = ("".join([line.rstrip() + "\n" for line in pyte_screen.display])).strip() + "\n"
   return text
 
-ansi_escape =re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
+ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
 def escape_ansi(line):
   return ansi_escape.sub('', line)
 
 
+producer = KafkaProducer(bootstrap_servers=['localhost:9092'],
+                         value_serializer=lambda x: 
+                         json.dumps(x).encode('utf-8'))
 # To consume latest messages and auto-commit offsets
 
-consumer = KafkaConsumer('tmux-events',
+consumer = KafkaConsumer('tmux-raw-stream',
 #                         group_id='my-group',
                          bootstrap_servers=['localhost:9092'])
 
+prompt_regex = re.compile(r'.*@.*[\$#] ')
+ctx_input = {}
+ctx_output = {} 
+
+context = {}
 
 for message in consumer:
-    # message value and key are raw bytes -- decode if necessary!
-    # e.g., for unicode: `message.value.decode('utf-8')`
     msg = json.loads(message.value) 
-    print(escape_ansi(msg["message"]))
-    #print ("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
-    #                                      message.offset, message.key,
-    #                                      pyte_fix(message.value)))
+    session_name = msg["tags"][0]; # tmux.tmux-fp-shell-ID_898073125.fifo
+
+    raw_line = escape_ansi(msg["message"])
+
+    if (prompt_regex.match(raw_line)):
+      if (      
+           session_name in ctx_input and
+           len(ctx_input[session_name]) and
+           session_name in ctx_output and
+           len(ctx_output[session_name])
+         ):
+        # print("FIRE THE EVENT!")
+        producer.send('io-context', value = {
+          'sesion_name': session_name,
+          'input': ctx_input[session_name],
+          'output': ctx_output[session_name]
+        })
+        ctx_input[session_name] = ""
+      # new command
+      print("PROMPT ->>> " + raw_line)
+      ctx_input[session_name] = raw_line
+      ctx_output[session_name] = []
+    else: 
+      if session_name in ctx_output:
+        ctx_output[session_name].append(raw_line)
+
+
 
 # consume earliest available messages, don't commit offsets
 KafkaConsumer(auto_offset_reset='earliest', enable_auto_commit=False)
