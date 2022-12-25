@@ -7,4 +7,5 @@ parameters:
     host: 127.0.0.1
     port: 9092
   kafka_root_dir: ${kapitan_root}/files/kafka
-  kafka_tmux_topic: tmux-events
+  kafka_tmux_topic: tmux-raw-stream
+  kafka_io_context_topic: io-context
