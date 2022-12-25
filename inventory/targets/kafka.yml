@@ -1,0 +1,72 @@
+---
+classes:
+  - common
+  - vim
+  - tmuxinator
+  - bash.kapitan
+  - tmuxinator.kapitan
+  - kapitan.bash.compile-fetch
+parameters:
+  target_name: kafka
+
+
+  bash:
+    functions:
+      zookeeper_start: |
+        while :; do
+          bin/zookeeper-server-start.sh config/zookeeper.properties
+          sleep 3
+        done
+      broker_start: |
+        pkill -9 -f broker
+        while :; do
+          bin/kafka-server-start.sh config/server.properties
+          sleep 3
+        done
+
+  kafka_version:
+    major: 3.3.1
+    minor: 2.13
+  kafka_root_dir: ${kapitan_root}/files/kafka
+  kafka_cluster_id: "8MeJ2rX9SBerkyd-crbG_w"
+
+
+  tmuxinator:
+    windows:
+        # https://kafka.apache.org/quickstart
+      - kafka:
+          pre:
+            - . ${kapitan_root}/compiled/${target_name}/functions.bash
+            - cd ${kafka_root_dir}/kafka_${kafka_version:minor}-${kafka_version:major}
+            # /bin/bash from vanila kafka scripts
+            # nixos pain with /bin/bash and the upstream kafka scripts
+            # https://discourse.nixos.org/t/add-bin-bash-to-avoid-unnecessary-pain/5673/52
+            # https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/services/misc/apache-kafka.nix
+            - |
+              sudo bash -c 'mkdir -p /bin/; rm /bin/bash; ln -s /run/current-system/sw/bin/bash /bin/bash'
+              # bash scripts without executable flags ?
+              chmod +x bin/*.sh
+          panes:
+            # zookeeper
+            - |
+              zookeeper_start
+            # broker
+            - |
+              broker_start
+      - topics:
+          pre:
+            - . ${kapitan_root}/compiled/${target_name}/functions.bash
+            - cd ${kafka_root_dir}/kafka_${kafka_version:minor}-${kafka_version:major}
+          panes:
+            -
+            -
+
+
+
+  kapitan:
+    dependencies:
+      - type: http
+        output_path: files/kafka/
+        source: https://dlcdn.apache.org/kafka/${kafka_version:major}/kafka_${kafka_version:minor}-${kafka_version:major}.tgz
+        unpack: true
+
