@@ -1,0 +1,11 @@
+---
+classes:
+  - bash.functions
+parameters:
+  bash:
+    functions:
+      kapitan_compile: |
+        cd ${kapitan_root}
+        ./kapitan.sh compile --fetch --cache -t ${target_name}
+
+
