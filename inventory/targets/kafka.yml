@@ -6,6 +6,7 @@ classes:
   - bash.kapitan
   - tmuxinator.kapitan
   - kapitan.bash.compile-fetch
+  - kafka
 parameters:
   target_name: kafka
 
@@ -18,17 +19,27 @@ parameters:
           sleep 3
         done
       broker_start: |
-        pkill -9 -f broker
         while :; do
           bin/kafka-server-start.sh config/server.properties
           sleep 3
         done
+      kafka_ui_start: |
+        docker run \
+          --net=host \
+          -it \
+          --rm \
+          -p 8080:8080 \
+          -e KAFKA_CLUSTERS_0_NAME=local \
+          -e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=127.0.0.1:9092 \
+              provectuslabs/kafka-ui:latest
 
-  kafka_version:
-    major: 3.3.1
-    minor: 2.13
-  kafka_root_dir: ${kapitan_root}/files/kafka
-  kafka_cluster_id: "8MeJ2rX9SBerkyd-crbG_w"
+#  kafka_version:
+#    major: 3.3.1
+#    minor: 2.13
+#  kafka_root_dir: ${kapitan_root}/files/kafka
+#  kafka_tmux_topic: tmux-events
+  # only for raft
+  #kafka_cluster_id: "8MeJ2rX9SBerkyd-crbG_w"
 
 
   tmuxinator:
@@ -58,8 +69,25 @@ parameters:
             - . ${kapitan_root}/compiled/${target_name}/functions.bash
             - cd ${kafka_root_dir}/kafka_${kafka_version:minor}-${kafka_version:major}
           panes:
-            -
-            -
+            # observe
+            - |
+              # bin/kafka-topics.sh --create --topic ${kafka_tmux_topic} --bootstrap-server localhost:9092
+              bin/kafka-topics.sh --describe --topic ${kafka_tmux_topic} --bootstrap-server localhost:9092
+            # producer
+            - |
+              echo my first event | bin/kafka-console-producer.sh --topic ${kafka_tmux_topic} --bootstrap-server localhost:9092
+            # consumer
+            - |
+              bin/kafka-console-consumer.sh --topic ${kafka_tmux_topic} --from-beginning --bootstrap-server localhost:9092
+      - kafka_ui:
+          pre:
+            - . ${kapitan_root}/compiled/${target_name}/functions.bash
+            - cd ${kafka_root_dir}/kafka_${kafka_version:minor}-${kafka_version:major}
+          panes:
+            - |
+              kafka_ui_start
+
+
 
 
 
