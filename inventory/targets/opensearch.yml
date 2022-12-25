@@ -23,7 +23,7 @@ parameters:
   bash:
     functions:
       opensearch_start: |
-        docker run --network host --name opensearch-node1 -v opensearch-data1:/usr/share/opensearch/data -it -e "discovery.type=single-node" ${docker_image_name}:${docker_image_tag}
+        docker run --network host --rm --name opensearch-node1 -v opensearch-data1:/usr/share/opensearch/data -it -e "discovery.type=single-node" ${docker_image_name}:${docker_image_tag}
       opensearch_stop: |
         echo opensearch stop
       opensearch_reload: |

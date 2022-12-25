@@ -1,0 +1,10 @@
+---
+parameters:
+  kafka_version:
+    major: 3.3.1
+    minor: 2.13
+  kafka:
+    host: 127.0.0.1
+    port: 9092
+  kafka_root_dir: ${kapitan_root}/files/kafka
+  kafka_tmux_topic: tmux-events
