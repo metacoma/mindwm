@@ -33,15 +33,6 @@ parameters:
           -e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=${kafka:host}:${kafka:port} \
               provectuslabs/kafka-ui:latest
 
-#  kafka_version:
-#    major: 3.3.1
-#    minor: 2.13
-#  kafka_root_dir: ${kapitan_root}/files/kafka
-#  kafka_tmux_topic: tmux-events
-  # only for raft
-  #kafka_cluster_id: "8MeJ2rX9SBerkyd-crbG_w"
-
-
   tmuxinator:
     windows:
         # https://kafka.apache.org/quickstart
@@ -86,6 +77,15 @@ parameters:
           panes:
             - |
               kafka_ui_start
+      - tmux_consumer:
+          pre:
+            - . ${kapitan_root}/compiled/${target_name}/functions.bash
+            - cd ${kafka_root_dir}/
+          panes:
+            -
+            -
+
+
 
 
 
