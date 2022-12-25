@@ -2,6 +2,7 @@
 #  path.config: "/bitnami/logstash/pipeline/kubernetes.conf"
 #path.config: "/home/bebebeko/mindwm/files/logstash/pipeline/kubernetes.conf"
 #  pipeline.ecs_compatibility: disabled
-
 - pipeline.id: shell
   path.config: "/bitnami/logstash/pipeline/shell.conf"
+  pipeline.ordered: true
+  pipeline.workers: 1
