@@ -30,7 +30,7 @@ parameters:
           --rm \
           -p 8080:8080 \
           -e KAFKA_CLUSTERS_0_NAME=local \
-          -e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=127.0.0.1:9092 \
+          -e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=${kafka:host}:${kafka:port} \
               provectuslabs/kafka-ui:latest
 
 #  kafka_version:
@@ -72,13 +72,13 @@ parameters:
             # observe
             - |
               # bin/kafka-topics.sh --create --topic ${kafka_tmux_topic} --bootstrap-server localhost:9092
-              bin/kafka-topics.sh --describe --topic ${kafka_tmux_topic} --bootstrap-server localhost:9092
+              bin/kafka-topics.sh --describe --topic ${kafka_tmux_topic} --bootstrap-server ${kafka:host}:${kafka:port}
             # producer
             - |
-              echo my first event | bin/kafka-console-producer.sh --topic ${kafka_tmux_topic} --bootstrap-server localhost:9092
+              echo my first event | bin/kafka-console-producer.sh --topic ${kafka_tmux_topic} --bootstrap-server ${kafka:host}:${kafka:port}
             # consumer
             - |
-              bin/kafka-console-consumer.sh --topic ${kafka_tmux_topic} --from-beginning --bootstrap-server localhost:9092
+              bin/kafka-console-consumer.sh --topic ${kafka_tmux_topic} --from-beginning --bootstrap-server ${kafka:host}:${kafka:port}
       - kafka_ui:
           pre:
             - . ${kapitan_root}/compiled/${target_name}/functions.bash
