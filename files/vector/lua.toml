@@ -1,0 +1,25 @@
+data_dir = "."
+
+[sources.stdin]
+  type = "stdin"
+  decoding.codec = "bytes"
+
+[transforms.lua]
+  inputs = ["stdin"]
+  type = "lua"
+  version = "2"
+  hooks.process = """
+    function (event, emit)
+      -- to be expanded
+      emit(event)
+    end
+  """
+
+[sinks.tmux-raw-output]
+type = "kafka"
+inputs = [ "lua" ]
+bootstrap_servers = "127.0.0.1:9092"
+topic = "tmux-raw-stream"
+compression = "none"
+  [sinks.tmux-raw-output.encoding]
+  codec = "json"
