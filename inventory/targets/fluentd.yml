@@ -8,6 +8,7 @@ classes:
   - tmuxinator
   - tmuxinator.kapitan
   - logstash
+  - kapitan.bash.compile-fetch
 #  - tmuxp
 
 parameters:
@@ -69,7 +70,7 @@ parameters:
       - type: git
         output_path: ${fluentd_named_pipe_plugin}
         source: https://github.com/metacoma/fluent-plugin-named_pipe.git
-        ref: without_mkfifo_dependency
+        ref: tmux_pipe_pane_prompt_workaround
 
     compile:
       - input_type: jinja2
