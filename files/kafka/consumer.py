@@ -42,13 +42,16 @@ for message in consumer:
     raw_line = escape_ansi(msg["message"])
 
     if (prompt_regex.match(raw_line)):
+      print("MATCH PROMPT")
+
+    if (prompt_regex.match(raw_line)):
       if (      
            session_name in ctx_input and
            len(ctx_input[session_name]) and
            session_name in ctx_output and
            len(ctx_output[session_name])
          ):
-        # print("FIRE THE EVENT!")
+        print("FIRE THE EVENT!")
         producer.send('io-context', value = {
           'sesion_name': session_name,
           'input': ctx_input[session_name],

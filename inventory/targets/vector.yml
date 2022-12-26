@@ -1,0 +1,61 @@
+---
+classes:
+  - common
+  - mindwm
+  - vim
+  - tmuxinator
+  - bash.kapitan
+  - tmuxinator
+  - tmuxinator.kapitan
+  - logstash
+  - kapitan.bash.compile-fetch
+  - kafka
+
+parameters:
+
+  target_name: vector
+
+
+  bash:
+    functions:
+      kapitan_compile: |
+        cd ${kapitan_root}
+        ./kapitan.sh compile --fetch -t ${target_name}
+      # https://vector.dev/docs/setup/installation/package-managers/nix/
+      vector_install: |
+        nix-env --install \
+          --file https://github.com/NixOS/nixpkgs/archive/master.tar.gz \
+            --attr vector
+
+      vector_start: |
+        echo vector start
+
+  tmuxinator:
+    name: ${target_name}
+    root: ${compiled_dir}
+
+    startup_window: shell
+
+    #vector:
+    #  tmux-vector:
+
+
+    windows:
+      - kafka-topic:
+          layout: main-vertical
+          # TODO (@metacoma) move 'pre' section in jsonnet template
+          pre:
+            - |
+              . ${compiled_dir}/functions.bash
+          panes:
+            - |
+              kcat -b ${kafka:host}:${kafka:port} -t ${kafka_tmux_topic}
+            - |
+              cd ${kapitan_root}/files/vector
+      - shell:
+          pre:
+            - |
+              . ${compiled_dir}/functions.bash
+          panes:
+            - |
+              tmux pipe-pane -IO -t :2 'vector -q --config ${kapitan_root}/files/vector/lua.toml'
