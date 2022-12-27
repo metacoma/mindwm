@@ -7,14 +7,15 @@ parameters:
     config:
       tmux-kafka:
         sources:
-          stdin:
-            type: "stdin"
+          tmux:
+            type: "file_descriptor"
+            fd: 0
             decoding:
               codec: "bytes"
         transforms:
           lua:
             inputs:
-              - stdin
+              - tmux
             type: "lua"
             # 2022-12-26T00:51:06.650157Z ERROR vector::cli: Configuration error. error=data did not match any variant of untagged enum LuaConfig for key `transforms.lua`
             # https://github.com/serde-rs/serde/issues/773#issuecomment-777314431
