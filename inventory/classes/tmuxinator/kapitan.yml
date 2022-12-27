@@ -11,6 +11,8 @@ parameters:
             echo kapitan_compile
           # TODO metacoma nix-shell XXX
           - |
-            nix-shell -p entr
             cd ${kapitan_root}
-            find ${kapitan_root}/inventory/targets/ -type f -iname "${target_name}.yml" | entr -p -c bash -c ". ${compiled_dir}/functions.bash && kapitan_compile"
+            (
+              find inventory/targets/ -type f -iname '${target_name}.yml';
+              kapitan_inventory | yq -r '.parameters.kapitan.compile[].input_paths[]'
+            ) | entr -p -c bash -c ". ${compiled_dir}/functions.bash && kapitan_compile"
