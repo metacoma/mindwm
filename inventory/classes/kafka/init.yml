@@ -9,3 +9,17 @@ parameters:
   kafka_root_dir: ${kapitan_root}/files/kafka
   kafka_tmux_topic: tmux-raw-stream
   kafka_io_context_topic: io-context
+
+  # WARNING: Due to limitations in metric names, topics with a period ('.') or underscore ('_') could collide. To avoid issues it is best to use either, but not both.
+  kafka_topics:
+    tmux_bytestream:
+      name: tmux-bytestream
+      config:
+        - retention.ms=1000
+      description: ""
+    tmux_linestream:
+      config:
+        - retention.ms=1000
+      description: ""
+    io_context:
+      description: ""
