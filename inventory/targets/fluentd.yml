@@ -108,18 +108,12 @@ parameters:
     windows:
       fluentd:
         layout: main-vertical
-        # TODO (@metacoma) move 'pre' section in jsonnet template
-        pre:
-          - |
-            . ${compiled_dir}/functions.bash
         panes:
           - |
             fluentd_start
 
       # for kadet sandbox
       kapitan-runtime:
-        pre:
-          - . ${kapitan_root}/compiled/${target_name}/functions.bash
         panes:
           - |
             docker run \

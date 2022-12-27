@@ -31,10 +31,6 @@ parameters:
     windows:
       shell:
         layout: main-vertical
-        # TODO (@metacoma) move 'pre' section in jsonnet template
-        pre:
-          - |
-            . ${compiled_dir}/functions.bash
         panes:
           - |
             tmux pipe-pane -IO 'vector --config ${compiled_dir}/vector/tmux-kafka.yaml'
