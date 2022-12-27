@@ -33,12 +33,12 @@ parameters:
 
   tmuxinator:
     windows:
-      - freeplane:
-          panes:
-            - cd ${freeplane_root}/
-            - cd ${freeplane_root}/
-      - scripts:
-          panes:
-            - cd ${freeplane_root}/scripts
-            - cd ${freeplane_root}/scripts
+      freeplane:
+        panes:
+          - cd ${freeplane_root}/
+          - cd ${freeplane_root}/
+      scripts:
+        panes:
+          - cd ${freeplane_root}/scripts
+          - cd ${freeplane_root}/scripts
 
