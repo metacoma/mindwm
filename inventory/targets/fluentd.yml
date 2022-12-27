@@ -106,34 +106,28 @@ parameters:
     startup_window: fluentd
 
     windows:
-      - fluentd:
-          layout: main-vertical
-          # TODO (@metacoma) move 'pre' section in jsonnet template
-          pre:
-            - |
-              . ${compiled_dir}/functions.bash
-          panes:
-            - |
-              fluentd_start
+      fluentd:
+        layout: main-vertical
+        panes:
+          - |
+            fluentd_start
 
       # for kadet sandbox
-      - kapitan-runtime:
-          pre:
-            - . ${kapitan_root}/compiled/${target_name}/functions.bash
-          panes:
-            - |
-              docker run \
-                -v ${kapitan_root}:${kapitan_root} \
-                -v /tmp:/tmp \
-                -w ${kapitan_root} \
-                --name ${target_name}-kapitan \
-                --rm \
-                -it \
-                --entrypoint /bin/sh \
-                kapicorp/kapitan:latest \
-                -c /bin/bash
-            - |
-              while :; do
-                docker exec -ti ${target_name}-kapitan /bin/bash
-                sleep 5
-              done
+      kapitan-runtime:
+        panes:
+          - |
+            docker run \
+              -v ${kapitan_root}:${kapitan_root} \
+              -v /tmp:/tmp \
+              -w ${kapitan_root} \
+              --name ${target_name}-kapitan \
+              --rm \
+              -it \
+              --entrypoint /bin/sh \
+              kapicorp/kapitan:latest \
+              -c /bin/bash
+          - |
+            while :; do
+              docker exec -ti ${target_name}-kapitan /bin/bash
+              sleep 5
+            done

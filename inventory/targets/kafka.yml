@@ -36,55 +36,51 @@ parameters:
   tmuxinator:
     windows:
         # https://kafka.apache.org/quickstart
-      - kafka:
-          pre:
-            - . ${kapitan_root}/compiled/${target_name}/functions.bash
-            - cd ${kafka_root_dir}/kafka_${kafka_version:minor}-${kafka_version:major}
-            # /bin/bash from vanila kafka scripts
-            # nixos pain with /bin/bash and the upstream kafka scripts
-            # https://discourse.nixos.org/t/add-bin-bash-to-avoid-unnecessary-pain/5673/52
-            # https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/services/misc/apache-kafka.nix
-            - |
-              sudo bash -c 'mkdir -p /bin/; rm /bin/bash; ln -s /run/current-system/sw/bin/bash /bin/bash'
-              # bash scripts without executable flags ?
-              chmod +x bin/*.sh
-          panes:
-            # zookeeper
-            - |
-              zookeeper_start
-            # broker
-            - |
-              broker_start
-      - topics:
-          pre:
-            - . ${kapitan_root}/compiled/${target_name}/functions.bash
-            - cd ${kafka_root_dir}/kafka_${kafka_version:minor}-${kafka_version:major}
-          panes:
-            # observe
-            - |
-              # bin/kafka-topics.sh --create --topic ${kafka_tmux_topic} --bootstrap-server localhost:9092
-              # bin/kafka-topics.sh --create --topic ${kafka_io_context_topic} --bootstrap-server localhost:9092
-              bin/kafka-topics.sh --describe --topic ${kafka_tmux_topic} --bootstrap-server ${kafka:host}:${kafka:port}
-            # producer
-            - |
-              echo my first event | bin/kafka-console-producer.sh --topic ${kafka_tmux_topic} --bootstrap-server ${kafka:host}:${kafka:port}
-            # consumer
-            - |
-              bin/kafka-console-consumer.sh --topic ${kafka_tmux_topic} --from-beginning --bootstrap-server ${kafka:host}:${kafka:port}
-      - kafka_ui:
-          pre:
-            - . ${kapitan_root}/compiled/${target_name}/functions.bash
-            - cd ${kafka_root_dir}/kafka_${kafka_version:minor}-${kafka_version:major}
-          panes:
-            - |
-              kafka_ui_start
-      - tmux_consumer:
-          pre:
-            - . ${kapitan_root}/compiled/${target_name}/functions.bash
-            - cd ${kafka_root_dir}/
-          panes:
-            -
-            -
+      kafka:
+        pre:
+          - cd ${kafka_root_dir}/kafka_${kafka_version:minor}-${kafka_version:major}
+          # /bin/bash from vanila kafka scripts
+          # nixos pain with /bin/bash and the upstream kafka scripts
+          # https://discourse.nixos.org/t/add-bin-bash-to-avoid-unnecessary-pain/5673/52
+          # https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/services/misc/apache-kafka.nix
+          - |
+            sudo bash -c 'mkdir -p /bin/; rm /bin/bash; ln -s /run/current-system/sw/bin/bash /bin/bash'
+            # bash scripts without executable flags ?
+            chmod +x bin/*.sh
+        panes:
+          # zookeeper
+          - |
+            zookeeper_start
+          # broker
+          - |
+            broker_start
+      topics:
+        pre:
+          - cd ${kafka_root_dir}/kafka_${kafka_version:minor}-${kafka_version:major}
+        panes:
+          # observe
+          - |
+            # bin/kafka-topics.sh --create --topic ${kafka_tmux_topic} --bootstrap-server localhost:9092
+            # bin/kafka-topics.sh --create --topic ${kafka_io_context_topic} --bootstrap-server localhost:9092
+            bin/kafka-topics.sh --describe --topic ${kafka_tmux_topic} --bootstrap-server ${kafka:host}:${kafka:port}
+          # producer
+          - |
+            echo my first event | bin/kafka-console-producer.sh --topic ${kafka_tmux_topic} --bootstrap-server ${kafka:host}:${kafka:port}
+          # consumer
+          - |
+            bin/kafka-console-consumer.sh --topic ${kafka_tmux_topic} --from-beginning --bootstrap-server ${kafka:host}:${kafka:port}
+      kafka_ui:
+        pre:
+          - cd ${kafka_root_dir}/kafka_${kafka_version:minor}-${kafka_version:major}
+        panes:
+          - |
+            kafka_ui_start
+      tmux_consumer:
+        pre:
+          - cd ${kafka_root_dir}/
+        panes:
+          -
+          -
 
 
 
