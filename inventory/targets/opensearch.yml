@@ -45,14 +45,14 @@ parameters:
     startup_window: opensearch
 
     windows:
-      - opensearch:
-          layout: main-vertical
-          # TODO (@metacoma) move 'pre' section in jsonnet template
-          pre:
-            - |
-              . ${compiled_dir}/functions.bash
-          panes:
-            - |
-              opensearch_start
-            - |
-              opensearch_dashboards_start
+      opensearch:
+        layout: main-vertical
+        # TODO (@metacoma) move 'pre' section in jsonnet template
+        pre:
+          - |
+            . ${compiled_dir}/functions.bash
+        panes:
+          - |
+            opensearch_start
+          - |
+            opensearch_dashboards_start

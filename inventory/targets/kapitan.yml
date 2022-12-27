@@ -41,40 +41,40 @@ parameters:
 
   tmuxinator:
     windows:
-      - docker:
-          pre:
-            - . ${kapitan_root}/compiled/${target_name}/functions.bash
-          panes:
-            -
-              cd ${kapitan_root}/files/kapitan
-            - |
-              cd ${kapitan_root}/files/kapitan
-              echo kapitan_build
-      - upstream:
-          pre:
-            - . ${kapitan_root}/compiled/${target_name}/functions.bash
-          panes:
-            - |
-              cd ~/git/github/metacoma/kapitan/
-            - |
-              cd ~/git/github/metacoma/kapitan/
+      docker:
+        pre:
+          - . ${kapitan_root}/compiled/${target_name}/functions.bash
+        panes:
+          -
+            cd ${kapitan_root}/files/kapitan
+          - |
+            cd ${kapitan_root}/files/kapitan
+            echo kapitan_build
+      upstream:
+        pre:
+          - . ${kapitan_root}/compiled/${target_name}/functions.bash
+        panes:
+          - |
+            cd ~/git/github/metacoma/kapitan/
+          - |
+            cd ~/git/github/metacoma/kapitan/
 
-      - docker-runtime:
-          pre:
-            - . ${kapitan_root}/compiled/${target_name}/functions.bash
-          panes:
-            - |
-              docker run \
-                -v ${kapitan_root}:${kapitan_root} \
-                -w ${kapitan_root} \
-                --name kapitan-runtime-0 \
-                --rm \
-                -it \
-                --entrypoint /bin/sh \
-                kapicorp/kapitan:latest \
-                -c /bin/sh
-            - |
-              while :; do
-                docker exec -ti kapitan-runtime-0 /bin/sh
-                sleep 5
-              done
+      docker-runtime:
+        pre:
+          - . ${kapitan_root}/compiled/${target_name}/functions.bash
+        panes:
+          - |
+            docker run \
+              -v ${kapitan_root}:${kapitan_root} \
+              -w ${kapitan_root} \
+              --name kapitan-runtime-0 \
+              --rm \
+              -it \
+              --entrypoint /bin/sh \
+              kapicorp/kapitan:latest \
+              -c /bin/sh
+          - |
+            while :; do
+              docker exec -ti kapitan-runtime-0 /bin/sh
+              sleep 5
+            done
