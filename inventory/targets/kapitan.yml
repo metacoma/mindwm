@@ -42,8 +42,6 @@ parameters:
   tmuxinator:
     windows:
       docker:
-        pre:
-          - . ${kapitan_root}/compiled/${target_name}/functions.bash
         panes:
           -
             cd ${kapitan_root}/files/kapitan
@@ -51,8 +49,6 @@ parameters:
             cd ${kapitan_root}/files/kapitan
             echo kapitan_build
       upstream:
-        pre:
-          - . ${kapitan_root}/compiled/${target_name}/functions.bash
         panes:
           - |
             cd ~/git/github/metacoma/kapitan/
@@ -60,8 +56,6 @@ parameters:
             cd ~/git/github/metacoma/kapitan/
 
       docker-runtime:
-        pre:
-          - . ${kapitan_root}/compiled/${target_name}/functions.bash
         panes:
           - |
             docker run \

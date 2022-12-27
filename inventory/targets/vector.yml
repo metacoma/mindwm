@@ -52,19 +52,12 @@ parameters:
     windows:
       kafka-topic:
         layout: main-vertical
-        # TODO (@metacoma) move 'pre' section in jsonnet template
-        pre:
-          - |
-            . ${compiled_dir}/functions.bash
         panes:
           - |
             kcat -b ${kafka:host}:${kafka:port} -t ${kafka_tmux_topic}
           - |
             cd ${kapitan_root}/files/vector
       shell:
-        pre:
-          - |
-            . ${compiled_dir}/functions.bash
         panes:
           # run vector for the debug purposes
           - |

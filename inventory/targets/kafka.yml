@@ -38,7 +38,6 @@ parameters:
         # https://kafka.apache.org/quickstart
       kafka:
         pre:
-          - . ${kapitan_root}/compiled/${target_name}/functions.bash
           - cd ${kafka_root_dir}/kafka_${kafka_version:minor}-${kafka_version:major}
           # /bin/bash from vanila kafka scripts
           # nixos pain with /bin/bash and the upstream kafka scripts
@@ -57,7 +56,6 @@ parameters:
             broker_start
       topics:
         pre:
-          - . ${kapitan_root}/compiled/${target_name}/functions.bash
           - cd ${kafka_root_dir}/kafka_${kafka_version:minor}-${kafka_version:major}
         panes:
           # observe
@@ -73,14 +71,12 @@ parameters:
             bin/kafka-console-consumer.sh --topic ${kafka_tmux_topic} --from-beginning --bootstrap-server ${kafka:host}:${kafka:port}
       kafka_ui:
         pre:
-          - . ${kapitan_root}/compiled/${target_name}/functions.bash
           - cd ${kafka_root_dir}/kafka_${kafka_version:minor}-${kafka_version:major}
         panes:
           - |
             kafka_ui_start
       tmux_consumer:
         pre:
-          - . ${kapitan_root}/compiled/${target_name}/functions.bash
           - cd ${kafka_root_dir}/
         panes:
           -

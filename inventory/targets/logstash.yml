@@ -76,10 +76,6 @@ parameters:
     windows:
       logstash:
         layout: main-vertical
-        # TODO (@metacoma) move 'pre' section in jsonnet template
-        pre:
-          - |
-            . ${compiled_dir}/functions.bash
         panes:
           - |
             logstash_start
