@@ -1,0 +1,19 @@
+---
+classes:
+  - vector
+parameters:
+  vector:
+    config:
+      console-output:
+        sources:
+          tmux:
+            type: "tcp"
+            port: 4000
+            decoding:
+              codec: "bytes"
+        sinks:
+          console:
+            type: console
+            encoding:
+              codec: json
+
