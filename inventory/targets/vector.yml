@@ -33,46 +33,37 @@ parameters:
       vector_start: |
         echo vector start
 
+#  vector:
+#    config:
+#      console-output:
+#        sources:
+#          tmux:
+#            port: 4001
+
   tmuxinator:
     name: ${target_name}
     root: ${compiled_dir}
 
     startup_window: shell
 
-    #vector:
-    #  tmux-vector:
-    #
-    vector:
-      config:
-        console-output:
-          sources:
-            tmux:
-              port: 4001
 
 
 
     windows:
-      - kafka-topic:
-          layout: main-vertical
-          # TODO (@metacoma) move 'pre' section in jsonnet template
-          pre:
-            - |
-              . ${compiled_dir}/functions.bash
-          panes:
-            - |
-              kcat -b ${kafka:host}:${kafka:port} -t ${kafka_tmux_topic}
-            - |
-              cd ${kapitan_root}/files/vector
-      - shell:
-          pre:
-            - |
-              . ${compiled_dir}/functions.bash
-          panes:
-            # run vector for the debug purposes
-            - |
-              vector --config vector/console-output.yaml
+      kafka-topic:
+        layout: main-vertical
+        panes:
+          - |
+            kcat -b ${kafka:host}:${kafka:port} -t ${kafka_tmux_topic}
+          - |
+            cd ${kapitan_root}/files/vector
+      shell:
+        panes:
+          # run vector for the debug purposes
+          - |
+            vector --config vector/console-output.yaml
 
-           # i spent a lot(LOT) of time for this one-liner, stuck here for four(4) days
-           # https://www.unix.com/shell-programming-and-scripting/210907-grab-exactly-one-byte-fifo-random-intervals.html
-            - |
-              tmux pipe-pane -IO 'perl ${compiled_dir}/pipe-pane2hexstream.pl | vector -q --config ${compiled_dir}/vector/tmux-bytestream-kafka.yaml'
+         # i spent a lot(LOT) of time for this one-liner, stuck here for four(4) days
+         # https://www.unix.com/shell-programming-and-scripting/210907-grab-exactly-one-byte-fifo-random-intervals.html
+          - |
+            tmux pipe-pane -IO 'perl ${compiled_dir}/pipe-pane2hexstream.pl | vector -q --config ${compiled_dir}/vector/tmux-bytestream-kafka.yaml'
