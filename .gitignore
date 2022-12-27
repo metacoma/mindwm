@@ -1,7 +1,12 @@
+# kapitan
 compiled
+.dependency_cache
+
 files/git
 inventory/targets/freeplane-node-sh
 components/*/__pycache__
+
+
 
 # https://github.com/github/gitignore/blob/main/Global/Vim.gitignore
 # Swap
