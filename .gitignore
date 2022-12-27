@@ -1,0 +1,4 @@
+compiled
+files/git
+inventory/targets/freeplane-node-sh
+components/*/__pycache__
