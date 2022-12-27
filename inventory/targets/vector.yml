@@ -10,6 +10,7 @@ classes:
   - logstash
   - kapitan.bash.compile-fetch
   - kafka
+  - vector.tmux-kafka
 
 parameters:
 
@@ -57,5 +58,6 @@ parameters:
             - |
               . ${compiled_dir}/functions.bash
           panes:
+              # i spent a lot(LOT) of time for this one-liner, stuck here for four(4) days
             - |
-              tmux pipe-pane -IO -t :2 'vector -q --config ${kapitan_root}/files/vector/lua.toml'
+              tmux pipe-pane -IO 'stdbuf -i0 -o0 dd bs=1 | stdbuf -i0 -o0 xxd -b | vector -q --config ~/mindwm/compiled/vector/vector/tmux-kafka.yaml'
