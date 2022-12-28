@@ -12,7 +12,7 @@ parameters:
           # TODO metacoma nix-shell XXX
           - |
             cd ${kapitan_root}
-            (
+            ls `
               find inventory/targets/ -type f -iname '${target_name}.yml';
               kapitan_inventory | yq -r '.parameters.kapitan.compile[].input_paths[]'
-            ) | entr -p -c bash -c ". ${compiled_dir}/functions.bash && kapitan_compile"
+            ` | entr -p -c bash -c ". ${compiled_dir}/functions.bash && kapitan_compile"
