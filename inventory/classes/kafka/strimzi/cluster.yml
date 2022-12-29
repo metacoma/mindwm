@@ -1,0 +1,9 @@
+---
+parameters:
+  kapitan:
+    compile:
+      - input_paths:
+          - jsonnet/strimzi/cluster.jsonnet
+        output_path: strimzi/cluster
+        input_type: jsonnet
+        use_go: false

@@ -1,0 +1,8 @@
+---
+parameters:
+  kapitan:
+    compile:
+      - input_paths:
+          - jsonnet/strimzi/topic.jsonnet
+        output_path: strimzi/topic/
+        input_type: jsonnet

@@ -1,0 +1,24 @@
+#classes:
+#  - kafka
+#  - kafka.strimzi.cluster
+#  - kafka.strimzi.topic
+parameters:
+  kapitan:
+    dependencies:
+      - source: https://github.com/jsonnet-libs/strimzi-libsonnet/
+        type: git
+        output_path: files/github.com/jsonnet-libs/strimzi-libjsonnet
+        ref: 45207bb16595acf8b3218d98841137f89df793ae
+
+  strimzi_jsonnet_version: 0.32
+  kafka_k8s_ns: kafka
+
+  tmuxinator:
+    windows:
+      strimzi:
+        panes:
+          -
+            - '# kubectl create ns ${kafka_k8s_ns}'
+            - "# kubectl create -f 'https://strimzi.io/install/latest?namespace=kafka' -n ${kafka_k8s_ns}"
+          -
+            -
