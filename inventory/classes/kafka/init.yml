@@ -9,8 +9,8 @@ parameters:
   kafka:
     host: 127.0.0.1
     port: 9092
-  kafka_root_dir: ${kapitan_root}/files/kafka
 
+  kafka_plain_port: 9092
   # this property should be the same with the name of kafka_cluster
   kafka_cluster_name: mindwm     # --.
                                  #   |
@@ -22,7 +22,7 @@ parameters:
         replicas: 1
         listeners:
           - name: plain
-            port: 9092
+            port: ${kafka_plain_port}
             type: internal
             tls: false
         config:

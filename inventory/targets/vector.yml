@@ -9,15 +9,37 @@ classes:
   - tmuxinator.kapitan
   - logstash
   - kapitan.bash.compile-fetch
-#  - kafka
+  - kafka
 #  - vector.tmux-bytestream-kafka
 #  - vector.tmux-kafka
 #  - vector.console-output
+
+  - kafka.topic.tmux-pane-bytestream # for kafka_tmux_pane_bytestream_topic variable
+
   - vector.operator
 
 parameters:
 
   target_name: vector
+
+  vector:
+    pipeline:
+      tmux-bytestream-kafka:
+        sources:
+          tcp:
+            type: socket
+            mode: tcp
+            port: 40000
+        sinks:
+          kafka:
+            type: kafka
+            inputs:
+              - tcp
+            bootstrap_servers: "${kafka_cluster_name}-kafka-bootstrap.${kafka_k8s_namespace}:${kafka_plain_port}"
+            topic: "${kafka_tmux_pane_bytestream_topic}"
+            compression: "none"
+            encoding:
+              codec: "json"
 
 
   bash:
@@ -26,10 +48,8 @@ parameters:
         cd ${kapitan_root}
         ./kapitan.sh compile --fetch -t ${target_name}
       # https://vector.dev/docs/setup/installation/package-managers/nix/
-      vector_install: |
-        nix-env --install \
-          --file https://github.com/NixOS/nixpkgs/archive/master.tar.gz \
-            --attr vector
+      vector_operator_install: |
+        cd ${kapitan_root}/files/helm-charts/vector-operator
+        kubectl create ns vector
+        helm install vector-operator . -f values.yaml -n vector
 
-      vector_start: |
-        echo vector start

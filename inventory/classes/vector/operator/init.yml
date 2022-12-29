@@ -1,10 +1,25 @@
 ---
 parameters:
+
+  vector_operator_version: "0.0.10"
+
+  vector-operator:
+    # override for vector-operator helm chart
+    values:
+      image:
+        tag: v${vector_operator_version}
+
+
+
   kapitan:
     dependencies:
       - type: helm
         output_path: files/helm-charts/vector-operator
         source: https://kaasops.github.io/vector-operator/helm
-        version: 0.0.10
+        version: ${vector_operator_version}
         chart_name: vector-operator
-
+    compile:
+      - input_type: jsonnet
+        output_path: vector-operator
+        input_paths:
+          - jsonnet/vector-operator/vector-pipeline.jsonnet
