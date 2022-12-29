@@ -4,19 +4,22 @@ classes:
 parameters:
   bash:
     functions:
-      kapitan_compile: >
+      kapitan_compile: |
         (
           cd ${kapitan_root}
           ./kapitan.sh compile -t ${target_name}
         )
-      kapitan_inventory: >
+      kapitan_inventory: |
         (
           cd ${kapitan_root}
           ./kapitan.sh inventory -t ${target_name}
         )
-      kapitan_edit_target: >
+      kapitan_edit_target: |
         (
           cd ${kapitan_root}
           editor `find inventory/targets -type f -name ${target_name}.yml | head -n1`
         )
+
+      reload: |
+        . ${compiled_dir}/functions.bash
 
