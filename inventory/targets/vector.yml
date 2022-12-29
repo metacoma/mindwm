@@ -13,6 +13,7 @@ classes:
 #  - vector.tmux-bytestream-kafka
 #  - vector.tmux-kafka
 #  - vector.console-output
+  - vector.operator
 
 parameters:
 

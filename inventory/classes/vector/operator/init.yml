@@ -1,0 +1,10 @@
+---
+parameters:
+  kapitan:
+    dependencies:
+      - type: helm
+        output_path: files/helm-charts/vector-operator
+        source: https://kaasops.github.io/vector-operator/helm
+        version: 0.0.10
+        chart_name: vector-operator
+
