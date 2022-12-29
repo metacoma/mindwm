@@ -1,0 +1,20 @@
+---
+parameters:
+
+  vector_image:
+    repo: timberio/vector
+    tag: 0.26.0-alpine
+
+  kapitan:
+    dependencies:
+      - output_path: files/helm-charts/vector
+        type: helm
+        source: https://helm.vector.dev
+        version: 0.18.0
+        chart_name: vector
+    compile:
+      - input_type: jsonnet
+        input_paths:
+          - jsonnet/vector/helm_values.jsonnet
+        output_path: vector_helm
+

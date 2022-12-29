@@ -4,6 +4,7 @@ compiled
 
 files/git
 files/github.com
+files/helm-charts
 inventory/targets/freeplane-node-sh
 components/*/__pycache__
 

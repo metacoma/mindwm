@@ -1,7 +1,7 @@
 ---
 classes:
-  - vector
-  - kafka
+#  - vector
+#  - kafka
 parameters:
   kapitan:
     compile:
@@ -12,33 +12,20 @@ parameters:
 
   vector:
     config:
-      tmux-bytestream-kafka:
+      tmux-bytestream:
         sources:
-          tmux:
+          tmux-bytestream:
             type: "file_descriptor"
             fd: 0
             decoding:
               codec: "bytes"
-        transforms:
-          lua:
-            inputs:
-              - tmux
-            type: "lua"
-#            # 2022-12-26T00:51:06.650157Z ERROR vector::cli: Configuration error. error=data did not match any variant of untagged enum LuaConfig for key `transforms.lua`
-#            # https://github.com/serde-rs/serde/issues/773#issuecomment-777314431
-            version: "2"
-            hooks:
-              process: |
-                function (event, emit)
-                  emit(event)
-                end
+
         sinks:
-          tmux-raw-stream:
-            type: kafka
+          tmux-to-vector:
+            type: socket
+            mode: tcp
             inputs:
-              - tmux
-            bootstrap_servers: "${kafka:host}:${kafka:port}"
-            topic: ${kafka_topics:tmux_bytestream:name}
-            compression: "none"
+              - tmux-bytestream
+            address: \${VECTOR_UPSTREAM}
             encoding:
               codec: json

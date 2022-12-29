@@ -1,0 +1,10 @@
+---
+parameters:
+  kapitan:
+    compile:
+      - input_type: jsonnet
+        input_paths:
+          - jsonnet/vector-conf.jsonnet
+        output_path: vector
+        prune: false
+        output_type: yaml
