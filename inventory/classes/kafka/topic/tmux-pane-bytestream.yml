@@ -1,0 +1,10 @@
+---
+parameters:
+  kafka_topics:
+    tmux-pane-bytesstream:
+      # 'spec' https://github.com/strimzi/strimzi-kafka-operator/blob/main/examples/topic/kafka-topic.yaml
+      partitions: 1
+      replicas: 1
+      config:
+        retention.ms: 7200000
+        segment.bytes: 1073741824
