@@ -7,7 +7,7 @@ classes:
   - bash.kapitan
   - tmuxinator
   - tmuxinator.kapitan
-  - vector.tmux-kafka
+#  - vector.tmux-kafka
 #  - tmuxp
 
 parameters:
@@ -21,17 +21,4 @@ parameters:
   # for some reason, fluentd will fail with other umask
   # 2022-12-20 05:14:10 +0000 [error]: config error file="/etc/fluentd/tmux.conf" error_class=Fluent::ConfigError error="Errno::EACCES: Permission denied @ rb_sysopen - /tmp/mindwm/tmux/tmux-ID_184313.fifo"
   fifo_umask: 0000
-
-  tmuxinator:
-#     name: freeplane-node-${node_id}
-    root: ${compiled_dir}
-
-    startup_window: shell-ng
-
-    windows:
-      shell:
-        layout: main-vertical
-        panes:
-          - |
-            tmux pipe-pane -IO 'vector --config ${compiled_dir}/vector/tmux-kafka.yaml'
 
