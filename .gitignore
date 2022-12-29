@@ -3,6 +3,7 @@ compiled
 .dependency_cache
 
 files/git
+files/github.com
 inventory/targets/freeplane-node-sh
 components/*/__pycache__
 
