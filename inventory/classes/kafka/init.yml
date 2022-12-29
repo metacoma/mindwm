@@ -1,5 +1,8 @@
 ---
 parameters:
+
+  kafka_k8s_namespace: kafka
+
   kafka_version:
     major: 3.3.1
     minor: 2.13
@@ -7,19 +10,43 @@ parameters:
     host: 127.0.0.1
     port: 9092
   kafka_root_dir: ${kapitan_root}/files/kafka
-  kafka_tmux_topic: tmux-raw-stream
-  kafka_io_context_topic: io-context
 
-  # WARNING: Due to limitations in metric names, topics with a period ('.') or underscore ('_') could collide. To avoid issues it is best to use either, but not both.
-  kafka_topics:
-    tmux_bytestream:
-      name: tmux-bytestream
-      config:
-        - retention.ms=1000
-      description: ""
-    tmux_linestream:
-      config:
-        - retention.ms=1000
-      description: ""
-    io_context:
-      description: ""
+  # this property should be the same with the name of kafka_cluster
+  kafka_cluster_name: mindwm     # --.
+                                 #   |
+  kafka_clusters:                #   |
+    mindwm:  # <---------------------'
+      # https://strimzi.io/examples/latest/kafka/kafka-persistent-single.yaml
+      kafka:
+        version: 3.3.1
+        replicas: 1
+        listeners:
+          - name: plain
+            port: 9092
+            type: internal
+            tls: false
+        config:
+          offsets.topic.replication.factor: 1
+          transaction.state.log.replication.factor: 1
+          transaction.state.log.min.isr: 1
+          default.replication.factor: 1
+          min.insync.replicas: 1
+          inter.broker.protocol.version: "3.3"
+        storage:
+          type: jbod
+          volumes:
+          - id: 0
+            type: persistent-claim
+            size: 8Gi
+            deleteClaim: true
+
+      zookeeper:
+        replicas: 1
+        storage:
+          type: persistent-claim
+          size: 8Gi
+          deleteClaim: true
+      entityOperator:
+        topicOperator: {}
+        userOperator: {}
+
