@@ -14,12 +14,23 @@ parameters:
     config:
       tmux-bytestream:
         sources:
-          tmux-bytestream:
+          tmux-raw-bytestream:
             type: "file_descriptor"
             fd: 0
             decoding:
               codec: "bytes"
+        transforms:
+          tmux-bytestream:
+            type: remap
+            inputs:
+              - tmux-raw-bytestream
+            source: |
+              .tmux_pane_id = "\${TMUX_PANE_ID}"
+#              .tmux_session = "\${TMUX_SESSION}"
 
+#            tags:
+#              pane_id: \${TMUX_PANE_ID}
+#              tmux_session: \${TMUX_SESSION}
         sinks:
           tmux-to-vector:
             type: socket

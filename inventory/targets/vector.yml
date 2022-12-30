@@ -93,8 +93,9 @@ parameters:
           - cd ${kapitan_root}/files/helm-charts/vector
       shell:
         panes:
+          # tmux list-windows -a -F '#{window_id} #{pane_id}'
           -
-            - tmux pipe-pane -IO "perl ${compiled_dir}/pipe-pane2hexstream.pl | export VECTOR_UPSTREAM=`minikube ip`:${vector_aggregator_port} vector -q --config ${compiled_dir}/vector/tmux-bytestream.yaml"
+            - tmux pipe-pane -IO "perl ${compiled_dir}/pipe-pane2hexstream.pl | VECTOR_UPSTREAM=`minikube ip`:${vector_aggregator_port} TMUX_PANE_ID='$TMUX_PANE' vector -q --config ${compiled_dir}/vector/tmux-bytestream.yaml"
           -
             -
 
