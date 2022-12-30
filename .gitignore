@@ -7,6 +7,7 @@ files/github.com
 files/helm-charts
 inventory/targets/freeplane-node-sh
 components/*/__pycache__
+lib/__pycache__/
 
 
 
