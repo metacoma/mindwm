@@ -8,6 +8,8 @@ classes:
   - tmuxinator
   - tmuxinator.kapitan
   - kapitan.bash.compile-fetch
+  - opensearch.helm
+  - opensearch.dashboards.helm
 #  - tmuxp
 
 parameters:
