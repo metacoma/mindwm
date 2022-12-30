@@ -26,11 +26,6 @@ parameters:
               - tmux-raw-bytestream
             source: |
               .tmux_pane_id = "\${TMUX_PANE_ID}"
-#              .tmux_session = "\${TMUX_SESSION}"
-
-#            tags:
-#              pane_id: \${TMUX_PANE_ID}
-#              tmux_session: \${TMUX_SESSION}
         sinks:
           tmux-to-vector:
             type: socket
