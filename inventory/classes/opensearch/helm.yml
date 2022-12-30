@@ -1,0 +1,12 @@
+---
+parameters:
+  kapitan:
+    dependencies:
+      - type: helm
+        output_path: files/helm-charts/opensearch
+        source: https://opensearch-project.github.io/helm-charts/
+        chart_name: opensearch
+        version: 2.9.0
+
+
+
