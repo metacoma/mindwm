@@ -16,6 +16,8 @@ parameters:
   tmuxinator:
     windows:
       strimzi:
+        pre:
+          - cd ${kapitan_root}/jsonnet/strimzi
         panes:
           -
             - '# kubectl create ns ${kafka_k8s_ns}'
