@@ -7,7 +7,6 @@ classes:
   - bash.kapitan
   - tmuxinator
   - tmuxinator.kapitan
-  - opensearch.operator
   - kapitan.bash.compile-fetch
 #  - tmuxp
 

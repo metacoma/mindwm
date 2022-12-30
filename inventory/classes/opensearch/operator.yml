@@ -1,9 +1,0 @@
----
-parameters:
-  kapitan:
-    dependencies:
-      - output_path: files/helm-charts/opensearch-operator
-        type: helm
-        source: https://opster.github.io/opensearch-k8s-operator/
-        version: 2.1.1
-        chart_name: opensearch-operator
