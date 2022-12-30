@@ -15,6 +15,7 @@ classes:
 #  - vector.tmux-kafka
 #  - vector.console-output
   - vector.config
+  - helm
   - vector.helm
 
 parameters:
@@ -29,10 +30,11 @@ parameters:
         ./kapitan.sh compile --fetch -t ${target_name}
       # https://vector.dev/docs/setup/installation/package-managers/nix/
       vector_upgrade: |
-        local values_file=\${1:-${compiled_dir}/vector_helm/values.yaml}
+        local values_file=\${1:-${compiled_dir}/helm/aggregator.yaml}
+        shift
         (
           cd ${kapitan_root}/files/helm-charts/vector
-          helm upgrade vector --install -n ${vector_k8s_ns} . -f ${compiled_dir}/vector_helm/values.yaml $*
+          helm upgrade vector --install -n ${vector_k8s_ns} . -f \${values_file} $*
         )
       vector_values: |
         (
@@ -46,8 +48,10 @@ parameters:
 
   vector_aggregator_port: 31399
 
-  vector:
-    aggregator:
+
+
+  helm:
+    aggregator: &vector_aggregator
       image:
         repository: ${vector_image:repo}
         tag: ${vector_image:tag}
