@@ -68,6 +68,20 @@ parameters:
             type: socket
             mode: tcp
             address: 0.0.0.0:${vector_aggregator_port}
+
+        transforms:
+          tmux-stream-split-line:
+            type: "lua"
+            version: "2"
+            inputs:
+              - tmux-pane-bytestream
+            hooks:
+              process: process
+            source: |
+              function process(event, emit)
+                emit(event)
+              end
+
         sinks:
           console:
             type: console
@@ -75,7 +89,7 @@ parameters:
               - tmux-pane-bytestream
             encoding:
               codec: json
-          kafka:
+          kafka-tmux-pane-bytestream:
             type: kafka
             inputs:
               - tmux-pane-bytestream
@@ -84,6 +98,24 @@ parameters:
             compression: "none"
             encoding:
               codec: json
+          kafka-tmux-pane-linestream:
+            type: kafka
+            inputs:
+              -  tmux-pane-bytestream
+            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
+            topic: "${kafka_topic_tmux_linestream}"
+            compression: "none"
+            encoding:
+              codec: json
+#          kafka-tmux-pane-io-context:
+#            type: kafka
+#            inputs:
+#              - tmux-pane-io-context
+#            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
+#            topic: "${kafka_topic_tmux_io_context}"
+#            compression: "none"
+#            encoding:
+#              codec: json
 
   tmuxinator:
     windows:
