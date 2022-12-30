@@ -45,10 +45,3 @@ parameters:
         source: https://github.com/provectus/kafka-ui/
         ref: f4e6afed2b2f996920c9f588275bf5666aecbed8
         subdir: charts/kafka-ui
-    compile:
-      - input_paths:
-          - jsonnet/helm_values.jsonnet
-        output_path: kafka_ui
-        input_type: jsonnet
-        ext_vars:
-          hello: world

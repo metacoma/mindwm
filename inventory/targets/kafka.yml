@@ -12,6 +12,7 @@ classes:
   - kafka.topic.tmux-pane-linestream
   - kafka.topic.tmux-pane-io-context
 
+  - helm
   - kafka.ui
 
   - kafka.strimzi
