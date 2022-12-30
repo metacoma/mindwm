@@ -5,9 +5,9 @@ local strimzi = import "files/github.com/jsonnet-libs/strimzi-libjsonnet/0.32/ma
 
 local kafkaTopic = strimzi.kafka.v1beta2.kafkaTopic;
 
-local kafkaTopicResource(topicName, spec) = 
+local kafkaTopicResource(spec) = 
   local newKafkaTopic = kafkaTopic.new(
-    name = topicName,
+    name = spec.name,
   ); 
   local kafkaTopicConfig = kafkaTopic.spec.withConfig(spec.config);
   newKafkaTopic + 
@@ -21,6 +21,6 @@ local kafkaTopicResource(topicName, spec) =
 
 
 {
-  [kafka_topic]: kafkaTopicResource(kafka_topic, p.kafka_topics[kafka_topic]) for kafka_topic in std.objectFieldsAll(p.kafka_topics)
+  [kafka_topic]: kafkaTopicResource(p.kafka_topics[kafka_topic]) for kafka_topic in std.objectFieldsAll(p.kafka_topics)
 
 }

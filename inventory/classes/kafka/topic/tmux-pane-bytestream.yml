@@ -1,8 +1,10 @@
 ---
 parameters:
+
   kafka_topics:
     tmux-pane-bytestream:
       # 'spec' https://github.com/strimzi/strimzi-kafka-operator/blob/main/examples/topic/kafka-topic.yaml
+      name: ${kafka_topic_tmux_bytestream}
       partitions: 1
       replicas: 1
       config:

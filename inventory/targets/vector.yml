@@ -80,7 +80,7 @@ parameters:
             inputs:
               - tmux-pane-bytestream
             bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
-            topic: "tmux-pane-bytestream"
+            topic: "${kafka_topic_tmux_bytestream}"
             compression: "none"
             encoding:
               codec: json

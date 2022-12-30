@@ -2,6 +2,7 @@
 parameters:
   kafka_topics:
     tmux-pane-linestream:
+      name: ${kafka_topic_tmux_linestream}
       # 'spec' https://github.com/strimzi/strimzi-kafka-operator/blob/main/examples/topic/kafka-topic.yaml
       partitions: 1
       replicas: 1
