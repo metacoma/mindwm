@@ -73,7 +73,7 @@ parameters:
             type: kafka
             inputs:
               - tmux-bytestream
-            bootstrap_servers: "mindwm-kafka-external-bootstrap.kafka:9092"
+            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
             topic: " tmux-pane-bytestream"
             compression: "none"
             encoding:
