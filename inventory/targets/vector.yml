@@ -98,15 +98,21 @@ parameters:
               - tmux-pane-bytestream
             hooks:
               process: process
+              init: init
             source: |
+              function init()
+                line = ""
+              end
               function process(event, emit)
                 ch = event.log.message
-                print('Event.log', event.log)
-                print('Event.log.message', event.log.message)
-                print('Event.log.message.host', event.log.message["host"])
                 if ch == "20" then
+                  event.log.message = line
                   emit(event)
+                  line = ""
+                else
+                  line = line .. string.format("%c", tonumber(ch, 16))
                 end
+
               end
 
 #                                  _       _
