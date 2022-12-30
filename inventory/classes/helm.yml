@@ -1,0 +1,8 @@
+---
+parameters:
+  kapitan:
+    compile:
+      - input_type: jsonnet
+        input_paths:
+          - jsonnet/helm/values.jsonnet
+        output_path: helm
