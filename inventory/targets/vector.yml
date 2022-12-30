@@ -41,7 +41,7 @@ parameters:
         )
       vector_logs: |
         (
-          kubectl -n ${vector_k8s_ns} logs -f vector-0
+          kubectl -n ${vector_k8s_ns} logs $* vector-0
         )
 
   vector_aggregator_port: 31399
@@ -74,9 +74,12 @@ parameters:
 
         sources:
           tmux-pane-bytestream:
-            type: socket
-            mode: tcp
+            type: vector
             address: 0.0.0.0:${vector_aggregator_port}
+            version: "2"
+            acknowledgements:
+              enabled: false
+
 
 #              _                        __
 #             | |                      / _|
@@ -97,7 +100,13 @@ parameters:
               process: process
             source: |
               function process(event, emit)
-                emit(event)
+                ch = event.log.message
+                print('Event.log', event.log)
+                print('Event.log.message', event.log.message)
+                print('Event.log.message.host', event.log.message["host"])
+                if ch == "20" then
+                  emit(event)
+                end
               end
 
 #                                  _       _
@@ -110,12 +119,6 @@ parameters:
 #
 
         sinks:
-          console:
-            type: console
-            inputs:
-              - tmux-pane-bytestream
-            encoding:
-              codec: json
           kafka-tmux-pane-bytestream:
             type: kafka
             inputs:
@@ -125,10 +128,18 @@ parameters:
             compression: "none"
             encoding:
               codec: json
+
+          console:
+            type: console
+            inputs:
+              -  tmux-stream-split-line
+            encoding:
+              codec: json
+
           kafka-tmux-pane-linestream:
             type: kafka
             inputs:
-              -  tmux-pane-bytestream
+              -  tmux-stream-split-line
             bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
             topic: "${kafka_topic_tmux_linestream}"
             compression: "none"

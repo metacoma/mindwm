@@ -28,10 +28,12 @@ parameters:
               .tmux_pane_id = "\${TMUX_PANE_ID}"
         sinks:
           tmux-to-vector:
-            type: socket
-            mode: tcp
+            type: vector
+
             inputs:
               - tmux-bytestream
             address: \${VECTOR_UPSTREAM}
-            encoding:
-              codec: json
+            version: "2"
+            acknowledgements:
+              enabled: false
+
