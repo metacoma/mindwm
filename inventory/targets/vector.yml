@@ -25,9 +25,6 @@ parameters:
 
   bash:
     functions:
-      kapitan_compile: |
-        cd ${kapitan_root}
-        ./kapitan.sh compile --fetch -t ${target_name}
       # https://vector.dev/docs/setup/installation/package-managers/nix/
       vector_upgrade: |
         local values_file=\${1:-${compiled_dir}/helm/aggregator.yaml}

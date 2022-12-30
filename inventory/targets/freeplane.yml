@@ -5,6 +5,7 @@ classes:
   - vim
   - tmuxinator
   - bash.kapitan
+  - kapitan.bash.compile-fetch
   - tmuxinator.kapitan
   - terminal.emulator.xterm
   - freeplane.lib.fp
@@ -15,9 +16,6 @@ parameters:
 
   bash:
     functions:
-      kapitan_compile: |
-        cd ${kapitan_root}
-        ./kapitan.sh compile --fetch --cache -t ${target_name}
       freeplane_start: |
         cd ${freeplane_root}
         sed -i 's,^userfpdir=.*,userfpdir="${freeplane_root}",' ./freeplane.sh

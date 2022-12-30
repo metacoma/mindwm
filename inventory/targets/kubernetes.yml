@@ -5,6 +5,7 @@ classes:
   - tmuxinator
   - tmuxinator.kapitan
   - bash.kapitan
+  - kapitan.bash.compile-fetch
 
 
 parameters:
@@ -20,9 +21,6 @@ parameters:
 
   bash:
     functions:
-      kapitan_compile: |
-        cd ${kapitan_root}
-        ./kapitan.sh compile --fetch --cache -t ${target_name}
       kubectl_get_service_nodeport: |
         # usage
         # kubectl_get_service_nodeport kafka mindwm-kafka-external-0

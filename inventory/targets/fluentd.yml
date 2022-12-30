@@ -32,9 +32,6 @@ parameters:
 
   bash:
     functions:
-      kapitan_compile: |
-        cd ${kapitan_root}
-        ./kapitan.sh compile --fetch -t ${target_name}
       fluentd_start: |
         # TODO @metacoma hardcode /etc/fluentd/fluentd.conf
         while :; do
