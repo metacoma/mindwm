@@ -6,5 +6,5 @@ parameters:
       partitions: 1
       replicas: 1
       config:
-        retention.ms: 7200000
-        segment.bytes: 1073741824
+        retention.ms: 600000 # 600 seconds
+        retention.bytes: 536870912 # 512 Mb
