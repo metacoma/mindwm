@@ -23,6 +23,9 @@ parameters:
 
   target_name: opensearch
 
+  opensearch_port: 31002
+  opensearch_k8s_namespace: opensearch
+
   bash:
     functions:
       opensearch_start: |
