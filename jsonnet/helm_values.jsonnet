@@ -4,5 +4,5 @@ local p = inventory.parameters;
 
 
 {
-  "helm_values": p
+  "helm_values": p.helm_values
 }

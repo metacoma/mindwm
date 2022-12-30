@@ -15,18 +15,31 @@ parameters:
           config:
             KAFKA_CLUSTERS_0_NAME: ${kafka_cluster_name}
             KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
+        service:
+          type: NodePort
+          port: 80
+          nodePort: 31001
 
 
+
+  helm_values: *helm_values
 
   bash:
     functions:
       kafka_ui_install: |
-        local ns=${kafka_k8s_ns}
+        local ns=${kafka_k8s_namespace}
         (
           cd ${kafka-ui:helm:local_chart}
-          helm upgrade --install -n \${ns} . -f ${compiled_dir}/kafka-ui/helm_values.yml
+          helm upgrade ${kafka-ui:helm:release_name} --install -n \${ns} . -f ${compiled_dir}/kafka_ui/helm_values.yaml
         )
-
+      kafka_ui_url: |
+        echo `minikube ip`:${kafka-ui:helm:values:service:nodePort}
+  tmuxinator:
+    windows:
+      kafka-ui:
+        panes:
+          - kubectl -n ${kafka_k8s_namespace} logs -f --selector=app.kubernetes.io/name=${kafka-ui:helm:release_name}
+          -
   kapitan:
     dependencies:
       - output_path: ${kafka-ui:helm:local_chart}
