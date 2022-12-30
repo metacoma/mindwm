@@ -1,5 +1,9 @@
 ---
 parameters:
+
+  opensearch_dashboards_helm_release: opensearch-dashboards
+  opensearch_dashboards_k8s_namespace: ${opensearch_k8s_namespace}
+
   kapitan:
     dependencies:
       - type: helm

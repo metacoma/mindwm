@@ -1,5 +1,21 @@
 ---
 parameters:
+
+  opensearch_helm_release: opensearch
+
+  bash:
+    functions:
+      opensearch_install: |
+        local ns=\${1:-${opensearch_k8s_namespace}}
+        (
+          cd files/helm-charts/opensearch
+          helm upgrade ${opensearch_helm_release} \
+            --namespace \${ns} \
+            --create-namespace \
+            --install . -f ${compiled_dir}/helm/opensearch.yaml
+        )
+
+
   kapitan:
     dependencies:
       - type: helm
@@ -14,3 +30,8 @@ parameters:
       extraVars:
         - name:  DISABLE_INSTALL_DEMO_CONFIG
           value: "true"
+      service:
+        type: NodePort
+        nodePort: ${opensearch_port}
+      singleNode: true
+
