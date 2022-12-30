@@ -1,4 +1,3 @@
-
 ---
 parameters:
 
@@ -20,9 +19,8 @@ parameters:
           port: 80
           nodePort: 31001
 
-
-
-  helm_values: *helm_values
+  helm:
+    kafka-ui: *helm_values
 
   bash:
     functions:
