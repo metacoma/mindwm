@@ -3,6 +3,7 @@ parameters:
   kafka_topics:
     tmux-pane-io-context:
       # 'spec' https://github.com/strimzi/strimzi-kafka-operator/blob/main/examples/topic/kafka-topic.yaml
+      name: ${kafka_topic_tmux_io_context}
       partitions: 1
       replicas: 1
       config:
