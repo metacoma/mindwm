@@ -2,6 +2,7 @@
 parameters:
 
   kafka_k8s_namespace: kafka
+  kafka_port: 9092
 
   kafka_version:
     major: 3.3.1
@@ -22,7 +23,7 @@ parameters:
         replicas: 1
         listeners:
           - name: external
-            port: 9092
+            port: ${kafka_port}
             type: nodeport
             tls: false
         config:

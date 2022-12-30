@@ -1,0 +1,56 @@
+
+---
+parameters:
+
+  vector_image:
+    repo: timberio/vector
+    tag: 0.26.0-alpine
+
+  kafka-ui:
+    helm:
+      local_chart: ${kapitan_root}/files/github.com/provectus/kafka-ui
+      release_name: kafka-ui
+      values: &helm_values
+        envs:
+          config:
+            KAFKA_CLUSTERS_0_NAME: ${kafka_cluster_name}
+            KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
+        service:
+          type: NodePort
+          port: 80
+          nodePort: 31001
+
+
+
+  helm_values: *helm_values
+
+  bash:
+    functions:
+      kafka_ui_install: |
+        local ns=${kafka_k8s_namespace}
+        (
+          cd ${kafka-ui:helm:local_chart}
+          helm upgrade ${kafka-ui:helm:release_name} --install -n \${ns} . -f ${compiled_dir}/kafka_ui/helm_values.yaml
+        )
+      kafka_ui_url: |
+        echo `minikube ip`:${kafka-ui:helm:values:service:nodePort}
+  tmuxinator:
+    windows:
+      kafka-ui:
+        panes:
+          - kubectl -n ${kafka_k8s_namespace} logs -f --selector=app.kubernetes.io/name=${kafka-ui:helm:release_name}
+          -
+  kapitan:
+    dependencies:
+      - output_path: ${kafka-ui:helm:local_chart}
+        type: git
+        source: https://github.com/provectus/kafka-ui/
+        ref: f4e6afed2b2f996920c9f588275bf5666aecbed8
+        subdir: charts/kafka-ui
+    compile:
+      - input_paths:
+          - jsonnet/helm_values.jsonnet
+        output_path: kafka_ui
+        input_type: jsonnet
+        ext_vars:
+          hello: world

@@ -12,6 +12,8 @@ classes:
   - kafka.topic.tmux-pane-linestream
   - kafka.topic.tmux-pane-io-context
 
+  - kafka.ui
+
   - kafka.strimzi
   - kafka.strimzi.topic
   - kafka.strimzi.cluster
@@ -21,12 +23,25 @@ parameters:
   bash:
     functions:
       # move to strimzi.kafka-cluster class
-      strimzi_delete_cluster:
-        local ns=${kafka_k8s_namespace}
+      strimzi_delete_cluster: |
+        local ns=\${1}
         kubectl -n \${ns} delete $(kubectl get strimzi -n \${ns} -o name)
-      delete_cluster:
+      strimzi_cluster_deploy: |
+        local ns=\${1}
+        kubectl -n \${ns} apply -f ${compiled_dir}/strimzi/cluster
+      strimzi_topic_create: |
+        local ns=\${1}
+        kubectl -n \${ns} apply -f ${compiled_dir}/strimzi/topic
+
+
+      delete_cluster: |
         local ns=${kafka_k8s_namespace}
         strimzi_delete_cluster \${ns}
+      kafka_cluster_deploy: |
+        local ns=${kafka_k8s_namespace}
+        strimzi_cluster_deploy \${ns}
+      kafka_topic_create:
+        strimzi_topic_create ${kafka_k8s_namespace}
 
 
 

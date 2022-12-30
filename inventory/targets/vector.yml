@@ -64,17 +64,23 @@ parameters:
             nodePort: ${vector_aggregator_port}
       customConfig:
         sources:
-          tmux-bytestream:
+          tmux-pane-bytestream:
             type: socket
             mode: tcp
             address: 0.0.0.0:${vector_aggregator_port}
         sinks:
+          console:
+            type: console
+            inputs:
+              - tmux-pane-bytestream
+            encoding:
+              codec: json
           kafka:
             type: kafka
             inputs:
-              - tmux-bytestream
-            bootstrap_servers: "mindwm-kafka-external-bootstrap.kafka:9092"
-            topic: " tmux-pane-bytestream"
+              - tmux-pane-bytestream
+            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
+            topic: "tmux-pane-bytestream"
             compression: "none"
             encoding:
               codec: json
