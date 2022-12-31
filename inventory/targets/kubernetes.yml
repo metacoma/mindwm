@@ -29,11 +29,9 @@ parameters:
 
   tmuxinator:
     windows:
-      kos:
-        pre:
-          - cd ${kapitan_root}/files/k0s
+      kubectl:
         panes:
-          -
+          - kubectl get all --all-namespaces
           -
 
   notes:
