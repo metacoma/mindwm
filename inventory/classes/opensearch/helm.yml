@@ -14,7 +14,23 @@ parameters:
             --create-namespace \
             --install . -f ${compiled_dir}/helm/opensearch.yaml
         )
+      opensearch_delete: |
+        helm delete ${opensearch_helm_release} \
+          --namespace ${opensearch_k8s_namespace} \
+          $*
 
+      opensearch_logs: |
+        kubectl -n ${opensearch_k8s_namespace} logs -f $* --selector=app.kubernetes.io/name=${opensearch_helm_release}
+
+      force_delete_stuck_master: |
+        kubectl -n ${opensearch_k8s_namespace} delete pod --force=true --grace-period=-1 ${opensearch_helm_release}-cluster-master-0
+      opensearch_force_cleanup: |
+        opensearch_delete
+        force_delete_stuck_master
+        kubectl -n ${opensearch_k8s_namespace} delete pvc --selector=app.kubernetes.io/name=opensearch
+        kubectl -n ${opensearch_k8s_namespace} delete pv `kubectl -n opensearch get pv | grep -i opensearch | awk '{print $1}'`
+      opensearch_pod: |
+        kubectl -n ${opensearch_k8s_namespace} exec -it statefulset/${opensearch_helm_release}-cluster-master -c opensearch -- /bin/sh
 
   kapitan:
     dependencies:
@@ -35,3 +51,33 @@ parameters:
         nodePort: ${opensearch_port}
       singleNode: true
 
+      persistence:
+        image: busybox
+        imageTag: 1.35.0 # to prevent pull image on each redeploy cycle
+      sysctlInit:
+        image: busybox
+        imageTag: 1.35.0 # to prevent pull image on each redeploy cycle
+
+
+
+
+      lifecycle:
+        postStart:
+          exec:
+            command:
+              - bash
+              - -c
+              - |
+                echo lifecycle postStart
+
+
+#                #!/bin/bash
+#                # Add a template to adjust number of shards/replicas1
+#                TEMPLATE_NAME=my_template
+#                INDEX_PATTERN="logstash-*"
+#                SHARD_COUNT=8
+#                REPLICA_COUNT=1
+#                ES_URL=http://localhost:9200
+#                while [[ "$(curl -s -o /dev/null -w '%{http_code}\n' $ES_URL)" != "200" ]]; do sleep 1; done
+#                curl -XPUT "$ES_URL/_template/$TEMPLATE_NAME" -H 'Content-Type: application/json' -d'{"index_patterns":['\""$INDEX_PATTERN"\"'],"settings":{"number_of_shards":'$SHARD_COUNT',"number_of_replicas":'$REPLICA_COUNT'}}'
+#

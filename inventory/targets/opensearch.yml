@@ -37,4 +37,12 @@ parameters:
         layout: main-vertical
         panes:
           - |
+            while :; do
+              opensearch_logs
+              sleep 1
+            done
           - |
+            while :; do
+              opensearch_pod
+              sleep 1
+            done
