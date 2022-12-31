@@ -13,4 +13,27 @@ parameters:
         version: 2.7.0
 
 
+  bash:
+    functions:
+      opensearch_dashboards_install: |
+        helm upgrade \
+          --install ${opensearch_dashboards_helm_release} \
+          --namespace ${opensearch_dashboards_k8s_namespace} \
+          --create-namespace \
+          ${kapitan_root}/files/helm-charts/opensearch-dashboards \
+          -f ${compiled_dir}/helm/opensearch-dashboards.yaml
+      opensearch_dashboards_delete: |
+        helm delete \
+          ${opensearch_dashboards_helm_release} \
+          --namespace ${opensearch_dashboards_k8s_namespace}
+
+
+
+  helm:
+    opensearch-dashboards:
+      opensearchHosts: "https://opensearch-cluster-master:9200"
+      replicaCount: 1
+      service:
+        type: NodePort
+        nodePort: 31003
 

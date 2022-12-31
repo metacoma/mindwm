@@ -6,6 +6,7 @@ parameters:
     functions:
       kapitan_compile: |
         cd ${kapitan_root}
-        ./kapitan.sh compile --fetch --cache -t ${target_name}
+        #./kapitan.sh compile --fetch --cache -t ${target_name}
+        ./kapitan.sh compile --cache -t ${target_name}
 
 
