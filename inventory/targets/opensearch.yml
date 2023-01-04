@@ -9,6 +9,7 @@ classes:
   - tmuxinator.kapitan
   - kapitan.bash.compile-fetch
   - helm
+  - opensearch
   - opensearch.helm
   - opensearch.dashboards.helm
 #  - tmuxp
@@ -24,7 +25,7 @@ parameters:
   target_name: opensearch
 
   opensearch_port: 31002
-  opensearch_k8s_namespace: opensearch
+  # opensearch_k8s_namespace: opensearch
 
   tmuxinator:
     name: ${target_name}
@@ -34,7 +35,7 @@ parameters:
 
     windows:
       opensearch:
-        layout: main-vertical
+        layout: main-horizontal
         panes:
           - |
             while :; do
@@ -46,3 +47,9 @@ parameters:
               opensearch_pod
               sleep 1
             done
+      dashboards:
+        layout: main-horizontal
+        panes:
+          -
+
+          -

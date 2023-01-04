@@ -14,6 +14,7 @@ classes:
   - vector.tmux-bytestream-kafka
 #  - vector.tmux-kafka
 #  - vector.console-output
+  - opensearch
   - vector.config
   - helm
   - vector.helm
@@ -158,6 +159,22 @@ parameters:
             compression: "none"
             encoding:
               codec: json
+          opensearch:
+            type: elasticsearch
+            inputs:
+              - tmux-stream-split-line
+            endpoint: https://${opensearch_helm_release}-cluster-master.${opensearch_k8s_namespace}:9200
+            api_version: "v7" # https://opensearch.org/faq/
+            auth: # TODO (@metacoma) use opensearch credentials from opensearch class
+              user: admin
+              password: admin
+              strategy: basic
+            tls:
+              verify_certificate: false
+              verify_hostname: false
+            healthcheck:
+              enabled: false
+
 #          kafka-tmux-pane-io-context:
 #            type: kafka
 #            inputs:
