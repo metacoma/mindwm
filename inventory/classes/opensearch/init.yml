@@ -1,0 +1,5 @@
+parameters:
+  opensearch_k8s_namespace: opensearch
+  opensearch_helm_release: opensearch
+  opensearch_admin_username: admin
+  opensearch_admin_password: admin
