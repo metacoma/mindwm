@@ -109,6 +109,7 @@ parameters:
                 ch = event.log.message
                 tmux_pane_id = string.gsub(event.log.tmux_pane_id, " ", "")
                 event.log.tmux_pane_id = tmux_pane_id
+                -- newline
                 if ch == "0a" then
                   event.log.message = line[tmux_pane_id]
                   emit(event)
@@ -120,7 +121,42 @@ parameters:
                       line[tmux_pane_id] = line[tmux_pane_id] .. string.format("%c", tonumber(ch, 16))
                   end
                 end
+              end
 
+          tmux-io-context:
+            type: "lua"
+            version: "2"
+            inputs:
+              - tmux-pane-bytestream
+            hooks:
+              process: process
+              init: init
+            source: |
+              function init()
+                line = {}
+              end
+              function process(event, emit)
+                ch = event.log.message
+                tmux_pane_id = string.gsub(event.log.tmux_pane_id, " ", "")
+                event.log.tmux_pane_id = tmux_pane_id
+                -- space
+                if ch == "20" and string.match(line[tmux_pane_id], ".*@.*") then
+                  event.log.message = {
+                    input = "some input",
+                    output = "some output",
+                    metadata = {
+                      tmux_pane_id = tmux_pane_id
+                    }
+                  }
+                  emit(event)
+                  line[tmux_pane_id] = ""
+                else
+                  if line[tmux_pane_id] == nil then
+                      line[tmux_pane_id] =  string.format("%c", tonumber(ch, 16))
+                    else
+                      line[tmux_pane_id] = line[tmux_pane_id] .. string.format("%c", tonumber(ch, 16))
+                  end
+                end
               end
 
 #                                  _       _
@@ -146,7 +182,8 @@ parameters:
           console:
             type: console
             inputs:
-              -  tmux-stream-split-line
+              # - tmux-stream-split-line
+              - tmux-io-context
             encoding:
               codec: json
 
