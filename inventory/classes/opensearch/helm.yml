@@ -207,6 +207,13 @@ parameters:
                 - "admin"
                 description: "Demo admin user"
 
+              ${opensearch_vector_user}:
+                hash: "${opensearch_vector_password_hash}"
+                reserved: true
+                backend_roles:
+                - "admin"
+                description: "vector admin user"
+
               anomalyadmin:
                 hash: "$2y$12$TRwAAJgnNo67w3rVUz4FIeLx9Dy/llB79zf9I15CKJ9vkM4ZzAd3."
                 reserved: false
