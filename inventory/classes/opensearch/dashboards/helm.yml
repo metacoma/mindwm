@@ -26,6 +26,11 @@ parameters:
         helm delete \
           ${opensearch_dashboards_helm_release} \
           --namespace ${opensearch_dashboards_k8s_namespace}
+      opensearch_dashboards_pod: |
+        kubectl -n ${opensearch_dashboards_k8s_namespace} exec -it deployment/${opensearch_dashboards_helm_release} -- /bin/sh
+
+      opensearch_dashboards_logs: |
+        kubectl -n ${opensearch_dashboards_k8s_namespace} logs -f $* --selector=app=${opensearch_dashboards_helm_release}
 
 
 
