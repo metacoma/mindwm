@@ -166,8 +166,8 @@ parameters:
             endpoint: https://${opensearch_helm_release}-cluster-master.${opensearch_k8s_namespace}:9200
             api_version: "v7" # https://opensearch.org/faq/
             auth: # TODO (@metacoma) use opensearch credentials from opensearch class
-              user: admin
-              password: admin
+              user: ${opensearch_vector_user}
+              password: ${opensearch_vector_password}
               strategy: basic
             tls:
               verify_certificate: false
