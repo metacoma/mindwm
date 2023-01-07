@@ -209,7 +209,7 @@ parameters:
             compression: "none"
             encoding:
               codec: json
-          opensearch-lines:
+          opensearch-raw-tmux-lines:
             type: elasticsearch
             inputs:
               - tmux-stream-split-line
@@ -227,7 +227,7 @@ parameters:
             bulk:
               index: "${opensearch_raw_tmux_lines_index}-%F"
 
-          opensearch-context:
+          opensearch-raw-tmux-io-context:
             type: elasticsearch
             inputs:
               - tmux-io-context
