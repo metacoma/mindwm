@@ -14,7 +14,9 @@ classes:
   - vector.tmux-bytestream-kafka
 #  - vector.tmux-kafka
 #  - vector.console-output
+  - opensearch
   - vector.config
+  - helm
   - vector.helm
 
 parameters:
@@ -24,15 +26,13 @@ parameters:
 
   bash:
     functions:
-      kapitan_compile: |
-        cd ${kapitan_root}
-        ./kapitan.sh compile --fetch -t ${target_name}
       # https://vector.dev/docs/setup/installation/package-managers/nix/
       vector_upgrade: |
-        local values_file=\${1:-${compiled_dir}/vector_helm/values.yaml}
+        local values_file=\${1:-${compiled_dir}/helm/aggregator.yaml}
+        shift
         (
           cd ${kapitan_root}/files/helm-charts/vector
-          helm upgrade vector --install -n ${vector_k8s_ns} . -f ${compiled_dir}/vector_helm/values.yaml $*
+          helm upgrade vector --install -n ${vector_k8s_ns} . -f \${values_file} $*
         )
       vector_values: |
         (
@@ -46,8 +46,10 @@ parameters:
 
   vector_aggregator_port: 31399
 
-  vector:
-    aggregator:
+
+
+  helm:
+    aggregator: &vector_aggregator
       image:
         repository: ${vector_image:repo}
         tag: ${vector_image:tag}
@@ -107,6 +109,7 @@ parameters:
                 ch = event.log.message
                 tmux_pane_id = string.gsub(event.log.tmux_pane_id, " ", "")
                 event.log.tmux_pane_id = tmux_pane_id
+                -- newline
                 if ch == "0a" then
                   event.log.message = line[tmux_pane_id]
                   emit(event)
@@ -118,7 +121,57 @@ parameters:
                       line[tmux_pane_id] = line[tmux_pane_id] .. string.format("%c", tonumber(ch, 16))
                   end
                 end
+              end
 
+          tmux-io-context:
+            type: "lua"
+            version: "2"
+            inputs:
+              - tmux-pane-bytestream
+            hooks:
+              process: process
+              init: init
+            source: |-
+              function init()
+                line = {}
+                data = {}
+                input = {}
+              end
+              function process(event, emit)
+                ch = event.log.message
+                tmux_pane_id = string.gsub(event.log.tmux_pane_id, " ", "")
+                event.log.tmux_pane_id = tmux_pane_id
+                -- space
+                if ch == "20" and string.match(line[tmux_pane_id], ".*@.*") then
+                  event.log.message = {
+                    input = input[tmux_pane_id],
+                    output = data[tmux_pane_id],
+                    metadata = {
+                      tmux_pane_id = tmux_pane_id,
+                    }
+                  }
+                  emit(event)
+                  data[tmux_pane_id] = nil
+                  line[tmux_pane_id] = ""
+                  input[tmux_pane_id] = ""
+                end
+                -- newline
+                if ch == "0a" then
+                  if data[tmux_pane_id] == nil then
+                    -- FIXME(@metacoma) multiline input with is not supported
+                    input[tmux_pane_id] = line[tmux_pane_id]
+                    data[tmux_pane_id] = {}
+                  else
+                    table.insert(data[tmux_pane_id], line[tmux_pane_id])
+                  end
+                  line[tmux_pane_id] = ""
+                else
+                  if line[tmux_pane_id] == nil then
+                      line[tmux_pane_id] =  string.format("%c", tonumber(ch, 16))
+                    else
+                     line[tmux_pane_id] = line[tmux_pane_id] .. string.format("%c", tonumber(ch, 16))
+                  end
+                end
               end
 
 #                                  _       _
@@ -144,7 +197,8 @@ parameters:
           console:
             type: console
             inputs:
-              -  tmux-stream-split-line
+              # - tmux-stream-split-line
+              - tmux-io-context
             encoding:
               codec: json
 
@@ -157,6 +211,22 @@ parameters:
             compression: "none"
             encoding:
               codec: json
+          opensearch:
+            type: elasticsearch
+            inputs:
+              - tmux-stream-split-line
+            endpoint: https://${opensearch_helm_release}-cluster-master.${opensearch_k8s_namespace}:9200
+            api_version: "v7" # https://opensearch.org/faq/
+            auth: # TODO (@metacoma) use opensearch credentials from opensearch class
+              user: ${opensearch_vector_user}
+              password: ${opensearch_vector_password}
+              strategy: basic
+            tls:
+              verify_certificate: false
+              verify_hostname: false
+            healthcheck:
+              enabled: false
+
 #          kafka-tmux-pane-io-context:
 #            type: kafka
 #            inputs:
@@ -179,5 +249,5 @@ parameters:
           -
             - tmux pipe-pane -IO "perl ${compiled_dir}/pipe-pane2hexstream.pl | VECTOR_UPSTREAM=`minikube ip`:${vector_aggregator_port} TMUX_PANE_ID='$TMUX_PANE' vector -q --config ${compiled_dir}/vector/tmux-bytestream.yaml"
           -
-            -
+            - vector_logs -f
 

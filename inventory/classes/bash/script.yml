@@ -1,0 +1,10 @@
+parameters:
+
+  kapitan:
+    compile:
+      - input_type: jsonnet
+        output_path: bin
+        input_paths:
+          - jsonnet/bash/scripts.jsonnet
+        output_type: plain
+        # mode: 0777
