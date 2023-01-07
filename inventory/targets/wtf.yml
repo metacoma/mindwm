@@ -1,0 +1,45 @@
+classes:
+  - common
+  - mindwm
+  - vim
+  - tmuxinator
+  - tmuxinator.kapitan
+  - bash.kapitan
+  - bash.script
+  - wtf
+
+
+parameters:
+  target_name: wtf
+
+  bash:
+    functions:
+      opensearch_api_endpoint: |
+        minikube service -n opensearch opensearch-cluster-master --url | sed -n '1s/^http/https/g p'
+      opensearch_curl: |
+        curl -s -k -u vector:vectorvector `opensearch_api_endpoint`/$1
+      opensearch_health: |
+        opensearch_curl "_cluster/health?wait_for_status=yellow&timeout=50s" | jq '.status'
+
+
+  wtf:
+    mods:
+      health:
+        cmd: "bash"
+        args:
+          - "${compiled_dir}/bin/opensearch_health.sh"
+        enabled: true
+        position:
+          top: 0
+          left: 0
+          height: 3
+          width: 3
+        refreshInterval: 5s
+        type: cmdrunner
+
+  tmuxinator:
+    windows:
+      wtf:
+        panes:
+          - wtf_util
+
