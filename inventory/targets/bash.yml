@@ -1,0 +1,32 @@
+classes:
+  - common
+  - mindwm
+  - vim
+  - tmuxinator
+  - tmuxinator.kapitan
+  - bash.kapitan
+  - bash.script
+
+
+parameters:
+  target_name: bash
+
+  bash:
+    functions:
+      kubectl_get_service_nodeport: |
+        # usage
+        # kubectl_get_service_nodeport kafka mindwm-kafka-external-0
+        kubectl get svc -n $* --output='jsonpath="{.spec.ports[0].nodePort}"'
+      minikube_start: |
+        # TODO (@metacoma) run minikube in host network
+        minikube start
+
+
+
+  tmuxinator:
+    windows:
+      compiled:
+        panes:
+          -
+          -
+
