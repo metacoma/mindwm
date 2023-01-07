@@ -1,4 +1,15 @@
 parameters:
+  bash:
+    functions:
+      session_reload: |
+        bash -c '
+          tmux kill-session -t ${target_name}
+          bash ${compiled_dir}/bin/kapitan_compile.sh
+          . ${compiled_dir}/functions.bash
+          tmux_sesion_start
+        ' &
+
+
   tmuxinator:
     root: ${compiled_dir}
     windows:

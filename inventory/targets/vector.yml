@@ -101,16 +101,22 @@ parameters:
               init: init
             source: |
               function init()
-                line = ""
+                line = {}
               end
               function process(event, emit)
                 ch = event.log.message
-                if ch == "20" then
-                  event.log.message = line
+                tmux_pane_id = string.gsub(event.log.tmux_pane_id, " ", "")
+                event.log.tmux_pane_id = tmux_pane_id
+                if ch == "0a" then
+                  event.log.message = line[tmux_pane_id]
                   emit(event)
-                  line = ""
+                  line[tmux_pane_id] = ""
                 else
-                  line = line .. string.format("%c", tonumber(ch, 16))
+                  if line[tmux_pane_id] == nil then
+                      line[tmux_pane_id] =  string.format("%c", tonumber(ch, 16))
+                    else
+                      line[tmux_pane_id] = line[tmux_pane_id] .. string.format("%c", tonumber(ch, 16))
+                  end
                 end
 
               end
