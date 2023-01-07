@@ -7,6 +7,11 @@ classes:
   - bash.kapitan
   - tmuxinator
   - tmuxinator.kapitan
+  - kapitan.bash.compile-fetch
+  - helm
+  - opensearch
+  - opensearch.helm
+  - opensearch.dashboards.helm
 #  - tmuxp
 
 parameters:
@@ -17,26 +22,10 @@ parameters:
   docker_dashboards_image_name: opensearchproject/opensearch-dashboards
   docker_dashboards_image_tag: 2.4.1
 
-
   target_name: opensearch
 
-  bash:
-    functions:
-      opensearch_start: |
-        docker run --network host --rm --name opensearch-node1 -v opensearch-data1:/usr/share/opensearch/data -it -e "discovery.type=single-node" ${docker_image_name}:${docker_image_tag}
-      opensearch_stop: |
-        echo opensearch stop
-      opensearch_reload: |
-        echo opensearch reload
-
-      opensearch_dashboards_start: |
-        docker run --network host -it -e OPENSEARCH_HOSTS='["http://127.0.0.1:9200"]' ${docker_dashboards_image_name}:${docker_dashboards_image_tag}
-
-      opensearch_dashboards_stop: |
-        echo opensearch_dashboards_stop
-      opensearch_dashboards_reload: |
-        echo opensearch_dashboards_reload
-
+  opensearch_port: 31002
+  # opensearch_k8s_namespace: opensearch
 
   tmuxinator:
     name: ${target_name}
@@ -46,9 +35,21 @@ parameters:
 
     windows:
       opensearch:
-        layout: main-vertical
+        layout: main-horizontal
         panes:
           - |
-            opensearch_start
+            while :; do
+              opensearch_logs
+              sleep 1
+            done
           - |
-            opensearch_dashboards_start
+            while :; do
+              opensearch_pod
+              sleep 1
+            done
+      dashboards:
+        layout: main-horizontal
+        panes:
+          -
+
+          -

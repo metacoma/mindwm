@@ -1,0 +1,641 @@
+---
+parameters:
+
+  opensearch_helm_release: opensearch
+
+  bash:
+    functions:
+      opensearch_install: |
+        local ns=\${1:-${opensearch_k8s_namespace}}
+        (
+          cd ${kapitan_root}/files/helm-charts/opensearch
+          helm upgrade ${opensearch_helm_release} \
+            --namespace \${ns} \
+            --create-namespace \
+            --install . -f ${compiled_dir}/helm/opensearch.yaml
+        )
+      opensearch_delete: |
+        helm delete ${opensearch_helm_release} \
+          --namespace ${opensearch_k8s_namespace} \
+          $*
+
+      opensearch_logs: |
+        kubectl -n ${opensearch_k8s_namespace} logs -f $* --selector=app.kubernetes.io/name=${opensearch_helm_release}
+
+      force_delete_stuck_master: |
+        kubectl -n ${opensearch_k8s_namespace} delete pod --force=true --grace-period=-1 ${opensearch_helm_release}-cluster-master-0
+      opensearch_force_cleanup: |
+        opensearch_delete
+        force_delete_stuck_master
+        kubectl -n ${opensearch_k8s_namespace} delete pvc --selector=app.kubernetes.io/name=opensearch
+        kubectl -n ${opensearch_k8s_namespace} delete pv `kubectl -n opensearch get pv | grep -i opensearch | awk '{print $1}'`
+      opensearch_pod: |
+        kubectl -n ${opensearch_k8s_namespace} exec -it statefulset/${opensearch_helm_release}-cluster-master -c opensearch -- /bin/sh
+
+  kapitan:
+    dependencies:
+      - type: helm
+        output_path: files/helm-charts/opensearch
+        source: https://opensearch-project.github.io/helm-charts/
+        chart_name: opensearch
+        version: 2.9.0
+
+  # default values for chart
+  helm:
+    opensearch:
+      extraVars:
+        - name:  DISABLE_INSTALL_DEMO_CONFIG
+          value: "true"
+      service:
+        type: NodePort
+        nodePort: ${opensearch_port}
+      singleNode: true
+
+      persistence:
+        image: busybox
+        imageTag: 1.35.0 # to prevent pull image on each redeploy cycle
+      sysctlInit:
+        image: busybox
+        imageTag: 1.35.0 # to prevent pull image on each redeploy cycle
+      securityConfig:
+        config:
+          data:
+            config.yml: |-
+              _meta:
+                type: "config"
+                config_version: 2
+
+              config:
+                dynamic:
+                  http:
+                    anonymous_auth_enabled: false
+                    xff:
+                      enabled: false
+                      internalProxies: '192\.168\.0\.10|192\.168\.0\.11' # regex pattern
+                  authc:
+                    kerberos_auth_domain:
+                      http_enabled: false
+                      transport_enabled: false
+                      order: 6
+                      http_authenticator:
+                        type: kerberos
+                        challenge: true
+                        config:
+                          krb_debug: false
+                          strip_realm_from_principal: true
+                      authentication_backend:
+                        type: noop
+                    basic_internal_auth_domain:
+                      description: "Authenticate via HTTP Basic against internal users database"
+                      http_enabled: true
+                      transport_enabled: true
+                      order: 4
+                      http_authenticator:
+                        type: basic
+                        challenge: true
+                      authentication_backend:
+                        type: intern
+                    proxy_auth_domain:
+                      description: "Authenticate via proxy"
+                      http_enabled: false
+                      transport_enabled: false
+                      order: 3
+                      http_authenticator:
+                        type: proxy
+                        challenge: false
+                        config:
+                          user_header: "x-proxy-user"
+                          roles_header: "x-proxy-roles"
+                      authentication_backend:
+                        type: noop
+                    jwt_auth_domain:
+                      description: "Authenticate via Json Web Token"
+                      http_enabled: false
+                      transport_enabled: false
+                      order: 0
+                      http_authenticator:
+                        type: jwt
+                        challenge: false
+                        config:
+                          signing_key: "base64 encoded HMAC key or public RSA/ECDSA pem key"
+                          jwt_header: "Authorization"
+                          jwt_url_parameter: null
+                          roles_key: null
+                          subject_key: null
+                      authentication_backend:
+                        type: noop
+                    clientcert_auth_domain:
+                      description: "Authenticate via SSL client certificates"
+                      http_enabled: false
+                      transport_enabled: false
+                      order: 2
+                      http_authenticator:
+                        type: clientcert
+                        config:
+                          username_attribute: cn #optional, if omitted DN becomes username
+                        challenge: false
+                      authentication_backend:
+                        type: noop
+                    ldap:
+                      description: "Authenticate via LDAP or Active Directory"
+                      http_enabled: false
+                      transport_enabled: false
+                      order: 5
+                      http_authenticator:
+                        type: basic
+                        challenge: false
+                      authentication_backend:
+                        type: ldap
+                        config:
+                          enable_ssl: false
+                          enable_start_tls: false
+                          enable_ssl_client_auth: false
+                          verify_hostnames: true
+                          hosts:
+                          - localhost:8389
+                          bind_dn: null
+                          password: null
+                          userbase: 'ou=people,dc=example,dc=com'
+                          usersearch: '(sAMAccountName={0})'
+                          username_attribute: null
+                  authz:
+                    roles_from_myldap:
+                      description: "Authorize via LDAP or Active Directory"
+                      http_enabled: false
+                      transport_enabled: false
+                      authorization_backend:
+                        type: ldap
+                        config:
+                          enable_ssl: false
+                          enable_start_tls: false
+                          enable_ssl_client_auth: false
+                          verify_hostnames: true
+                          hosts:
+                          - localhost:8389
+                          bind_dn: null
+                          password: null
+                          rolebase: 'ou=groups,dc=example,dc=com'
+                          rolesearch: '(member={0})'
+                          userroleattribute: null
+                          userrolename: disabled
+                          rolename: cn
+                          resolve_nested_roles: true
+                          userbase: 'ou=people,dc=example,dc=com'
+                          usersearch: '(uid={0})'
+                    roles_from_another_ldap:
+                      description: "Authorize via another Active Directory"
+                      http_enabled: false
+                      transport_enabled: false
+                      authorization_backend:
+                        type: ldap
+            internal_users.yml: |-
+              # This is the internal user database
+              # The hash value is a bcrypt hash and can be generated with plugin/tools/hash.sh
+
+              _meta:
+                type: "internalusers"
+                config_version: 2
+
+              # Define your internal users here
+
+              ## Demo users
+
+              admin:
+                hash: "$2a$12$VcCDgh2NDk07JGN0rjGbM.Ad41qVR/YFJcgHp0UGns5JDymv..TOG"
+                reserved: true
+                backend_roles:
+                - "admin"
+                description: "Demo admin user"
+
+              ${opensearch_vector_user}:
+                hash: "${opensearch_vector_password_hash}"
+                reserved: true
+                backend_roles:
+                - "admin"
+                description: "vector admin user"
+
+              anomalyadmin:
+                hash: "$2y$12$TRwAAJgnNo67w3rVUz4FIeLx9Dy/llB79zf9I15CKJ9vkM4ZzAd3."
+                reserved: false
+                opendistro_security_roles:
+                - "anomaly_full_access"
+                description: "Demo anomaly admin user, using internal role"
+
+              kibanaserver:
+                hash: "$2a$12$4AcgAt3xwOWadA5s5blL6ev39OXDNhmOesEoo33eZtrq2N0YrU3H."
+                reserved: true
+                description: "Demo OpenSearch Dashboards user"
+
+              kibanaro:
+                hash: "$2a$12$JJSXNfTowz7Uu5ttXfeYpeYE0arACvcwlPBStB1F.MI7f0U9Z4DGC"
+                reserved: false
+                backend_roles:
+                - "kibanauser"
+                - "readall"
+                attributes:
+                  attribute1: "value1"
+                  attribute2: "value2"
+                  attribute3: "value3"
+                description: "Demo OpenSearch Dashboards read only user, using external role mapping"
+
+              logstash:
+                hash: "$2a$12$u1ShR4l4uBS3Uv59Pa2y5.1uQuZBrZtmNfqB3iM/.jL0XoV9sghS2"
+                reserved: false
+                backend_roles:
+                - "logstash"
+                description: "Demo logstash user, using external role mapping"
+
+              readall:
+                hash: "$2a$12$ae4ycwzwvLtZxwZ82RmiEunBbIPiAmGZduBAjKN0TXdwQFtCwARz2"
+                reserved: false
+                backend_roles:
+                - "readall"
+                description: "Demo readall user, using external role mapping"
+
+              snapshotrestore:
+                hash: "$2y$12$DpwmetHKwgYnorbgdvORCenv4NAK8cPUg8AI6pxLCuWf/ALc0.v7W"
+                reserved: false
+                backend_roles:
+                - "snapshotrestore"
+                description: "Demo snapshotrestore user, using external role mapping"
+            roles.yml: |-
+              _meta:
+                type: "roles"
+                config_version: 2
+
+              # Restrict users so they can only view visualization and dashboard on OpenSearchDashboards
+              kibana_read_only:
+                reserved: true
+
+              # The security REST API access role is used to assign specific users access to change the security settings through the REST API.
+              security_rest_api_access:
+                reserved: true
+
+              # Allows users to view monitors, destinations and alerts
+              alerting_read_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opendistro/alerting/alerts/get'
+                  - 'cluster:admin/opendistro/alerting/destination/get'
+                  - 'cluster:admin/opendistro/alerting/monitor/get'
+                  - 'cluster:admin/opendistro/alerting/monitor/search'
+                  - 'cluster:admin/opensearch/alerting/findings/get'
+
+              # Allows users to view and acknowledge alerts
+              alerting_ack_alerts:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opendistro/alerting/alerts/*'
+
+              # Allows users to use all alerting functionality
+              alerting_full_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster_monitor'
+                  - 'cluster:admin/opendistro/alerting/*'
+                  - 'cluster:admin/opensearch/alerting/*'
+                  - 'cluster:admin/opensearch/notifications/feature/publish'
+                index_permissions:
+                  - index_patterns:
+                      - '*'
+                    allowed_actions:
+                      - 'indices_monitor'
+                      - 'indices:admin/aliases/get'
+                      - 'indices:admin/mappings/get'
+
+              # Allow users to read Anomaly Detection detectors and results
+              anomaly_read_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opendistro/ad/detector/info'
+                  - 'cluster:admin/opendistro/ad/detector/search'
+                  - 'cluster:admin/opendistro/ad/detectors/get'
+                  - 'cluster:admin/opendistro/ad/result/search'
+                  - 'cluster:admin/opendistro/ad/tasks/search'
+                  - 'cluster:admin/opendistro/ad/detector/validate'
+                  - 'cluster:admin/opendistro/ad/result/topAnomalies'
+
+              # Allows users to use all Anomaly Detection functionality
+              anomaly_full_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster_monitor'
+                  - 'cluster:admin/opendistro/ad/*'
+                index_permissions:
+                  - index_patterns:
+                      - '*'
+                    allowed_actions:
+                      - 'indices_monitor'
+                      - 'indices:admin/aliases/get'
+                      - 'indices:admin/mappings/get'
+
+              # Allows users to read Notebooks
+              notebooks_read_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opendistro/notebooks/list'
+                  - 'cluster:admin/opendistro/notebooks/get'
+
+              # Allows users to all Notebooks functionality
+              notebooks_full_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opendistro/notebooks/create'
+                  - 'cluster:admin/opendistro/notebooks/update'
+                  - 'cluster:admin/opendistro/notebooks/delete'
+                  - 'cluster:admin/opendistro/notebooks/get'
+                  - 'cluster:admin/opendistro/notebooks/list'
+
+              # Allows users to read observability objects
+              observability_read_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opensearch/observability/get'
+
+              # Allows users to all Observability functionality
+              observability_full_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opensearch/observability/create'
+                  - 'cluster:admin/opensearch/observability/update'
+                  - 'cluster:admin/opensearch/observability/delete'
+                  - 'cluster:admin/opensearch/observability/get'
+
+              # Allows users to read and download Reports
+              reports_instances_read_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opendistro/reports/instance/list'
+                  - 'cluster:admin/opendistro/reports/instance/get'
+                  - 'cluster:admin/opendistro/reports/menu/download'
+
+              # Allows users to read and download Reports and Report-definitions
+              reports_read_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opendistro/reports/definition/get'
+                  - 'cluster:admin/opendistro/reports/definition/list'
+                  - 'cluster:admin/opendistro/reports/instance/list'
+                  - 'cluster:admin/opendistro/reports/instance/get'
+                  - 'cluster:admin/opendistro/reports/menu/download'
+
+              # Allows users to all Reports functionality
+              reports_full_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opendistro/reports/definition/create'
+                  - 'cluster:admin/opendistro/reports/definition/update'
+                  - 'cluster:admin/opendistro/reports/definition/on_demand'
+                  - 'cluster:admin/opendistro/reports/definition/delete'
+                  - 'cluster:admin/opendistro/reports/definition/get'
+                  - 'cluster:admin/opendistro/reports/definition/list'
+                  - 'cluster:admin/opendistro/reports/instance/list'
+                  - 'cluster:admin/opendistro/reports/instance/get'
+                  - 'cluster:admin/opendistro/reports/menu/download'
+
+              # Allows users to use all asynchronous-search functionality
+              asynchronous_search_full_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opendistro/asynchronous_search/*'
+                index_permissions:
+                  - index_patterns:
+                      - '*'
+                    allowed_actions:
+                      - 'indices:data/read/search*'
+
+              # Allows users to read stored asynchronous-search results
+              asynchronous_search_read_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opendistro/asynchronous_search/get'
+
+              # Allows user to use all index_management actions - ism policies, rollups, transforms
+              index_management_full_access:
+                reserved: true
+                cluster_permissions:
+                  - "cluster:admin/opendistro/ism/*"
+                  - "cluster:admin/opendistro/rollup/*"
+                  - "cluster:admin/opendistro/transform/*"
+                  - "cluster:admin/opensearch/notifications/feature/publish"
+                index_permissions:
+                  - index_patterns:
+                      - '*'
+                    allowed_actions:
+                      - 'indices:admin/opensearch/ism/*'
+
+              # Allows users to use all cross cluster replication functionality at leader cluster
+              cross_cluster_replication_leader_full_access:
+                reserved: true
+                index_permissions:
+                  - index_patterns:
+                      - '*'
+                    allowed_actions:
+                      - "indices:admin/plugins/replication/index/setup/validate"
+                      - "indices:data/read/plugins/replication/changes"
+                      - "indices:data/read/plugins/replication/file_chunk"
+
+              # Allows users to use all cross cluster replication functionality at follower cluster
+              cross_cluster_replication_follower_full_access:
+                reserved: true
+                cluster_permissions:
+                  - "cluster:admin/plugins/replication/autofollow/update"
+                index_permissions:
+                  - index_patterns:
+                      - '*'
+                    allowed_actions:
+                      - "indices:admin/plugins/replication/index/setup/validate"
+                      - "indices:data/write/plugins/replication/changes"
+                      - "indices:admin/plugins/replication/index/start"
+                      - "indices:admin/plugins/replication/index/pause"
+                      - "indices:admin/plugins/replication/index/resume"
+                      - "indices:admin/plugins/replication/index/stop"
+                      - "indices:admin/plugins/replication/index/update"
+                      - "indices:admin/plugins/replication/index/status_check"
+
+              # Allow users to read ML stats/models/tasks
+              ml_read_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opensearch/ml/stats/nodes'
+                  - 'cluster:admin/opensearch/ml/models/get'
+                  - 'cluster:admin/opensearch/ml/models/search'
+                  - 'cluster:admin/opensearch/ml/tasks/get'
+                  - 'cluster:admin/opensearch/ml/tasks/search'
+
+              # Allows users to use all ML functionality
+              ml_full_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster_monitor'
+                  - 'cluster:admin/opensearch/ml/*'
+                index_permissions:
+                  - index_patterns:
+                      - '*'
+                    allowed_actions:
+                      - 'indices_monitor'
+
+              # Allows users to use all Notifications functionality
+              notifications_full_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opensearch/notifications/*'
+
+              # Allows users to read Notifications config/channels
+              notifications_read_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opensearch/notifications/configs/get'
+                  - 'cluster:admin/opensearch/notifications/features'
+                  - 'cluster:admin/opensearch/notifications/channels/get'
+
+              # Allows users to use all snapshot management functionality
+              snapshot_management_full_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opensearch/snapshot_management/*'
+                  - 'cluster:admin/opensearch/notifications/feature/publish'
+                  - 'cluster:admin/repository/*'
+                  - 'cluster:admin/snapshot/*'
+
+              # Allows users to see snapshots, repositories, and snapshot management policies
+              snapshot_management_read_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opensearch/snapshot_management/policy/get'
+                  - 'cluster:admin/opensearch/snapshot_management/policy/search'
+                  - 'cluster:admin/opensearch/snapshot_management/policy/explain'
+                  - 'cluster:admin/repository/get'
+                  - 'cluster:admin/snapshot/get'
+
+              # Allows user to use point in time functionality
+              point_in_time_full_access:
+                reserved: true
+                index_permissions:
+                  - index_patterns:
+                      - '*'
+                    allowed_actions:
+                      - 'manage_point_in_time'
+
+              # Allows users to see security analytics detectors and others
+              security_analytics_read_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opensearch/securityanalytics/alerts/get'
+                  - 'cluster:admin/opensearch/securityanalytics/detector/get'
+                  - 'cluster:admin/opensearch/securityanalytics/detector/search'
+                  - 'cluster:admin/opensearch/securityanalytics/findings/get'
+                  - 'cluster:admin/opensearch/securityanalytics/mapping/get'
+                  - 'cluster:admin/opensearch/securityanalytics/mapping/view/get'
+                  - 'cluster:admin/opensearch/securityanalytics/rule/get'
+                  - 'cluster:admin/opensearch/securityanalytics/rule/search'
+
+              # Allows users to use all security analytics functionality
+              security_analytics_full_access:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opensearch/securityanalytics/alerts/*'
+                  - 'cluster:admin/opensearch/securityanalytics/detector/*'
+                  - 'cluster:admin/opensearch/securityanalytics/findings/*'
+                  - 'cluster:admin/opensearch/securityanalytics/mapping/*'
+                  - 'cluster:admin/opensearch/securityanalytics/rule/*'
+                index_permissions:
+                  - index_patterns:
+                      - '*'
+                    allowed_actions:
+                      - 'indices:admin/mapping/put'
+                      - 'indices:admin/mappings/get'
+
+              # Allows users to view and acknowledge alerts
+              security_analytics_ack_alerts:
+                reserved: true
+                cluster_permissions:
+                  - 'cluster:admin/opensearch/securityanalytics/alerts/*'
+            roles_mapping.yml: |-
+              # In this file users, backendroles and hosts can be mapped to Security roles.
+              # Permissions for OpenSearch roles are configured in roles.yml
+
+              _meta:
+                type: "rolesmapping"
+                config_version: 2
+
+              # Define your roles mapping here
+
+              ## Demo roles mapping
+
+              all_access:
+                reserved: false
+                backend_roles:
+                - "admin"
+                description: "Maps admin to all_access"
+
+              own_index:
+                reserved: false
+                users:
+                - "*"
+                description: "Allow full access to an index named like the username"
+
+              logstash:
+                reserved: false
+                backend_roles:
+                - "logstash"
+
+              kibana_user:
+                reserved: false
+                backend_roles:
+                - "kibanauser"
+                description: "Maps kibanauser to kibana_user"
+
+              readall:
+                reserved: false
+                backend_roles:
+                - "readall"
+
+              manage_snapshots:
+                reserved: false
+                backend_roles:
+                - "snapshotrestore"
+
+              kibana_server:
+                reserved: true
+                users:
+                - "kibanaserver"
+            action_groups.yml: |-
+              _meta:
+                type: "actiongroups"
+                config_version: 2
+            tenants.yml: |-
+              _meta:
+                type: "tenants"
+                config_version: 2
+
+              # Define your tenants here
+
+              ## Demo tenants
+              admin_tenant:
+                reserved: false
+                description: "Demo tenant for admin user"
+
+
+
+
+#      lifecycle:
+#        postStart:
+#          exec:
+#            command:
+#              - bash
+#              - -c
+#              - |
+#                echo lifecycle postStart
+
+
+#                #!/bin/bash
+#                # Add a template to adjust number of shards/replicas1
+#                TEMPLATE_NAME=my_template
+#                INDEX_PATTERN="logstash-*"
+#                SHARD_COUNT=8
+#                REPLICA_COUNT=1
+#                ES_URL=http://localhost:9200
+#                while [[ "$(curl -s -o /dev/null -w '%{http_code}\n' $ES_URL)" != "200" ]]; do sleep 1; done
+#                curl -XPUT "$ES_URL/_template/$TEMPLATE_NAME" -H 'Content-Type: application/json' -d'{"index_patterns":['\""$INDEX_PATTERN"\"'],"settings":{"number_of_shards":'$SHARD_COUNT',"number_of_replicas":'$REPLICA_COUNT'}}'
+#

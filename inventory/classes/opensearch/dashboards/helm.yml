@@ -1,0 +1,44 @@
+---
+parameters:
+
+  opensearch_dashboards_helm_release: opensearch-dashboards
+  opensearch_dashboards_k8s_namespace: ${opensearch_k8s_namespace}
+
+  kapitan:
+    dependencies:
+      - type: helm
+        output_path: files/helm-charts/opensearch-dashboards
+        source: https://opensearch-project.github.io/helm-charts/
+        chart_name: opensearch-dashboards
+        version: 2.7.0
+
+
+  bash:
+    functions:
+      opensearch_dashboards_install: |
+        helm upgrade \
+          --install ${opensearch_dashboards_helm_release} \
+          --namespace ${opensearch_dashboards_k8s_namespace} \
+          --create-namespace \
+          ${kapitan_root}/files/helm-charts/opensearch-dashboards \
+          -f ${compiled_dir}/helm/opensearch-dashboards.yaml
+      opensearch_dashboards_delete: |
+        helm delete \
+          ${opensearch_dashboards_helm_release} \
+          --namespace ${opensearch_dashboards_k8s_namespace}
+      opensearch_dashboards_pod: |
+        kubectl -n ${opensearch_dashboards_k8s_namespace} exec -it deployment/${opensearch_dashboards_helm_release} -- /bin/sh
+
+      opensearch_dashboards_logs: |
+        kubectl -n ${opensearch_dashboards_k8s_namespace} logs -f $* --selector=app=${opensearch_dashboards_helm_release}
+
+
+
+  helm:
+    opensearch-dashboards:
+      opensearchHosts: "https://opensearch-cluster-master:9200"
+      replicaCount: 1
+      service:
+        type: NodePort
+        nodePort: 31003
+

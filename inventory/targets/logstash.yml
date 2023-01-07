@@ -9,6 +9,7 @@ classes:
   - tmuxinator.kapitan
   - logstash
   - kafka
+  - kapitan.bash.compile-fetch
 #  - tmuxp
 
 parameters:
@@ -30,9 +31,6 @@ parameters:
 
   bash:
     functions:
-      kapitan_compile: |
-        cd ${kapitan_root}
-        ./kapitan.sh compile --fetch -t ${target_name}
       logstash_start: |
         docker run \
           --user \${UID}:\${GID} \

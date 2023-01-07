@@ -5,37 +5,28 @@ classes:
   - tmuxinator
   - tmuxinator.kapitan
   - bash.kapitan
+  - kapitan.bash.compile-fetch
 
 
 parameters:
   target_name: kubernetes
 
-
-  kapitan:
-    dependencies:
-      - type: git
-        source: https://github.com/ansible/awx
-        output_path: files/github.com/ansible/awx
-        ref: "21.10.2"
-
   bash:
     functions:
-      kapitan_compile: |
-        cd ${kapitan_root}
-        ./kapitan.sh compile --fetch --cache -t ${target_name}
       kubectl_get_service_nodeport: |
         # usage
         # kubectl_get_service_nodeport kafka mindwm-kafka-external-0
         kubectl get svc -n $* --output='jsonpath="{.spec.ports[0].nodePort}"'
 
+      minikube_start: |
+        minikube start --driver=docker
+
 
   tmuxinator:
     windows:
-      kos:
-        pre:
-          - cd ${kapitan_root}/files/k0s
+      kubectl:
         panes:
-          -
+          - kubectl get all --all-namespaces
           -
 
   notes:
