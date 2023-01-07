@@ -11,14 +11,6 @@ classes:
 parameters:
   target_name: kubernetes
 
-
-  kapitan:
-    dependencies:
-      - type: git
-        source: https://github.com/ansible/awx
-        output_path: files/github.com/ansible/awx
-        ref: "21.10.2"
-
   bash:
     functions:
       kubectl_get_service_nodeport: |
