@@ -4,6 +4,7 @@ classes:
   - vim
   - tmuxinator
   - bash.kapitan
+  - bash.script
   - tmuxinator.kapitan
 parameters:
   target_name: kapitan
