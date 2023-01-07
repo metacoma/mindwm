@@ -4,6 +4,7 @@ classes:
   - vim
   - tmuxinator
   - bash.kapitan
+  - bash.script
   - tmuxinator.kapitan
   - kapitan.bash.compile-fetch
 parameters:
