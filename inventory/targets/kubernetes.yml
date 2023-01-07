@@ -18,6 +18,9 @@ parameters:
         # kubectl_get_service_nodeport kafka mindwm-kafka-external-0
         kubectl get svc -n $* --output='jsonpath="{.spec.ports[0].nodePort}"'
 
+      minikube_start: |
+        minikube start --driver=docker
+
 
   tmuxinator:
     windows:
