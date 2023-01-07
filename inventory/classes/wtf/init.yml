@@ -15,6 +15,12 @@ parameters:
           wtfutil --config=${compiled_dir}/wtf.yml
         )
 
+  tmuxinator:
+    windows:
+      wtf:
+        panes:
+          - wtf_util
+
   wtf:
     grid:
       columns: [80]
