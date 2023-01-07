@@ -5,13 +5,16 @@ classes:
   - vim
   - tmuxinator
   - bash.kapitan
+  - bash.script
   - tmuxinator
   - tmuxinator.kapitan
   - kapitan.bash.compile-fetch
   - helm
   - opensearch
   - opensearch.helm
+    #  - opensearch.dashboards
   - opensearch.dashboards.helm
+  - wtf
 #  - tmuxp
 
 parameters:
@@ -26,6 +29,49 @@ parameters:
 
   opensearch_port: 31002
   # opensearch_k8s_namespace: opensearch
+  bash:
+    functions:
+
+      opensearch_api_endpoint: |
+        minikube service -n opensearch opensearch-cluster-master --url | sed -n '1s/^http/https/g p'
+      opensearch_wait_200: |
+        local endpoint=`opensearch_api_endpoint`
+        while :; do
+          echo -n .
+          http_code=`curl -k -u ${opensearch_api_user}:${opensearch_api_password} -s -o /dev/null \${endpoint} -w "%{http_code}"`
+          if [ \${http_code} -ge "200" -a \${http_code} -lt 300 ]; then
+            break
+          fi
+        done
+
+      opensearch_curl: |
+        curl -s -k -u vector:vectorvector `opensearch_api_endpoint`/$1
+      opensearch_health: |
+        opensearch_curl "_cluster/health?wait_for_status=yellow&timeout=50s" | jq '.status'
+
+
+  kapitan:
+    compile:
+      - input_paths:
+          - templates/opensearch/create_index.sh
+        output_path: .
+        input_type: jinja2
+
+
+  wtf:
+    mods:
+      health:
+        cmd: "bash"
+        args:
+          - "${compiled_dir}/bin/opensearch_health.sh"
+        enabled: true
+        position:
+          top: 0
+          left: 0
+          height: 3
+          width: 3
+        refreshInterval: 5s
+        type: cmdrunner
 
   tmuxinator:
     name: ${target_name}
