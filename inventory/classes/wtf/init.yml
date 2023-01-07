@@ -1,0 +1,27 @@
+parameters:
+  kapitan:
+    compile:
+      - input_paths:
+          - jsonnet/wtf.jsonnet
+        output_path: .
+        output_type: yml
+        input_type: jsonnet
+
+  bash:
+    functions:
+      wtf_util: |
+        (
+          cd ${compiled_dir}
+          wtfutil --config=${compiled_dir}/wtf.yml
+        )
+
+  tmuxinator:
+    windows:
+      wtf:
+        panes:
+          - wtf_util
+
+  wtf:
+    grid:
+      columns: [80]
+      rows: [80]

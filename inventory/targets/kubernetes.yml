@@ -6,6 +6,7 @@ classes:
   - tmuxinator.kapitan
   - bash.kapitan
   - kapitan.bash.compile-fetch
+  - wtf
 
 
 parameters:
@@ -21,6 +22,25 @@ parameters:
       minikube_start: |
         minikube start --driver=docker
 
+  wtf:
+    mods:
+      kubernetes:
+        enabled: true
+        kubeconfig: "/home/bebebeko/.kube/config"
+        namespaces:
+        - opensearch
+        - vector
+        objects:
+        - deployments
+        - nodes
+        - pods
+        position:
+          top: 0
+          left: 0
+          height: 3
+          width: 3
+        refreshInterval: 5m
+        title: "Build System"
 
   tmuxinator:
     windows:
