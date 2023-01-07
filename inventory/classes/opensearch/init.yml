@@ -4,6 +4,18 @@ parameters:
   opensearch_admin_username: admin
   opensearch_admin_password: admin
 
+  # tmux-io-context
+  opensearch_raw_tmux_io_context_index: "tmux-raw-tmux-io-context"
+  # without colors codes
+  opensearch_tmux_io_context_index: "tmux-tmux-io-context"
+
+  # tmux-raw-stream-lines
+  opensearch_raw_tmux_lines_index: "tmux-raw-tmux-lines"
+  # without colors codes
+  opensearch_tmux_lines_index: "tmux-tmux-lines"
+
+
+
 
   # http basic auth
   opensearch_vector_user: vector
