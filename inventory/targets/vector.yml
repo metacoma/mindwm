@@ -193,7 +193,6 @@ parameters:
             compression: "none"
             encoding:
               codec: json
-
           console:
             type: console
             inputs:
@@ -201,7 +200,6 @@ parameters:
               - tmux-io-context
             encoding:
               codec: json
-
           kafka-tmux-pane-linestream:
             type: kafka
             inputs:
@@ -211,7 +209,7 @@ parameters:
             compression: "none"
             encoding:
               codec: json
-          opensearch:
+          opensearch-raw-tmux-lines:
             type: elasticsearch
             inputs:
               - tmux-stream-split-line
@@ -226,6 +224,26 @@ parameters:
               verify_hostname: false
             healthcheck:
               enabled: false
+            bulk:
+              index: "${opensearch_raw_tmux_lines_index}-%F"
+
+          opensearch-raw-tmux-io-context:
+            type: elasticsearch
+            inputs:
+              - tmux-io-context
+            endpoint: https://${opensearch_helm_release}-cluster-master.${opensearch_k8s_namespace}:9200
+            api_version: "v7" # https://opensearch.org/faq/
+            auth: # TODO (@metacoma) use opensearch credentials from opensearch class
+              user: ${opensearch_vector_user}
+              password: ${opensearch_vector_password}
+              strategy: basic
+            tls:
+              verify_certificate: false
+              verify_hostname: false
+            healthcheck:
+              enabled: false
+            bulk:
+              index: "${opensearch_raw_tmux_io_context_index}-%F"
 
 #          kafka-tmux-pane-io-context:
 #            type: kafka
