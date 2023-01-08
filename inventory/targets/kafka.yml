@@ -33,7 +33,11 @@ parameters:
       strimzi_topic_create: |
         local ns=\${1}
         kubectl -n \${ns} apply -f ${compiled_dir}/strimzi/topic
-
+      strimzi_uninstall: |
+        local ns=\${1}
+        kubectl -n \${ns} delete configmap -l app.kubernetes.io/instance=${kafka_cluster_name} -l app.kubernetes.io/managed-by=strimzi-cluster-operator
+        kubectl -n \${ns} delete crds -l 'app=strimzi'
+        kubectl -n \${ns} delete deployment -l 'app=strimzi'
 
       delete_cluster: |
         local ns=${kafka_k8s_namespace}
@@ -41,10 +45,18 @@ parameters:
       kafka_cluster_deploy: |
         local ns=${kafka_k8s_namespace}
         strimzi_cluster_deploy \${ns}
-      kafka_topic_create:
+      kafka_topic_create: |
         strimzi_topic_create ${kafka_k8s_namespace}
+      kafka_uninstall: |
+        local ns=${kafka_k8s_namespace}
+        strimzi_uninstall \${ns}
 
 
-
+  tmuxinator:
+    windows:
+      kafka-connect:
+        panes:
+          - 'kubectl run kafka-consumer -ti --image=quay.io/strimzi/kafka:0.32.0-kafka-3.3.1 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server ${kafka_cluster_name}-kafka-external-0.${kafka_k8s_namespace}:${kafka_port} --topic tmux-pane-bytestream --from-beginning'
+          -
 
 

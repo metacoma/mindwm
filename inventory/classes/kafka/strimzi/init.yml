@@ -1,5 +1,6 @@
 classes:
   - kafka
+  - helm
 #  - kafka.strimzi.cluster
 #  - kafka.strimzi.topic
 parameters:
@@ -10,8 +11,14 @@ parameters:
         type: git
         output_path: files/github.com/jsonnet-libs/strimzi-libjsonnet
         ref: 45207bb16595acf8b3218d98841137f89df793ae
+      - type: helm
+        source: https://strimzi.io/charts/
+        chart_name: strimzi-kafka-operator
+        output_path: files/helm-charts/strimzi-kafka-operator
+        version: 0.32.0
 
   strimzi_jsonnet_version: 0.32
+
 
   tmuxinator:
     windows:
