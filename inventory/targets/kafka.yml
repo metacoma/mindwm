@@ -26,6 +26,8 @@ parameters:
       # move to strimzi.kafka-cluster class
       strimzi_delete_cluster: |
         local ns=\${1}
+        kubectl delete -f 'https://strimzi.io/install/latest?namespace=kafka' -n \${ns}
+        return
         kubectl -n \${ns} delete $(kubectl get strimzi -n \${ns} -o name)
       strimzi_cluster_deploy: |
         local ns=\${1}
@@ -38,6 +40,9 @@ parameters:
         kubectl -n \${ns} delete configmap -l app.kubernetes.io/instance=${kafka_cluster_name} -l app.kubernetes.io/managed-by=strimzi-cluster-operator
         kubectl -n \${ns} delete crds -l 'app=strimzi'
         kubectl -n \${ns} delete deployment -l 'app=strimzi'
+        # FIXME -l
+        kubectl -n kafka delete serviceaccount strimzi-cluster-operator
+        kubectl -n kafka delete configmap -l app=strimzi
 
       delete_cluster: |
         local ns=${kafka_k8s_namespace}
@@ -51,6 +56,11 @@ parameters:
         local ns=${kafka_k8s_namespace}
         strimzi_uninstall \${ns}
 
+      kafka_helm_install: |
+        helm upgrade --install --namespace ${kafka_k8s_namespace} ${kafka_cluster_name} ${kapitan_root}/files/helm-charts/strimzi-kafka-operator
+
+      kafka_helm_deinstall:
+        helm uninstall --namespace ${kafka_k8s_namespace} ${kafka_cluster_name}
 
   tmuxinator:
     windows:
