@@ -107,7 +107,7 @@ parameters:
               end
               function process(event, emit)
                 ch = event.log.message
-                tmux_pane_id = string.gsub(event.log.tmux_pane_id, " ", "")
+                tmux_pane_id = string.gsub(event.log.tmux_pane_id, "[^%0-9]", "")
                 event.log.tmux_pane_id = tmux_pane_id
                 -- newline
                 if ch == "0a" then
