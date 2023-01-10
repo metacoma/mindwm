@@ -27,6 +27,7 @@ parameters:
   bash:
     functions:
       # https://vector.dev/docs/setup/installation/package-managers/nix/
+      # TODO(@metacoma) parametrize vector release name
       vector_upgrade: |
         local values_file=\${1:-${compiled_dir}/helm/aggregator.yaml}
         shift
@@ -39,6 +40,13 @@ parameters:
           cd ${kapitan_root}/files/helm-charts/vector
           vim -R values.yaml
         )
+      # TODO(@metacoma) parametrize vector release name
+      vector_delete: |
+        (
+          cd ${kapitan_root}
+          helm uninstall -n ${vector_k8s_ns} vector
+        )
+
       vector_logs: |
         (
           kubectl -n ${vector_k8s_ns} logs $* vector-0
@@ -123,7 +131,7 @@ parameters:
                 end
               end
 
-          tmux-io-context:
+          tmux-pane-raw-io-context:
             type: "lua"
             version: "2"
             inputs:
@@ -197,15 +205,16 @@ parameters:
             type: console
             inputs:
               # - tmux-stream-split-line
-              - tmux-io-context
+              - tmux-pane-raw-io-context
             encoding:
               codec: json
-          kafka-tmux-pane-linestream:
+          kafka-tmux-pane-raw-linestream:
             type: kafka
             inputs:
               -  tmux-stream-split-line
             bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
-            topic: "${kafka_topic_tmux_linestream}"
+            # topic: "${kafka_topic_tmux_linestream}"
+            topic: "${kafka_topic_tmux_raw_linestream}" # linestream with shell color codes
             compression: "none"
             encoding:
               codec: json
@@ -230,7 +239,7 @@ parameters:
           opensearch-raw-tmux-io-context:
             type: elasticsearch
             inputs:
-              - tmux-io-context
+              - tmux-pane-raw-io-context
             endpoint: https://${opensearch_helm_release}-cluster-master.${opensearch_k8s_namespace}:9200
             api_version: "v7" # https://opensearch.org/faq/
             auth: # TODO (@metacoma) use opensearch credentials from opensearch class
@@ -245,15 +254,16 @@ parameters:
             bulk:
               index: "${opensearch_raw_tmux_io_context_index}-%F"
 
-#          kafka-tmux-pane-io-context:
-#            type: kafka
-#            inputs:
-#              - tmux-pane-io-context
-#            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
-#            topic: "${kafka_topic_tmux_io_context}"
-#            compression: "none"
-#            encoding:
-#              codec: json
+          kafka-tmux-pane-raw-io-context:
+            type: kafka
+            inputs:
+              - tmux-pane-raw-io-context
+              # - tmux-pane-io-context
+            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
+            topic: "${kafka_topic_tmux_raw_io_context}"
+            compression: "none"
+            encoding:
+              codec: json
 
   tmuxinator:
     windows:

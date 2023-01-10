@@ -12,6 +12,9 @@ classes:
   - kafka.topic.tmux-pane-linestream
   - kafka.topic.tmux-pane-io-context
 
+  - kafka.topic.tmux-pane-raw-linestream
+  - kafka.topic.tmux-pane-raw-io-context
+
   - helm
   - kafka.ui
 
@@ -68,5 +71,15 @@ parameters:
         panes:
           - 'kubectl run kafka-consumer -ti --image=quay.io/strimzi/kafka:0.32.0-kafka-3.3.1 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server ${kafka_cluster_name}-kafka-external-0.${kafka_k8s_namespace}:${kafka_port} --topic tmux-pane-bytestream --from-beginning'
           -
+      host-consumers:
+        pre:
+          - cd ${kapitan_root}/files/kafka
+          - . .venv/bin/activate
+          - ls -ltr simple.py
+        panes:
+          -
+            -
+          -
+            -
 
 
