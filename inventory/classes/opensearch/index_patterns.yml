@@ -1,0 +1,27 @@
+parameters:
+  kapitan:
+    compile:
+      - input_paths:
+          - templates/opensearch/create_index.sh
+        output_path: .
+        input_type: jinja2
+
+  # tmux-io-context
+  opensearch_raw_tmux_io_context_index: "tmux-raw-tmux-io-context"
+  # without colors codes
+  opensearch_tmux_io_context_index: "tmux-tmux-io-context"
+
+  # tmux-raw-stream-lines
+  opensearch_raw_tmux_lines_index: "tmux-raw-tmux-lines"
+  # without colors codes
+  opensearch_tmux_lines_index: "tmux-tmux-lines"
+
+  opensearch_index_patterns:
+    opensearch_raw_tmux_io_context_index:
+      name: ${opensearch_raw_tmux_io_context_index}
+    opensearch_tmux_io_context_index:
+      name: ${opensearch_tmux_io_context_index}
+    opensearch_raw_tmux_lines_index:
+      name: ${opensearch_raw_tmux_lines_index}
+    opensearch_tmux_lines_index:
+      name: ${opensearch_tmux_lines_index}
