@@ -158,7 +158,14 @@ parameters:
                       tmux_pane_id = tmux_pane_id,
                     }
                   }
-                  emit(event)
+                  --[[
+                  FIXME (@metacoma) without this ugly hack, this pipeline will generate
+                  empty io-context message like following:
+                    {"host":"nixos","message":{"input":"","metadata":{"tmux_pane_id":"%59"}},"source_type":"file_descriptor","timestamp":"2023-01-10T13:46:19.760164430Z","tmux_pane_id":"%59"}
+                  ]]
+                  if (event.log.message.output ~= nil and event.log.message.input ~= "") then
+                    emit(event)
+                  end
                   data[tmux_pane_id] = nil
                   line[tmux_pane_id] = ""
                   input[tmux_pane_id] = ""
