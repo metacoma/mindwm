@@ -11,6 +11,7 @@ classes:
   - kapitan.bash.compile-fetch
   - helm
   - opensearch
+  - opensearch.index_patterns
   - opensearch.helm
     #  - opensearch.dashboards
   - opensearch.dashboards.helm
@@ -48,15 +49,6 @@ parameters:
         curl -s -k -u vector:vectorvector `opensearch_api_endpoint`/$1
       opensearch_health: |
         opensearch_curl "_cluster/health?wait_for_status=yellow&timeout=50s" | jq '.status'
-
-
-  kapitan:
-    compile:
-      - input_paths:
-          - templates/opensearch/create_index.sh
-        output_path: .
-        input_type: jinja2
-
 
   wtf:
     mods:
