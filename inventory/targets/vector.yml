@@ -99,6 +99,15 @@ parameters:
             topics:
               - ${kafka_topic_tmux_io_context}
 
+          kafka-tmux-pane-linestream:
+            type: kafka
+            acknowledgements:
+              enabled: false
+            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
+            group_id: vector_kafka
+            topics:
+              - ${kafka_topic_tmux_linestream}
+
 #              _                        __
 #             | |                      / _|
 #             | |_ _ __ __ _ _ __  ___| |_ ___  _ __ _ __ ___  ___
@@ -121,10 +130,19 @@ parameters:
               .host = msg.host
               .metadata = msg.message.metadata
               del(.message)
-              #. = msg
-              #msg = parse_json!(string!(.message))
-              #msg.output = "XXX"
-              #.message = msg
+
+          kafka-linestream-to-elasticsearch:
+            type: "remap"
+            inputs:
+              - kafka-tmux-pane-linestream
+            source: |
+              msg, err = parse_json(.message)
+              .message = msg.message
+              .host = msg.host
+              .tmux_pane_id = msg.tmux_pane.id
+              del(.message)
+
+
           tmux-stream-split-line:
             type: "lua"
             version: "2"
@@ -300,6 +318,24 @@ parameters:
             type: elasticsearch
             inputs:
               - kafka-io-context-to-elasticsearch
+            endpoint: https://${opensearch_helm_release}-cluster-master.${opensearch_k8s_namespace}:9200
+            api_version: "v7" # https://opensearch.org/faq/
+            auth: # TODO (@metacoma) use opensearch credentials from opensearch class
+              user: ${opensearch_vector_user}
+              password: ${opensearch_vector_password}
+              strategy: basic
+            tls:
+              verify_certificate: false
+              verify_hostname: false
+            healthcheck:
+              enabled: false
+            bulk:
+              index: "${opensearch_tmux_io_context_index}-%F"
+
+          opensearch-tmux-pane-linestream:
+            type: elasticsearch
+            inputs:
+              - kafka-linestream-to-elasticsearch
             endpoint: https://${opensearch_helm_release}-cluster-master.${opensearch_k8s_namespace}:9200
             api_version: "v7" # https://opensearch.org/faq/
             auth: # TODO (@metacoma) use opensearch credentials from opensearch class
