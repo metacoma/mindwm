@@ -90,6 +90,14 @@ parameters:
             acknowledgements:
               enabled: false
 
+          kafka-tmux-pane-io-context:
+            type: kafka
+            acknowledgements:
+              enabled: false
+            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
+            group_id: vector_kafka
+            topics:
+              - ${kafka_topic_tmux_io_context}
 
 #              _                        __
 #             | |                      / _|
@@ -271,6 +279,24 @@ parameters:
             compression: "none"
             encoding:
               codec: json
+
+          opensearch-tmux-io-context:
+            type: elasticsearch
+            inputs:
+              - kafka-tmux-pane-io-context
+            endpoint: https://${opensearch_helm_release}-cluster-master.${opensearch_k8s_namespace}:9200
+            api_version: "v7" # https://opensearch.org/faq/
+            auth: # TODO (@metacoma) use opensearch credentials from opensearch class
+              user: ${opensearch_vector_user}
+              password: ${opensearch_vector_password}
+              strategy: basic
+            tls:
+              verify_certificate: false
+              verify_hostname: false
+            healthcheck:
+              enabled: false
+            bulk:
+              index: "${opensearch_tmux_io_context_index}-%F"
 
   tmuxinator:
     windows:
