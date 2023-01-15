@@ -1,6 +1,7 @@
 parameters:
   bash:
     functions:
+      # doesn't work :(
       session_reload: |
         bash -c '
           tmux kill-session -t ${target_name}
@@ -8,6 +9,18 @@ parameters:
           . ${compiled_dir}/functions.bash
           tmux_sesion_start
         ' &
+      kapitan_target_files: |
+        template_files=`kapitan_inventory | yq -r '.parameters.kapitan.compile[].input_paths[]'`
+        for template_file in \${template_files}; do
+          find ${kapitan_root}/inventory ${kapitan_root}/lib ${kapitan_root}/templates ${kapitan_root}/jsonnet -type f -path "*/\${template_file}"
+        done
+        reclass_classes=`kapitan_inventory | yq -r '.classes[]' | sed 's,\\.,/,'`
+        for reclass_class in \${reclass_classes}; do
+          find ${kapitan_root}/inventory/classes -type f | grep -m1 -E "(\${reclass_class}.yml|\${reclass_class}/init.yml)"
+        done
+        find ${kapitan_root}/inventory/targets -type f -name ${target_name}.yml | head -n1
+      kapitan_wait_compile:
+        ls `kapitan_target_files` | entr -p -c bash -c ". ${compiled_dir}/functions.bash && kapitan_compile"
 
 
   tmuxinator:
@@ -20,10 +33,6 @@ parameters:
             kapitan_edit_target
           - |
             echo kapitan_compile
-          # TODO metacoma nix-shell XXX
           - |
-            cd ${kapitan_root}
-            ls `
-              find inventory/targets/ -type f -iname '${target_name}.yml';
-              kapitan_inventory | yq -r '.parameters.kapitan.compile[].input_paths[]'
-            ` | entr -p -c bash -c ". ${compiled_dir}/functions.bash && kapitan_compile"
+            kapitan_wait_compile
+
