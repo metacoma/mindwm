@@ -118,7 +118,6 @@ parameters:
 #
 
         transforms:
-          # test
           kafka-io-context-to-elasticsearch:
             type: "remap"
             inputs:
@@ -137,7 +136,7 @@ parameters:
               - kafka-tmux-pane-linestream
             source: |
               msg, err = parse_json(.message)
-              .message = msg.message
+              .line = msg.message
               .host = msg.host
               .tmux_pane_id = msg.tmux_pane.id
               del(.message)
@@ -254,7 +253,9 @@ parameters:
             type: console
             inputs:
               # - tmux-stream-split-line
-              - tmux-pane-raw-io-context
+              # - kafka-linestream-to-elasticsearch
+              - kafka-tmux-pane-linestream
+              - kafka-io-context-to-elasticsearch
             encoding:
               codec: json
           kafka-tmux-pane-raw-linestream:
@@ -348,7 +349,7 @@ parameters:
             healthcheck:
               enabled: false
             bulk:
-              index: "${opensearch_tmux_io_context_index}-%F"
+              index: "${opensearch_tmux_lines_index}-%F"
 
   tmuxinator:
     windows:
