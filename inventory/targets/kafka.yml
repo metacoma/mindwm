@@ -75,11 +75,12 @@ parameters:
         pre:
           - cd ${kapitan_root}/files/kafka
           - . .venv/bin/activate
-          - ls -ltr simple.py
         panes:
+          # this "host" consumer remove the color codes from the io-context events
           -
-            -
+            - python ./kafka-tmux-pane-raw-io-context.py
+          # this "host" consumer remove the color codes from the lines events
           -
-            -
+            - python ./kafka-tmux-pane-raw-linestream.py
 
 
