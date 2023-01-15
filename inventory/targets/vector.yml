@@ -27,6 +27,7 @@ parameters:
   bash:
     functions:
       # https://vector.dev/docs/setup/installation/package-managers/nix/
+      # TODO(@metacoma) parametrize vector release name
       vector_upgrade: |
         local values_file=\${1:-${compiled_dir}/helm/aggregator.yaml}
         shift
@@ -39,6 +40,13 @@ parameters:
           cd ${kapitan_root}/files/helm-charts/vector
           vim -R values.yaml
         )
+      # TODO(@metacoma) parametrize vector release name
+      vector_delete: |
+        (
+          cd ${kapitan_root}
+          helm uninstall -n ${vector_k8s_ns} vector
+        )
+
       vector_logs: |
         (
           kubectl -n ${vector_k8s_ns} logs $* vector-0
@@ -82,6 +90,23 @@ parameters:
             acknowledgements:
               enabled: false
 
+          kafka-tmux-pane-io-context:
+            type: kafka
+            acknowledgements:
+              enabled: false
+            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
+            group_id: vector_kafka
+            topics:
+              - ${kafka_topic_tmux_io_context}
+
+          kafka-tmux-pane-linestream:
+            type: kafka
+            acknowledgements:
+              enabled: false
+            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
+            group_id: vector_kafka
+            topics:
+              - ${kafka_topic_tmux_linestream}
 
 #              _                        __
 #             | |                      / _|
@@ -93,6 +118,30 @@ parameters:
 #
 
         transforms:
+          kafka-io-context-to-elasticsearch:
+            type: "remap"
+            inputs:
+              - kafka-tmux-pane-io-context
+            source: |
+              msg, err = parse_json(.message)
+              .input = msg.message.input
+              .output = msg.message.output
+              .host = msg.host
+              .metadata = msg.message.metadata
+              del(.message)
+
+          kafka-linestream-to-elasticsearch:
+            type: "remap"
+            inputs:
+              - kafka-tmux-pane-linestream
+            source: |
+              msg, err = parse_json(.message)
+              .line = msg.message
+              .host = msg.host
+              .tmux_pane_id = msg.tmux_pane.id
+              del(.message)
+
+
           tmux-stream-split-line:
             type: "lua"
             version: "2"
@@ -107,7 +156,7 @@ parameters:
               end
               function process(event, emit)
                 ch = event.log.message
-                tmux_pane_id = string.gsub(event.log.tmux_pane_id, " ", "")
+                tmux_pane_id = string.gsub(event.log.tmux_pane_id, "[^%0-9]", "")
                 event.log.tmux_pane_id = tmux_pane_id
                 -- newline
                 if ch == "0a" then
@@ -123,7 +172,7 @@ parameters:
                 end
               end
 
-          tmux-io-context:
+          tmux-pane-raw-io-context:
             type: "lua"
             version: "2"
             inputs:
@@ -141,16 +190,23 @@ parameters:
                 ch = event.log.message
                 tmux_pane_id = string.gsub(event.log.tmux_pane_id, " ", "")
                 event.log.tmux_pane_id = tmux_pane_id
-                -- space
+                --[[
+                  FIXME (@metacoma) without this ugly hack, this pipeline will generate
+                  empty io-context message like following:
+                    {"host":"nixos","message":{"input":"","metadata":{"tmux_pane_id":"%59"}},"source_type":"file_descriptor","timestamp":"2023-01-10T13:46:19.760164430Z","tmux_pane_id":"%59"}
+                ]]
                 if ch == "20" and string.match(line[tmux_pane_id], ".*@.*") then
-                  event.log.message = {
-                    input = input[tmux_pane_id],
-                    output = data[tmux_pane_id],
-                    metadata = {
-                      tmux_pane_id = tmux_pane_id,
+                  -- we found a space character and the line matches the prompt regex
+                  if (data[tmux_pane_id] ~= nil and event.log.message.input ~= "" and data[tmux_pane_id] ~= {}) then
+                    event.log.message = {
+                      input = input[tmux_pane_id],
+                      output = table.concat(data[tmux_pane_id]),
+                      metadata = {
+                        tmux_pane_id = tmux_pane_id,
+                      }
                     }
-                  }
-                  emit(event)
+                    emit(event)
+                  end
                   data[tmux_pane_id] = nil
                   line[tmux_pane_id] = ""
                   input[tmux_pane_id] = ""
@@ -197,15 +253,18 @@ parameters:
             type: console
             inputs:
               # - tmux-stream-split-line
-              - tmux-io-context
+              # - kafka-linestream-to-elasticsearch
+              - kafka-tmux-pane-linestream
+              - kafka-io-context-to-elasticsearch
             encoding:
               codec: json
-          kafka-tmux-pane-linestream:
+          kafka-tmux-pane-raw-linestream:
             type: kafka
             inputs:
               -  tmux-stream-split-line
             bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
-            topic: "${kafka_topic_tmux_linestream}"
+            # topic: "${kafka_topic_tmux_linestream}"
+            topic: "${kafka_topic_tmux_raw_linestream}" # linestream with shell color codes
             compression: "none"
             encoding:
               codec: json
@@ -230,7 +289,7 @@ parameters:
           opensearch-raw-tmux-io-context:
             type: elasticsearch
             inputs:
-              - tmux-io-context
+              - tmux-pane-raw-io-context
             endpoint: https://${opensearch_helm_release}-cluster-master.${opensearch_k8s_namespace}:9200
             api_version: "v7" # https://opensearch.org/faq/
             auth: # TODO (@metacoma) use opensearch credentials from opensearch class
@@ -245,15 +304,52 @@ parameters:
             bulk:
               index: "${opensearch_raw_tmux_io_context_index}-%F"
 
-#          kafka-tmux-pane-io-context:
-#            type: kafka
-#            inputs:
-#              - tmux-pane-io-context
-#            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
-#            topic: "${kafka_topic_tmux_io_context}"
-#            compression: "none"
-#            encoding:
-#              codec: json
+          kafka-tmux-pane-raw-io-context:
+            type: kafka
+            inputs:
+              - tmux-pane-raw-io-context
+              # - tmux-pane-io-context
+            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
+            topic: "${kafka_topic_tmux_raw_io_context}"
+            compression: "none"
+            encoding:
+              codec: json
+
+          opensearch-tmux-io-context:
+            type: elasticsearch
+            inputs:
+              - kafka-io-context-to-elasticsearch
+            endpoint: https://${opensearch_helm_release}-cluster-master.${opensearch_k8s_namespace}:9200
+            api_version: "v7" # https://opensearch.org/faq/
+            auth: # TODO (@metacoma) use opensearch credentials from opensearch class
+              user: ${opensearch_vector_user}
+              password: ${opensearch_vector_password}
+              strategy: basic
+            tls:
+              verify_certificate: false
+              verify_hostname: false
+            healthcheck:
+              enabled: false
+            bulk:
+              index: "${opensearch_tmux_io_context_index}-%F"
+
+          opensearch-tmux-pane-linestream:
+            type: elasticsearch
+            inputs:
+              - kafka-linestream-to-elasticsearch
+            endpoint: https://${opensearch_helm_release}-cluster-master.${opensearch_k8s_namespace}:9200
+            api_version: "v7" # https://opensearch.org/faq/
+            auth: # TODO (@metacoma) use opensearch credentials from opensearch class
+              user: ${opensearch_vector_user}
+              password: ${opensearch_vector_password}
+              strategy: basic
+            tls:
+              verify_certificate: false
+              verify_hostname: false
+            healthcheck:
+              enabled: false
+            bulk:
+              index: "${opensearch_tmux_lines_index}-%F"
 
   tmuxinator:
     windows:

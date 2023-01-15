@@ -9,6 +9,9 @@ parameters:
   kafka_topic_tmux_linestream: "tmux-pane-linestream"
   kafka_topic_tmux_io_context: "tmux-pane-io-context"
 
+  kafka_topic_tmux_raw_linestream: "tmux-pane-raw-linestream"
+  kafka_topic_tmux_raw_io_context: "tmux-pane-raw-io-context"
+
   # this property should be the same with the name of kafka_cluster
   kafka_cluster_name: mindwm     # --.
                                  #   |

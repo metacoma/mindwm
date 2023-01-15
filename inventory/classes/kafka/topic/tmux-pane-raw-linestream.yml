@@ -1,0 +1,11 @@
+---
+parameters:
+  kafka_topics:
+    tmux-pane-raw-linestream:
+      name: ${kafka_topic_tmux_raw_linestream}
+      # 'spec' https://github.com/strimzi/strimzi-kafka-operator/blob/main/examples/topic/kafka-topic.yaml
+      partitions: 1
+      replicas: 1
+      config:
+        retention.ms: 60000 # 60 seconds
+        retention.bytes: 536870912 # 512 Mb
