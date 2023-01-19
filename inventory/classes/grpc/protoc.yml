@@ -1,0 +1,9 @@
+---
+parameters:
+  kapitan:
+    compile:
+      - input_paths:
+          - jsonnet/grpc/protoc.jsonnet
+        output_path: grpc
+        input_type: jsonnet
+        output_type: plain
