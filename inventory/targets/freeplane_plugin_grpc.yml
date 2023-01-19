@@ -27,6 +27,10 @@ parameters:
         (
           cd ${compiled_dir}/grpc
           cp freeplane.protoc ${freeplane_root}/freeplane_plugin_grpc/src/main/proto/freeplane.proto
+          protoc \
+            --ruby_out=${kapitan_root}/files/grpc/freeplane_grpc/ruby \
+            --python_out=${kapitan_root}/files/grpc/freeplane_grpc/python \
+            ./freeplane.protoc
         )
 
 
@@ -61,6 +65,7 @@ parameters:
       freeplane:
         pre:
           - cd ${freeplane_root}
+          - . ${compiled_dir}/functions.bash
         panes:
           -
             - nix-shell -p glibc
@@ -69,14 +74,19 @@ parameters:
       freeplane_plugin_grpc:
         pre:
           - cd ${freeplane_root}/freeplane_plugin_grpc
+          - . ${compiled_dir}/functions.bash
         panes:
           -
           -
       grpc_clients:
         pre:
-          - cd ${kapitan_root}/files/grpc/clients
+          - cd ${kapitan_root}/files/grpc/freeplane_grpc
+          - . ${compiled_dir}/functions.bash
         panes:
           -
-            -
+            - test -d python || mkdir python
+            - cd python
           -
+            - test -d ruby || mkdir ruby
             - nix-shell -p ruby
+            - cd ruby
