@@ -1,0 +1,82 @@
+classes:
+  - common
+  - mindwm
+  - vim
+  - tmuxinator
+  - tmuxinator.kapitan
+  - grpc.protoc
+  - bash.kapitan
+  - bash.script
+
+
+parameters:
+  target_name: freeplane_plugin_grpc
+
+  freeplane_root: ${kapitan_root}/files/github.com/freeplane
+
+  bash:
+    functions:
+      freeplane_build: |
+        cd ${freeplane_root}
+        bash ./gradle.sh build
+      freeplane_clean: |
+        cd ${freeplane_root}
+        bash ./gradle.sh clean
+
+      freeplane_grpc: |
+        (
+          cd ${compiled_dir}/grpc
+          cp freeplane.protoc ${freeplane_root}/freeplane_plugin_grpc/src/main/proto/freeplane.proto
+        )
+
+
+
+  grpc:
+    freeplane:
+      protoc_raw: |
+        syntax = "proto3";
+
+        option java_multiple_files = true;
+        option java_package = "org.freeplane.plugin.grpc";
+        option java_outer_classname = "HelloWorldProto";
+        option objc_class_prefix = "HLW";
+
+        package helloworld;
+
+        service Greeter {
+          rpc createChild (createChildRequest) returns (createChildResponse) {}
+        }
+
+        message createChildRequest {
+          string name = 1;
+        }
+
+        message createChildResponse {
+          string message = 1;
+        }
+
+
+  tmuxinator:
+    windows:
+      freeplane:
+        pre:
+          - cd ${freeplane_root}
+        panes:
+          -
+            - nix-shell -p glibc
+          -
+            - nix-shell -p glibc
+      freeplane_plugin_grpc:
+        pre:
+          - cd ${freeplane_root}/freeplane_plugin_grpc
+        panes:
+          -
+          -
+      grpc_clients:
+        pre:
+          - cd ${kapitan_root}/files/grpc/clients
+        panes:
+          -
+            -
+          -
+            - nix-shell -p ruby
