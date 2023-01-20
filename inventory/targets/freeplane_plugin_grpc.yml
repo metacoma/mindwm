@@ -14,6 +14,10 @@ parameters:
 
   freeplane_root: ${kapitan_root}/files/github.com/freeplane
 
+  grpc_ruby_docker:
+    repo: grpc/ruby
+    tag: latest
+
   bash:
     functions:
       freeplane_build: |
@@ -26,11 +30,26 @@ parameters:
       freeplane_grpc: |
         (
           cd ${compiled_dir}/grpc
-          cp freeplane.protoc ${freeplane_root}/freeplane_plugin_grpc/src/main/proto/freeplane.proto
+          cp freeplane.proto ${freeplane_root}/freeplane_plugin_grpc/src/main/proto/freeplane.proto
+
+          # ruby
+          test -d ruby_lib || mkdir ruby_lib/
+          docker run --rm 	\
+            -it 		\
+            -v `pwd`:/host 	\
+            -w /host            \
+            ${grpc_ruby_docker:repo}:${grpc_ruby_docker:tag} \
+            grpc_tools_ruby_protoc -I . --ruby_out=ruby_lib --grpc_out=ruby_lib ./freeplane.proto
+          cp -vr ${compiled_dir}/grpc/ruby_lib ${kapitan_root}/files/grpc/freeplane_grpc/ruby/lib
+
+          # python
           protoc \
-            --ruby_out=${kapitan_root}/files/grpc/freeplane_grpc/ruby \
             --python_out=${kapitan_root}/files/grpc/freeplane_grpc/python \
-            ./freeplane.protoc
+            ./freeplane.proto
+
+          # protoc \
+          # --ruby_out=${kapitan_root}/files/grpc/freeplane_grpc/ruby/lib \
+          #  ./helloworld.proto
         )
 
 
@@ -42,20 +61,20 @@ parameters:
 
         option java_multiple_files = true;
         option java_package = "org.freeplane.plugin.grpc";
-        option java_outer_classname = "HelloWorldProto";
-        option objc_class_prefix = "HLW";
+        option java_outer_classname = "freeplane";
+        option objc_class_prefix = "FP";
 
-        package helloworld;
+        package freeplane;
 
-        service Greeter {
-          rpc createChild (createChildRequest) returns (createChildResponse) {}
+        service Freeplane {
+          rpc CreateChild (CreateChildRequest) returns (CreateChildResponse) {}
         }
 
-        message createChildRequest {
+        message CreateChildRequest {
           string name = 1;
         }
 
-        message createChildResponse {
+        message CreateChildResponse {
           string message = 1;
         }
 
@@ -84,9 +103,11 @@ parameters:
           - . ${compiled_dir}/functions.bash
         panes:
           -
+            # python
             - test -d python || mkdir python
             - cd python
           -
-            - test -d ruby || mkdir ruby
+            # ruby
+            - test -d ruby/lib || mkdir -p ruby/lib
             - nix-shell -p ruby
             - cd ruby
