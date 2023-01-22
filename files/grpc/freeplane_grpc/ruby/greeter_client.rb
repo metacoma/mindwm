@@ -23,15 +23,14 @@ lib_dir = File.join(this_dir, 'lib')
 $LOAD_PATH.unshift(lib_dir) unless $LOAD_PATH.include?(lib_dir)
 
 require 'grpc'
-require 'freeplane_services_pb'
+require 'helloworld_services_pb'
 
 def main
   user = ARGV.size > 0 ?  ARGV[0] : 'world'
   hostname = ARGV.size > 1 ?  ARGV[1] : 'localhost:50051'
-  stub = Freeplane::Freeplane::Stub.new(hostname, :this_channel_is_insecure)
+  stub = Helloworld::Greeter::Stub.new(hostname, :this_channel_is_insecure)
   begin
-    #message = stub.CreateChild(Freeplane::CreateChildRequest.new(name: user)).message
-    message = stub.create_child(Freeplane::CreateChildRequest.new(name: user)).message
+    message = stub.say_hello(Helloworld::HelloRequest.new(name: user)).message
     p "Greeting: #{message}"
   rescue GRPC::BadStatus => e
     abort "ERROR: #{e.message}"
