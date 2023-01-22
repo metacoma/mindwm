@@ -31,8 +31,10 @@ def main
   stub = Freeplane::Freeplane::Stub.new(hostname, :this_channel_is_insecure)
   begin
     #message = stub.CreateChild(Freeplane::CreateChildRequest.new(name: user)).message
-    message = stub.create_child(Freeplane::CreateChildRequest.new(name: user)).message
-    p "Greeting: #{message}"
+    node = stub.create_child(Freeplane::CreateChildRequest.new(name: user))
+    p node
+    #p "Node_id: #{node.node_id}"
+    #p "Text: #{node.text}"
   rescue GRPC::BadStatus => e
     abort "ERROR: #{e.message}"
   end
