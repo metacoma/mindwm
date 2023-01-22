@@ -42,7 +42,8 @@ parameters:
             -w /host            \
             ${grpc_ruby_docker:repo}:${grpc_ruby_docker:tag} \
             grpc_tools_ruby_protoc -I . --ruby_out=ruby_lib --grpc_out=ruby_lib ./freeplane.proto
-          cp -vr ${compiled_dir}/grpc/ruby_lib ${kapitan_root}/files/grpc/freeplane_grpc/ruby/lib
+
+          cp -v ${compiled_dir}/grpc/ruby_lib/* ${kapitan_root}/files/grpc/freeplane_grpc/ruby/lib/
 
           # python
           protoc \
@@ -77,7 +78,8 @@ parameters:
         }
 
         message CreateChildResponse {
-          string message = 1;
+          string node_id = 1;
+          string node_text = 2;
         }
 
 

@@ -8,7 +8,8 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :name, :string, 1
   end
   add_message "freeplane.CreateChildResponse" do
-    optional :message, :string, 1
+    optional :node_id, :string, 1
+    optional :node_text, :string, 2
   end
 end
 
