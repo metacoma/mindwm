@@ -11,9 +11,17 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     optional :node_id, :string, 1
     optional :node_text, :string, 2
   end
+  add_message "freeplane.DeleteChildRequest" do
+    optional :node_id, :string, 1
+  end
+  add_message "freeplane.DeleteChildResponse" do
+    optional :success, :bool, 1
+  end
 end
 
 module Freeplane
   CreateChildRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.CreateChildRequest").msgclass
   CreateChildResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.CreateChildResponse").msgclass
+  DeleteChildRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.DeleteChildRequest").msgclass
+  DeleteChildResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.DeleteChildResponse").msgclass
 end

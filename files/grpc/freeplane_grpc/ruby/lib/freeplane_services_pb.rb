@@ -15,6 +15,7 @@ module Freeplane
       self.service_name = 'freeplane.Freeplane'
 
       rpc :CreateChild, CreateChildRequest, CreateChildResponse
+      rpc :DeleteChild, DeleteChildRequest, DeleteChildResponse
     end
 
     Stub = Service.rpc_stub_class
