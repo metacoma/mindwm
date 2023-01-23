@@ -14,12 +14,14 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x66reeplane.proto\x12\tfreeplane\"\"\n\x12\x43reateChildRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"9\n\x13\x43reateChildResponse\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x11\n\tnode_text\x18\x02 \x01(\t2[\n\tFreeplane\x12N\n\x0b\x43reateChild\x12\x1d.freeplane.CreateChildRequest\x1a\x1e.freeplane.CreateChildResponse\"\x00\x42-\n\x19org.freeplane.plugin.grpcB\tfreeplaneP\x01\xa2\x02\x02\x46Pb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x66reeplane.proto\x12\tfreeplane\"\"\n\x12\x43reateChildRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"9\n\x13\x43reateChildResponse\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x11\n\tnode_text\x18\x02 \x01(\t\"%\n\x12\x44\x65leteChildRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\"&\n\x13\x44\x65leteChildResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xab\x01\n\tFreeplane\x12N\n\x0b\x43reateChild\x12\x1d.freeplane.CreateChildRequest\x1a\x1e.freeplane.CreateChildResponse\"\x00\x12N\n\x0b\x44\x65leteChild\x12\x1d.freeplane.DeleteChildRequest\x1a\x1e.freeplane.DeleteChildResponse\"\x00\x42-\n\x19org.freeplane.plugin.grpcB\tfreeplaneP\x01\xa2\x02\x02\x46Pb\x06proto3')
 
 
 
 _CREATECHILDREQUEST = DESCRIPTOR.message_types_by_name['CreateChildRequest']
 _CREATECHILDRESPONSE = DESCRIPTOR.message_types_by_name['CreateChildResponse']
+_DELETECHILDREQUEST = DESCRIPTOR.message_types_by_name['DeleteChildRequest']
+_DELETECHILDRESPONSE = DESCRIPTOR.message_types_by_name['DeleteChildResponse']
 CreateChildRequest = _reflection.GeneratedProtocolMessageType('CreateChildRequest', (_message.Message,), {
   'DESCRIPTOR' : _CREATECHILDREQUEST,
   '__module__' : 'freeplane_pb2'
@@ -34,6 +36,20 @@ CreateChildResponse = _reflection.GeneratedProtocolMessageType('CreateChildRespo
   })
 _sym_db.RegisterMessage(CreateChildResponse)
 
+DeleteChildRequest = _reflection.GeneratedProtocolMessageType('DeleteChildRequest', (_message.Message,), {
+  'DESCRIPTOR' : _DELETECHILDREQUEST,
+  '__module__' : 'freeplane_pb2'
+  # @@protoc_insertion_point(class_scope:freeplane.DeleteChildRequest)
+  })
+_sym_db.RegisterMessage(DeleteChildRequest)
+
+DeleteChildResponse = _reflection.GeneratedProtocolMessageType('DeleteChildResponse', (_message.Message,), {
+  'DESCRIPTOR' : _DELETECHILDRESPONSE,
+  '__module__' : 'freeplane_pb2'
+  # @@protoc_insertion_point(class_scope:freeplane.DeleteChildResponse)
+  })
+_sym_db.RegisterMessage(DeleteChildResponse)
+
 _FREEPLANE = DESCRIPTOR.services_by_name['Freeplane']
 if _descriptor._USE_C_DESCRIPTORS == False:
 
@@ -43,6 +59,10 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _CREATECHILDREQUEST._serialized_end=64
   _CREATECHILDRESPONSE._serialized_start=66
   _CREATECHILDRESPONSE._serialized_end=123
-  _FREEPLANE._serialized_start=125
-  _FREEPLANE._serialized_end=216
+  _DELETECHILDREQUEST._serialized_start=125
+  _DELETECHILDREQUEST._serialized_end=162
+  _DELETECHILDRESPONSE._serialized_start=164
+  _DELETECHILDRESPONSE._serialized_end=202
+  _FREEPLANE._serialized_start=205
+  _FREEPLANE._serialized_end=376
 # @@protoc_insertion_point(module_scope)

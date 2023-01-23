@@ -29,15 +29,25 @@ def main
   user = ARGV.size > 0 ?  ARGV[0] : 'world'
   hostname = ARGV.size > 1 ?  ARGV[1] : 'localhost:50051'
   stub = Freeplane::Freeplane::Stub.new(hostname, :this_channel_is_insecure)
+
+  # create child
+
   begin
-    #message = stub.CreateChild(Freeplane::CreateChildRequest.new(name: user)).message
     node = stub.create_child(Freeplane::CreateChildRequest.new(name: user))
     p node
-    #p "Node_id: #{node.node_id}"
-    #p "Text: #{node.text}"
   rescue GRPC::BadStatus => e
     abort "ERROR: #{e.message}"
   end
+
+  # delete child
+
+#  node_id = "ID_763827590"
+#  begin
+#    response = stub.delete_child(Freeplane::DeleteChildRequest.new(node_id: node_id))
+#    p response
+#  rescue GRPC::BadStatus => e
+#    abort "ERROR: #{e.message}"
+#  end
 end
 
 main

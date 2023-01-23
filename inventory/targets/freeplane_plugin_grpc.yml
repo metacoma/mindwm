@@ -70,7 +70,8 @@ parameters:
         package freeplane;
 
         service Freeplane {
-          rpc CreateChild (CreateChildRequest) returns (CreateChildResponse) {}
+          rpc CreateChild (CreateChildRequest) returns (CreateChildResponse) {};
+          rpc DeleteChild (DeleteChildRequest) returns (DeleteChildResponse) {};
         }
 
         message CreateChildRequest {
@@ -80,6 +81,13 @@ parameters:
         message CreateChildResponse {
           string node_id = 1;
           string node_text = 2;
+        }
+
+        message DeleteChildRequest {
+          string node_id = 1;
+        }
+        message DeleteChildResponse {
+          bool success = 1;
         }
 
 
@@ -101,6 +109,7 @@ parameters:
         panes:
           -
           -
+            - vim -O freeplane_plugin_grpc/src/main/{proto,java/org/freeplane/plugin/grpc}/*
       grpc:
         pre:
           - cd ${kapitan_root}/files/grpc/grpc
