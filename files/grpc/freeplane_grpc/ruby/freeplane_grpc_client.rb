@@ -39,15 +39,26 @@ def main
     abort "ERROR: #{e.message}"
   end
 
-  # delete child
-
   node_id = node["node_id"]
+
+
+  # add node property
+  #
   begin
-    response = stub.delete_child(Freeplane::DeleteChildRequest.new(node_id: node_id))
+    response = stub.node_property_add(Freeplane::NodePropertyAddRequest.new(node_id: node_id, property_name: "hello", property_value: "world"))
     p response
   rescue GRPC::BadStatus => e
     abort "ERROR: #{e.message}"
   end
+
+  # delete child
+#  begin
+#    response = stub.delete_child(Freeplane::DeleteChildRequest.new(node_id: node_id))
+#    p response
+#  rescue GRPC::BadStatus => e
+#    abort "ERROR: #{e.message}"
+#  end
+
 end
 
 main
