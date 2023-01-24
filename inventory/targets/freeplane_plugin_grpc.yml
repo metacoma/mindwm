@@ -101,13 +101,15 @@ parameters:
           -
             - nix-shell -p glibc
           -
-            - nix-shell -p glibc
+            - nix-shell -p ruby
+            - cd ${kapitan_root}/files/grpc/freeplane_grpc/ruby
       freeplane_plugin_grpc:
         pre:
-          - cd ${freeplane_root}/freeplane_plugin_grpc
+          - cd ${freeplane_root}/
           - . ${compiled_dir}/functions.bash
         panes:
           -
+            - cd freeplane_plugin_grpc
           -
             - vim -O freeplane_plugin_grpc/src/main/{proto,java/org/freeplane/plugin/grpc}/*
       grpc:
