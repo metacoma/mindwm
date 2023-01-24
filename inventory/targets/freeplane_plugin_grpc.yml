@@ -72,7 +72,7 @@ parameters:
         service Freeplane {
           rpc CreateChild (CreateChildRequest) returns (CreateChildResponse) {};
           rpc DeleteChild (DeleteChildRequest) returns (DeleteChildResponse) {};
-          rpc NodePropertyAdd (NodePropertyAddRequest) returns (NodePropertyAddResponse) {};
+          rpc NodeAttributeAdd (NodeAttributeAddRequest) returns (NodeAttributeAddResponse) {};
         }
 
         message CreateChildRequest {
@@ -92,13 +92,13 @@ parameters:
         }
 
 
-        message NodePropertyAddRequest {
+        message NodeAttributeAddRequest {
           string node_id = 1;
           string property_name = 2;
           string property_value = 3;
         }
 
-        message NodePropertyAddResponse {
+        message NodeAttributeAddResponse {
           bool success = 1;
         }
 

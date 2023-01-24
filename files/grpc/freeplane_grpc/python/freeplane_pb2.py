@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x66reeplane.proto\x12\tfreeplane\"\"\n\x12\x43reateChildRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"9\n\x13\x43reateChildResponse\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x11\n\tnode_text\x18\x02 \x01(\t\"%\n\x12\x44\x65leteChildRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\"&\n\x13\x44\x65leteChildResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"X\n\x16NodePropertyAddRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x15\n\rproperty_name\x18\x02 \x01(\t\x12\x16\n\x0eproperty_value\x18\x03 \x01(\t\"*\n\x17NodePropertyAddResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\x87\x02\n\tFreeplane\x12N\n\x0b\x43reateChild\x12\x1d.freeplane.CreateChildRequest\x1a\x1e.freeplane.CreateChildResponse\"\x00\x12N\n\x0b\x44\x65leteChild\x12\x1d.freeplane.DeleteChildRequest\x1a\x1e.freeplane.DeleteChildResponse\"\x00\x12Z\n\x0fNodePropertyAdd\x12!.freeplane.NodePropertyAddRequest\x1a\".freeplane.NodePropertyAddResponse\"\x00\x42-\n\x19org.freeplane.plugin.grpcB\tfreeplaneP\x01\xa2\x02\x02\x46Pb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x66reeplane.proto\x12\tfreeplane\"\"\n\x12\x43reateChildRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"9\n\x13\x43reateChildResponse\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x11\n\tnode_text\x18\x02 \x01(\t\"%\n\x12\x44\x65leteChildRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\"&\n\x13\x44\x65leteChildResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"Y\n\x17NodeAttributeAddRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x15\n\rproperty_name\x18\x02 \x01(\t\x12\x16\n\x0eproperty_value\x18\x03 \x01(\t\"+\n\x18NodeAttributeAddResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\x8a\x02\n\tFreeplane\x12N\n\x0b\x43reateChild\x12\x1d.freeplane.CreateChildRequest\x1a\x1e.freeplane.CreateChildResponse\"\x00\x12N\n\x0b\x44\x65leteChild\x12\x1d.freeplane.DeleteChildRequest\x1a\x1e.freeplane.DeleteChildResponse\"\x00\x12]\n\x10NodeAttributeAdd\x12\".freeplane.NodeAttributeAddRequest\x1a#.freeplane.NodeAttributeAddResponse\"\x00\x42-\n\x19org.freeplane.plugin.grpcB\tfreeplaneP\x01\xa2\x02\x02\x46Pb\x06proto3')
 
 
 
@@ -22,8 +22,8 @@ _CREATECHILDREQUEST = DESCRIPTOR.message_types_by_name['CreateChildRequest']
 _CREATECHILDRESPONSE = DESCRIPTOR.message_types_by_name['CreateChildResponse']
 _DELETECHILDREQUEST = DESCRIPTOR.message_types_by_name['DeleteChildRequest']
 _DELETECHILDRESPONSE = DESCRIPTOR.message_types_by_name['DeleteChildResponse']
-_NODEPROPERTYADDREQUEST = DESCRIPTOR.message_types_by_name['NodePropertyAddRequest']
-_NODEPROPERTYADDRESPONSE = DESCRIPTOR.message_types_by_name['NodePropertyAddResponse']
+_NODEATTRIBUTEADDREQUEST = DESCRIPTOR.message_types_by_name['NodeAttributeAddRequest']
+_NODEATTRIBUTEADDRESPONSE = DESCRIPTOR.message_types_by_name['NodeAttributeAddResponse']
 CreateChildRequest = _reflection.GeneratedProtocolMessageType('CreateChildRequest', (_message.Message,), {
   'DESCRIPTOR' : _CREATECHILDREQUEST,
   '__module__' : 'freeplane_pb2'
@@ -52,19 +52,19 @@ DeleteChildResponse = _reflection.GeneratedProtocolMessageType('DeleteChildRespo
   })
 _sym_db.RegisterMessage(DeleteChildResponse)
 
-NodePropertyAddRequest = _reflection.GeneratedProtocolMessageType('NodePropertyAddRequest', (_message.Message,), {
-  'DESCRIPTOR' : _NODEPROPERTYADDREQUEST,
+NodeAttributeAddRequest = _reflection.GeneratedProtocolMessageType('NodeAttributeAddRequest', (_message.Message,), {
+  'DESCRIPTOR' : _NODEATTRIBUTEADDREQUEST,
   '__module__' : 'freeplane_pb2'
-  # @@protoc_insertion_point(class_scope:freeplane.NodePropertyAddRequest)
+  # @@protoc_insertion_point(class_scope:freeplane.NodeAttributeAddRequest)
   })
-_sym_db.RegisterMessage(NodePropertyAddRequest)
+_sym_db.RegisterMessage(NodeAttributeAddRequest)
 
-NodePropertyAddResponse = _reflection.GeneratedProtocolMessageType('NodePropertyAddResponse', (_message.Message,), {
-  'DESCRIPTOR' : _NODEPROPERTYADDRESPONSE,
+NodeAttributeAddResponse = _reflection.GeneratedProtocolMessageType('NodeAttributeAddResponse', (_message.Message,), {
+  'DESCRIPTOR' : _NODEATTRIBUTEADDRESPONSE,
   '__module__' : 'freeplane_pb2'
-  # @@protoc_insertion_point(class_scope:freeplane.NodePropertyAddResponse)
+  # @@protoc_insertion_point(class_scope:freeplane.NodeAttributeAddResponse)
   })
-_sym_db.RegisterMessage(NodePropertyAddResponse)
+_sym_db.RegisterMessage(NodeAttributeAddResponse)
 
 _FREEPLANE = DESCRIPTOR.services_by_name['Freeplane']
 if _descriptor._USE_C_DESCRIPTORS == False:
@@ -79,10 +79,10 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _DELETECHILDREQUEST._serialized_end=162
   _DELETECHILDRESPONSE._serialized_start=164
   _DELETECHILDRESPONSE._serialized_end=202
-  _NODEPROPERTYADDREQUEST._serialized_start=204
-  _NODEPROPERTYADDREQUEST._serialized_end=292
-  _NODEPROPERTYADDRESPONSE._serialized_start=294
-  _NODEPROPERTYADDRESPONSE._serialized_end=336
-  _FREEPLANE._serialized_start=339
-  _FREEPLANE._serialized_end=602
+  _NODEATTRIBUTEADDREQUEST._serialized_start=204
+  _NODEATTRIBUTEADDREQUEST._serialized_end=293
+  _NODEATTRIBUTEADDRESPONSE._serialized_start=295
+  _NODEATTRIBUTEADDRESPONSE._serialized_end=338
+  _FREEPLANE._serialized_start=341
+  _FREEPLANE._serialized_end=607
 # @@protoc_insertion_point(module_scope)
