@@ -41,13 +41,13 @@ def main
 
   # delete child
 
-#  node_id = "ID_763827590"
-#  begin
-#    response = stub.delete_child(Freeplane::DeleteChildRequest.new(node_id: node_id))
-#    p response
-#  rescue GRPC::BadStatus => e
-#    abort "ERROR: #{e.message}"
-#  end
+  node_id = node["node_id"]
+  begin
+    response = stub.delete_child(Freeplane::DeleteChildRequest.new(node_id: node_id))
+    p response
+  rescue GRPC::BadStatus => e
+    abort "ERROR: #{e.message}"
+  end
 end
 
 main
