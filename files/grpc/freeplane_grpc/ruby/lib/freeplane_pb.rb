@@ -17,12 +17,12 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "freeplane.DeleteChildResponse" do
     optional :success, :bool, 1
   end
-  add_message "freeplane.NodePropertyAddRequest" do
+  add_message "freeplane.NodeAttributeAddRequest" do
     optional :node_id, :string, 1
     optional :property_name, :string, 2
     optional :property_value, :string, 3
   end
-  add_message "freeplane.NodePropertyAddResponse" do
+  add_message "freeplane.NodeAttributeAddResponse" do
     optional :success, :bool, 1
   end
 end
@@ -32,6 +32,6 @@ module Freeplane
   CreateChildResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.CreateChildResponse").msgclass
   DeleteChildRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.DeleteChildRequest").msgclass
   DeleteChildResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.DeleteChildResponse").msgclass
-  NodePropertyAddRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodePropertyAddRequest").msgclass
-  NodePropertyAddResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodePropertyAddResponse").msgclass
+  NodeAttributeAddRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeAttributeAddRequest").msgclass
+  NodeAttributeAddResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeAttributeAddResponse").msgclass
 end
