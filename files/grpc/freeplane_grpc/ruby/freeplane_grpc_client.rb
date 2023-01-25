@@ -45,7 +45,15 @@ def main
   # add node property
   #
   begin
-    response = stub.node_property_add(Freeplane::NodePropertyAddRequest.new(node_id: node_id, property_name: "hello", property_value: "world"))
+    response = stub.node_attribute_add(Freeplane::NodeAttributeAddRequest.new(node_id: node_id, attribute_name: "hello", attribute_value: "world"))
+    p response
+  rescue GRPC::BadStatus => e
+    abort "ERROR: #{e.message}"
+  end
+
+
+  begin
+    response = stub.node_link_set(Freeplane::NodeLinkSetRequest.new(node_id: node_id, link: "http://google.com"))
     p response
   rescue GRPC::BadStatus => e
     abort "ERROR: #{e.message}"
