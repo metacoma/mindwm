@@ -39,6 +39,12 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "freeplane.NodeDetailsSetResponse" do
     optional :success, :bool, 1
   end
+  add_message "freeplane.GroovyRequest" do
+    optional :groovy_code, :string, 1
+  end
+  add_message "freeplane.GroovyResponse" do
+    optional :success, :bool, 1
+  end
 end
 
 module Freeplane
@@ -52,4 +58,6 @@ module Freeplane
   NodeLinkSetResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeLinkSetResponse").msgclass
   NodeDetailsSetRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeDetailsSetRequest").msgclass
   NodeDetailsSetResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeDetailsSetResponse").msgclass
+  GroovyRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.GroovyRequest").msgclass
+  GroovyResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.GroovyResponse").msgclass
 end

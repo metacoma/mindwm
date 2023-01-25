@@ -19,6 +19,7 @@ module Freeplane
       rpc :NodeAttributeAdd, NodeAttributeAddRequest, NodeAttributeAddResponse
       rpc :NodeLinkSet, NodeLinkSetRequest, NodeLinkSetResponse
       rpc :NodeDetailsSet, NodeDetailsSetRequest, NodeDetailsSetResponse
+      rpc :Groovy, GroovyRequest, GroovyResponse
     end
 
     Stub = Service.rpc_stub_class
