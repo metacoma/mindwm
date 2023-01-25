@@ -32,6 +32,13 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "freeplane.NodeLinkSetResponse" do
     optional :success, :bool, 1
   end
+  add_message "freeplane.NodeDetailsSetRequest" do
+    optional :node_id, :string, 1
+    optional :details, :string, 2
+  end
+  add_message "freeplane.NodeDetailsSetResponse" do
+    optional :success, :bool, 1
+  end
 end
 
 module Freeplane
@@ -43,4 +50,6 @@ module Freeplane
   NodeAttributeAddResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeAttributeAddResponse").msgclass
   NodeLinkSetRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeLinkSetRequest").msgclass
   NodeLinkSetResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeLinkSetResponse").msgclass
+  NodeDetailsSetRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeDetailsSetRequest").msgclass
+  NodeDetailsSetResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeDetailsSetResponse").msgclass
 end
