@@ -59,6 +59,13 @@ def main
     abort "ERROR: #{e.message}"
   end
 
+  begin
+    response = stub.node_details_set(Freeplane::NodeDetailsSetRequest.new(node_id: node_id, details: "hello world"))
+    p response
+  rescue GRPC::BadStatus => e
+    abort "ERROR: #{e.message}"
+  end
+
   # delete child
 #  begin
 #    response = stub.delete_child(Freeplane::DeleteChildRequest.new(node_id: node_id))
