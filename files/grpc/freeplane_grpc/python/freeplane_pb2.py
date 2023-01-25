@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x66reeplane.proto\x12\tfreeplane\"\"\n\x12\x43reateChildRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"9\n\x13\x43reateChildResponse\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x11\n\tnode_text\x18\x02 \x01(\t\"%\n\x12\x44\x65leteChildRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\"&\n\x13\x44\x65leteChildResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"Y\n\x17NodeAttributeAddRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x15\n\rproperty_name\x18\x02 \x01(\t\x12\x16\n\x0eproperty_value\x18\x03 \x01(\t\"+\n\x18NodeAttributeAddResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\x8a\x02\n\tFreeplane\x12N\n\x0b\x43reateChild\x12\x1d.freeplane.CreateChildRequest\x1a\x1e.freeplane.CreateChildResponse\"\x00\x12N\n\x0b\x44\x65leteChild\x12\x1d.freeplane.DeleteChildRequest\x1a\x1e.freeplane.DeleteChildResponse\"\x00\x12]\n\x10NodeAttributeAdd\x12\".freeplane.NodeAttributeAddRequest\x1a#.freeplane.NodeAttributeAddResponse\"\x00\x42-\n\x19org.freeplane.plugin.grpcB\tfreeplaneP\x01\xa2\x02\x02\x46Pb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x66reeplane.proto\x12\tfreeplane\"\"\n\x12\x43reateChildRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"9\n\x13\x43reateChildResponse\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x11\n\tnode_text\x18\x02 \x01(\t\"%\n\x12\x44\x65leteChildRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\"&\n\x13\x44\x65leteChildResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"[\n\x17NodeAttributeAddRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x16\n\x0e\x61ttribute_name\x18\x02 \x01(\t\x12\x17\n\x0f\x61ttribute_value\x18\x03 \x01(\t\"+\n\x18NodeAttributeAddResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"3\n\x12NodeLinkSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0c\n\x04link\x18\x02 \x01(\t\"&\n\x13NodeLinkSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xda\x02\n\tFreeplane\x12N\n\x0b\x43reateChild\x12\x1d.freeplane.CreateChildRequest\x1a\x1e.freeplane.CreateChildResponse\"\x00\x12N\n\x0b\x44\x65leteChild\x12\x1d.freeplane.DeleteChildRequest\x1a\x1e.freeplane.DeleteChildResponse\"\x00\x12]\n\x10NodeAttributeAdd\x12\".freeplane.NodeAttributeAddRequest\x1a#.freeplane.NodeAttributeAddResponse\"\x00\x12N\n\x0bNodeLinkSet\x12\x1d.freeplane.NodeLinkSetRequest\x1a\x1e.freeplane.NodeLinkSetResponse\"\x00\x42-\n\x19org.freeplane.plugin.grpcB\tfreeplaneP\x01\xa2\x02\x02\x46Pb\x06proto3')
 
 
 
@@ -24,6 +24,8 @@ _DELETECHILDREQUEST = DESCRIPTOR.message_types_by_name['DeleteChildRequest']
 _DELETECHILDRESPONSE = DESCRIPTOR.message_types_by_name['DeleteChildResponse']
 _NODEATTRIBUTEADDREQUEST = DESCRIPTOR.message_types_by_name['NodeAttributeAddRequest']
 _NODEATTRIBUTEADDRESPONSE = DESCRIPTOR.message_types_by_name['NodeAttributeAddResponse']
+_NODELINKSETREQUEST = DESCRIPTOR.message_types_by_name['NodeLinkSetRequest']
+_NODELINKSETRESPONSE = DESCRIPTOR.message_types_by_name['NodeLinkSetResponse']
 CreateChildRequest = _reflection.GeneratedProtocolMessageType('CreateChildRequest', (_message.Message,), {
   'DESCRIPTOR' : _CREATECHILDREQUEST,
   '__module__' : 'freeplane_pb2'
@@ -66,6 +68,20 @@ NodeAttributeAddResponse = _reflection.GeneratedProtocolMessageType('NodeAttribu
   })
 _sym_db.RegisterMessage(NodeAttributeAddResponse)
 
+NodeLinkSetRequest = _reflection.GeneratedProtocolMessageType('NodeLinkSetRequest', (_message.Message,), {
+  'DESCRIPTOR' : _NODELINKSETREQUEST,
+  '__module__' : 'freeplane_pb2'
+  # @@protoc_insertion_point(class_scope:freeplane.NodeLinkSetRequest)
+  })
+_sym_db.RegisterMessage(NodeLinkSetRequest)
+
+NodeLinkSetResponse = _reflection.GeneratedProtocolMessageType('NodeLinkSetResponse', (_message.Message,), {
+  'DESCRIPTOR' : _NODELINKSETRESPONSE,
+  '__module__' : 'freeplane_pb2'
+  # @@protoc_insertion_point(class_scope:freeplane.NodeLinkSetResponse)
+  })
+_sym_db.RegisterMessage(NodeLinkSetResponse)
+
 _FREEPLANE = DESCRIPTOR.services_by_name['Freeplane']
 if _descriptor._USE_C_DESCRIPTORS == False:
 
@@ -80,9 +96,13 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _DELETECHILDRESPONSE._serialized_start=164
   _DELETECHILDRESPONSE._serialized_end=202
   _NODEATTRIBUTEADDREQUEST._serialized_start=204
-  _NODEATTRIBUTEADDREQUEST._serialized_end=293
-  _NODEATTRIBUTEADDRESPONSE._serialized_start=295
-  _NODEATTRIBUTEADDRESPONSE._serialized_end=338
-  _FREEPLANE._serialized_start=341
-  _FREEPLANE._serialized_end=607
+  _NODEATTRIBUTEADDREQUEST._serialized_end=295
+  _NODEATTRIBUTEADDRESPONSE._serialized_start=297
+  _NODEATTRIBUTEADDRESPONSE._serialized_end=340
+  _NODELINKSETREQUEST._serialized_start=342
+  _NODELINKSETREQUEST._serialized_end=393
+  _NODELINKSETRESPONSE._serialized_start=395
+  _NODELINKSETRESPONSE._serialized_end=433
+  _FREEPLANE._serialized_start=436
+  _FREEPLANE._serialized_end=782
 # @@protoc_insertion_point(module_scope)

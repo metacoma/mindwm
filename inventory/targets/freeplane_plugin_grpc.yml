@@ -73,6 +73,7 @@ parameters:
           rpc CreateChild (CreateChildRequest) returns (CreateChildResponse) {};
           rpc DeleteChild (DeleteChildRequest) returns (DeleteChildResponse) {};
           rpc NodeAttributeAdd (NodeAttributeAddRequest) returns (NodeAttributeAddResponse) {};
+          rpc NodeLinkSet (NodeLinkSetRequest) returns (NodeLinkSetResponse) {};
         }
 
         message CreateChildRequest {
@@ -94,11 +95,20 @@ parameters:
 
         message NodeAttributeAddRequest {
           string node_id = 1;
-          string property_name = 2;
-          string property_value = 3;
+          string attribute_name = 2;
+          string attribute_value = 3;
         }
 
         message NodeAttributeAddResponse {
+          bool success = 1;
+        }
+
+        message NodeLinkSetRequest {
+          string node_id = 1;
+          string link = 2;
+        }
+
+        message NodeLinkSetResponse {
           bool success = 1;
         }
 

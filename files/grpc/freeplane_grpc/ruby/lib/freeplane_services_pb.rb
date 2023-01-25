@@ -17,6 +17,7 @@ module Freeplane
       rpc :CreateChild, CreateChildRequest, CreateChildResponse
       rpc :DeleteChild, DeleteChildRequest, DeleteChildResponse
       rpc :NodeAttributeAdd, NodeAttributeAddRequest, NodeAttributeAddResponse
+      rpc :NodeLinkSet, NodeLinkSetRequest, NodeLinkSetResponse
     end
 
     Stub = Service.rpc_stub_class
