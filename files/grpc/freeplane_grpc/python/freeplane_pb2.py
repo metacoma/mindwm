@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x66reeplane.proto\x12\tfreeplane\"\"\n\x12\x43reateChildRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"9\n\x13\x43reateChildResponse\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x11\n\tnode_text\x18\x02 \x01(\t\"%\n\x12\x44\x65leteChildRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\"&\n\x13\x44\x65leteChildResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"[\n\x17NodeAttributeAddRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x16\n\x0e\x61ttribute_name\x18\x02 \x01(\t\x12\x17\n\x0f\x61ttribute_value\x18\x03 \x01(\t\"+\n\x18NodeAttributeAddResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"3\n\x12NodeLinkSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0c\n\x04link\x18\x02 \x01(\t\"&\n\x13NodeLinkSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"9\n\x15NodeDetailsSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0f\n\x07\x64\x65tails\x18\x02 \x01(\t\")\n\x16NodeDetailsSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xb3\x03\n\tFreeplane\x12N\n\x0b\x43reateChild\x12\x1d.freeplane.CreateChildRequest\x1a\x1e.freeplane.CreateChildResponse\"\x00\x12N\n\x0b\x44\x65leteChild\x12\x1d.freeplane.DeleteChildRequest\x1a\x1e.freeplane.DeleteChildResponse\"\x00\x12]\n\x10NodeAttributeAdd\x12\".freeplane.NodeAttributeAddRequest\x1a#.freeplane.NodeAttributeAddResponse\"\x00\x12N\n\x0bNodeLinkSet\x12\x1d.freeplane.NodeLinkSetRequest\x1a\x1e.freeplane.NodeLinkSetResponse\"\x00\x12W\n\x0eNodeDetailsSet\x12 .freeplane.NodeDetailsSetRequest\x1a!.freeplane.NodeDetailsSetResponse\"\x00\x42-\n\x19org.freeplane.plugin.grpcB\tfreeplaneP\x01\xa2\x02\x02\x46Pb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x66reeplane.proto\x12\tfreeplane\"\"\n\x12\x43reateChildRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"9\n\x13\x43reateChildResponse\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x11\n\tnode_text\x18\x02 \x01(\t\"%\n\x12\x44\x65leteChildRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\"&\n\x13\x44\x65leteChildResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"[\n\x17NodeAttributeAddRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x16\n\x0e\x61ttribute_name\x18\x02 \x01(\t\x12\x17\n\x0f\x61ttribute_value\x18\x03 \x01(\t\"+\n\x18NodeAttributeAddResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"3\n\x12NodeLinkSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0c\n\x04link\x18\x02 \x01(\t\"&\n\x13NodeLinkSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"9\n\x15NodeDetailsSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0f\n\x07\x64\x65tails\x18\x02 \x01(\t\")\n\x16NodeDetailsSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"$\n\rGroovyRequest\x12\x13\n\x0bgroovy_code\x18\x01 \x01(\t\"!\n\x0eGroovyResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xf4\x03\n\tFreeplane\x12N\n\x0b\x43reateChild\x12\x1d.freeplane.CreateChildRequest\x1a\x1e.freeplane.CreateChildResponse\"\x00\x12N\n\x0b\x44\x65leteChild\x12\x1d.freeplane.DeleteChildRequest\x1a\x1e.freeplane.DeleteChildResponse\"\x00\x12]\n\x10NodeAttributeAdd\x12\".freeplane.NodeAttributeAddRequest\x1a#.freeplane.NodeAttributeAddResponse\"\x00\x12N\n\x0bNodeLinkSet\x12\x1d.freeplane.NodeLinkSetRequest\x1a\x1e.freeplane.NodeLinkSetResponse\"\x00\x12W\n\x0eNodeDetailsSet\x12 .freeplane.NodeDetailsSetRequest\x1a!.freeplane.NodeDetailsSetResponse\"\x00\x12?\n\x06Groovy\x12\x18.freeplane.GroovyRequest\x1a\x19.freeplane.GroovyResponse\"\x00\x42-\n\x19org.freeplane.plugin.grpcB\tfreeplaneP\x01\xa2\x02\x02\x46Pb\x06proto3')
 
 
 
@@ -28,6 +28,8 @@ _NODELINKSETREQUEST = DESCRIPTOR.message_types_by_name['NodeLinkSetRequest']
 _NODELINKSETRESPONSE = DESCRIPTOR.message_types_by_name['NodeLinkSetResponse']
 _NODEDETAILSSETREQUEST = DESCRIPTOR.message_types_by_name['NodeDetailsSetRequest']
 _NODEDETAILSSETRESPONSE = DESCRIPTOR.message_types_by_name['NodeDetailsSetResponse']
+_GROOVYREQUEST = DESCRIPTOR.message_types_by_name['GroovyRequest']
+_GROOVYRESPONSE = DESCRIPTOR.message_types_by_name['GroovyResponse']
 CreateChildRequest = _reflection.GeneratedProtocolMessageType('CreateChildRequest', (_message.Message,), {
   'DESCRIPTOR' : _CREATECHILDREQUEST,
   '__module__' : 'freeplane_pb2'
@@ -98,6 +100,20 @@ NodeDetailsSetResponse = _reflection.GeneratedProtocolMessageType('NodeDetailsSe
   })
 _sym_db.RegisterMessage(NodeDetailsSetResponse)
 
+GroovyRequest = _reflection.GeneratedProtocolMessageType('GroovyRequest', (_message.Message,), {
+  'DESCRIPTOR' : _GROOVYREQUEST,
+  '__module__' : 'freeplane_pb2'
+  # @@protoc_insertion_point(class_scope:freeplane.GroovyRequest)
+  })
+_sym_db.RegisterMessage(GroovyRequest)
+
+GroovyResponse = _reflection.GeneratedProtocolMessageType('GroovyResponse', (_message.Message,), {
+  'DESCRIPTOR' : _GROOVYRESPONSE,
+  '__module__' : 'freeplane_pb2'
+  # @@protoc_insertion_point(class_scope:freeplane.GroovyResponse)
+  })
+_sym_db.RegisterMessage(GroovyResponse)
+
 _FREEPLANE = DESCRIPTOR.services_by_name['Freeplane']
 if _descriptor._USE_C_DESCRIPTORS == False:
 
@@ -123,6 +139,10 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _NODEDETAILSSETREQUEST._serialized_end=492
   _NODEDETAILSSETRESPONSE._serialized_start=494
   _NODEDETAILSSETRESPONSE._serialized_end=535
-  _FREEPLANE._serialized_start=538
-  _FREEPLANE._serialized_end=973
+  _GROOVYREQUEST._serialized_start=537
+  _GROOVYREQUEST._serialized_end=573
+  _GROOVYRESPONSE._serialized_start=575
+  _GROOVYRESPONSE._serialized_end=608
+  _FREEPLANE._serialized_start=611
+  _FREEPLANE._serialized_end=1111
 # @@protoc_insertion_point(module_scope)
