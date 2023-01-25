@@ -6,6 +6,7 @@ require 'google/protobuf'
 Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "freeplane.CreateChildRequest" do
     optional :name, :string, 1
+    optional :parent_node_id, :string, 2
   end
   add_message "freeplane.CreateChildResponse" do
     optional :node_id, :string, 1
@@ -45,6 +46,20 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "freeplane.GroovyResponse" do
     optional :success, :bool, 1
   end
+  add_message "freeplane.NodeColorSetRequest" do
+    optional :node_id, :string, 1
+    optional :color, :string, 2
+  end
+  add_message "freeplane.NodeColorSetResponse" do
+    optional :success, :bool, 1
+  end
+  add_message "freeplane.NodeBackgroundColorSetRequest" do
+    optional :node_id, :string, 1
+    optional :color, :string, 2
+  end
+  add_message "freeplane.NodeBackgroundColorSetResponse" do
+    optional :success, :bool, 1
+  end
 end
 
 module Freeplane
@@ -60,4 +75,8 @@ module Freeplane
   NodeDetailsSetResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeDetailsSetResponse").msgclass
   GroovyRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.GroovyRequest").msgclass
   GroovyResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.GroovyResponse").msgclass
+  NodeColorSetRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeColorSetRequest").msgclass
+  NodeColorSetResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeColorSetResponse").msgclass
+  NodeBackgroundColorSetRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeBackgroundColorSetRequest").msgclass
+  NodeBackgroundColorSetResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeBackgroundColorSetResponse").msgclass
 end

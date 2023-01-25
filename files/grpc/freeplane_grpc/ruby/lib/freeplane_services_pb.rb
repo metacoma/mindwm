@@ -20,6 +20,8 @@ module Freeplane
       rpc :NodeLinkSet, NodeLinkSetRequest, NodeLinkSetResponse
       rpc :NodeDetailsSet, NodeDetailsSetRequest, NodeDetailsSetResponse
       rpc :Groovy, GroovyRequest, GroovyResponse
+      rpc :NodeColorSet, NodeColorSetRequest, NodeColorSetResponse
+      rpc :NodeBackgroundColorSet, NodeBackgroundColorSetRequest, NodeBackgroundColorSetResponse
     end
 
     Stub = Service.rpc_stub_class

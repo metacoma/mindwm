@@ -66,6 +66,20 @@ def main
     abort "ERROR: #{e.message}"
   end
 
+  begin
+    response = stub.node_color_set(Freeplane::NodeColorSetRequest.new(node_id: node_id, color: "black"))
+    p response
+  rescue GRPC::BadStatus => e
+    abort "ERROR: #{e.message}"
+  end
+
+  begin
+    response = stub.node_background_color_set(Freeplane::NodeBackgroundColorSetRequest.new(node_id: node_id, color: "black"))
+    p response
+  rescue GRPC::BadStatus => e
+    abort "ERROR: #{e.message}"
+  end
+
   # delete child
 #  begin
 #    response = stub.delete_child(Freeplane::DeleteChildRequest.new(node_id: node_id))
