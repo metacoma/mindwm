@@ -48,14 +48,20 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   end
   add_message "freeplane.NodeColorSetRequest" do
     optional :node_id, :string, 1
-    optional :color, :string, 2
+    optional :red, :int32, 2
+    optional :green, :int32, 3
+    optional :blue, :int32, 4
+    optional :alpha, :int32, 5
   end
   add_message "freeplane.NodeColorSetResponse" do
     optional :success, :bool, 1
   end
   add_message "freeplane.NodeBackgroundColorSetRequest" do
     optional :node_id, :string, 1
-    optional :color, :string, 2
+    optional :red, :int32, 2
+    optional :green, :int32, 3
+    optional :blue, :int32, 4
+    optional :alpha, :int32, 5
   end
   add_message "freeplane.NodeBackgroundColorSetResponse" do
     optional :success, :bool, 1

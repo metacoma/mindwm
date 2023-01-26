@@ -14,7 +14,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x66reeplane.proto\x12\tfreeplane\":\n\x12\x43reateChildRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x16\n\x0eparent_node_id\x18\x02 \x01(\t\"9\n\x13\x43reateChildResponse\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x11\n\tnode_text\x18\x02 \x01(\t\"%\n\x12\x44\x65leteChildRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\"&\n\x13\x44\x65leteChildResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"[\n\x17NodeAttributeAddRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x16\n\x0e\x61ttribute_name\x18\x02 \x01(\t\x12\x17\n\x0f\x61ttribute_value\x18\x03 \x01(\t\"+\n\x18NodeAttributeAddResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"3\n\x12NodeLinkSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0c\n\x04link\x18\x02 \x01(\t\"&\n\x13NodeLinkSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"9\n\x15NodeDetailsSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0f\n\x07\x64\x65tails\x18\x02 \x01(\t\")\n\x16NodeDetailsSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"$\n\rGroovyRequest\x12\x13\n\x0bgroovy_code\x18\x01 \x01(\t\"!\n\x0eGroovyResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"5\n\x13NodeColorSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\r\n\x05\x63olor\x18\x02 \x01(\t\"\'\n\x14NodeColorSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"?\n\x1dNodeBackgroundColorSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\r\n\x05\x63olor\x18\x02 \x01(\t\"1\n\x1eNodeBackgroundColorSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xb8\x05\n\tFreeplane\x12N\n\x0b\x43reateChild\x12\x1d.freeplane.CreateChildRequest\x1a\x1e.freeplane.CreateChildResponse\"\x00\x12N\n\x0b\x44\x65leteChild\x12\x1d.freeplane.DeleteChildRequest\x1a\x1e.freeplane.DeleteChildResponse\"\x00\x12]\n\x10NodeAttributeAdd\x12\".freeplane.NodeAttributeAddRequest\x1a#.freeplane.NodeAttributeAddResponse\"\x00\x12N\n\x0bNodeLinkSet\x12\x1d.freeplane.NodeLinkSetRequest\x1a\x1e.freeplane.NodeLinkSetResponse\"\x00\x12W\n\x0eNodeDetailsSet\x12 .freeplane.NodeDetailsSetRequest\x1a!.freeplane.NodeDetailsSetResponse\"\x00\x12?\n\x06Groovy\x12\x18.freeplane.GroovyRequest\x1a\x19.freeplane.GroovyResponse\"\x00\x12Q\n\x0cNodeColorSet\x12\x1e.freeplane.NodeColorSetRequest\x1a\x1f.freeplane.NodeColorSetResponse\"\x00\x12o\n\x16NodeBackgroundColorSet\x12(.freeplane.NodeBackgroundColorSetRequest\x1a).freeplane.NodeBackgroundColorSetResponse\"\x00\x42-\n\x19org.freeplane.plugin.grpcB\tfreeplaneP\x01\xa2\x02\x02\x46Pb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x66reeplane.proto\x12\tfreeplane\":\n\x12\x43reateChildRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x16\n\x0eparent_node_id\x18\x02 \x01(\t\"9\n\x13\x43reateChildResponse\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x11\n\tnode_text\x18\x02 \x01(\t\"%\n\x12\x44\x65leteChildRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\"&\n\x13\x44\x65leteChildResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"[\n\x17NodeAttributeAddRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x16\n\x0e\x61ttribute_name\x18\x02 \x01(\t\x12\x17\n\x0f\x61ttribute_value\x18\x03 \x01(\t\"+\n\x18NodeAttributeAddResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"3\n\x12NodeLinkSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0c\n\x04link\x18\x02 \x01(\t\"&\n\x13NodeLinkSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"9\n\x15NodeDetailsSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0f\n\x07\x64\x65tails\x18\x02 \x01(\t\")\n\x16NodeDetailsSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"$\n\rGroovyRequest\x12\x13\n\x0bgroovy_code\x18\x01 \x01(\t\"!\n\x0eGroovyResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"_\n\x13NodeColorSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0b\n\x03red\x18\x02 \x01(\x05\x12\r\n\x05green\x18\x03 \x01(\x05\x12\x0c\n\x04\x62lue\x18\x04 \x01(\x05\x12\r\n\x05\x61lpha\x18\x05 \x01(\x05\"\'\n\x14NodeColorSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"i\n\x1dNodeBackgroundColorSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0b\n\x03red\x18\x02 \x01(\x05\x12\r\n\x05green\x18\x03 \x01(\x05\x12\x0c\n\x04\x62lue\x18\x04 \x01(\x05\x12\r\n\x05\x61lpha\x18\x05 \x01(\x05\"1\n\x1eNodeBackgroundColorSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xb8\x05\n\tFreeplane\x12N\n\x0b\x43reateChild\x12\x1d.freeplane.CreateChildRequest\x1a\x1e.freeplane.CreateChildResponse\"\x00\x12N\n\x0b\x44\x65leteChild\x12\x1d.freeplane.DeleteChildRequest\x1a\x1e.freeplane.DeleteChildResponse\"\x00\x12]\n\x10NodeAttributeAdd\x12\".freeplane.NodeAttributeAddRequest\x1a#.freeplane.NodeAttributeAddResponse\"\x00\x12N\n\x0bNodeLinkSet\x12\x1d.freeplane.NodeLinkSetRequest\x1a\x1e.freeplane.NodeLinkSetResponse\"\x00\x12W\n\x0eNodeDetailsSet\x12 .freeplane.NodeDetailsSetRequest\x1a!.freeplane.NodeDetailsSetResponse\"\x00\x12?\n\x06Groovy\x12\x18.freeplane.GroovyRequest\x1a\x19.freeplane.GroovyResponse\"\x00\x12Q\n\x0cNodeColorSet\x12\x1e.freeplane.NodeColorSetRequest\x1a\x1f.freeplane.NodeColorSetResponse\"\x00\x12o\n\x16NodeBackgroundColorSet\x12(.freeplane.NodeBackgroundColorSetRequest\x1a).freeplane.NodeBackgroundColorSetResponse\"\x00\x42-\n\x19org.freeplane.plugin.grpcB\tfreeplaneP\x01\xa2\x02\x02\x46Pb\x06proto3')
 
 
 
@@ -176,13 +176,13 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _GROOVYRESPONSE._serialized_start=599
   _GROOVYRESPONSE._serialized_end=632
   _NODECOLORSETREQUEST._serialized_start=634
-  _NODECOLORSETREQUEST._serialized_end=687
-  _NODECOLORSETRESPONSE._serialized_start=689
-  _NODECOLORSETRESPONSE._serialized_end=728
-  _NODEBACKGROUNDCOLORSETREQUEST._serialized_start=730
-  _NODEBACKGROUNDCOLORSETREQUEST._serialized_end=793
-  _NODEBACKGROUNDCOLORSETRESPONSE._serialized_start=795
-  _NODEBACKGROUNDCOLORSETRESPONSE._serialized_end=844
-  _FREEPLANE._serialized_start=847
-  _FREEPLANE._serialized_end=1543
+  _NODECOLORSETREQUEST._serialized_end=729
+  _NODECOLORSETRESPONSE._serialized_start=731
+  _NODECOLORSETRESPONSE._serialized_end=770
+  _NODEBACKGROUNDCOLORSETREQUEST._serialized_start=772
+  _NODEBACKGROUNDCOLORSETREQUEST._serialized_end=877
+  _NODEBACKGROUNDCOLORSETRESPONSE._serialized_start=879
+  _NODEBACKGROUNDCOLORSETRESPONSE._serialized_end=928
+  _FREEPLANE._serialized_start=931
+  _FREEPLANE._serialized_end=1627
 # @@protoc_insertion_point(module_scope)
