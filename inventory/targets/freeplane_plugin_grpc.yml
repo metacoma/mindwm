@@ -45,7 +45,7 @@ parameters:
 
           cp -v ${compiled_dir}/grpc/ruby_lib/* ${kapitan_root}/files/grpc/freeplane_grpc/ruby/lib/
 
-          # python
+          # python, needs to refact
           test -d python_lib || mkdir python_lib
           docker run  \
                   -v ${compiled_dir}:/compiled 	                                \
@@ -212,3 +212,16 @@ parameters:
             - test -d ruby/lib || mkdir -p ruby/lib
             - nix-shell -p ruby
             - cd ruby
+
+      python_grpc_client:
+        pre:
+          - cd ${kapitan_root}/files/grpc/freeplane_grpc/python
+          - . ${compiled_dir}/functions.bash
+        panes:
+          -
+            - . .venv/bin/activate
+            - |
+              #docker run -v`pwd`:/grpc -w /grpc --rm -it --net=host --entrypoint /bin/sh mindwm/freeplane_grpc_client_python:latest -c "python3 /grpc/freeplane_grpc_client.py"
+          -
+            - . .venv/bin/activate
+
