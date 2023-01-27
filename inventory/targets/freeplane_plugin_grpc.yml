@@ -1,0 +1,205 @@
+classes:
+  - common
+  - mindwm
+  - vim
+  - tmuxinator
+  - tmuxinator.kapitan
+  - grpc.protoc
+  - bash.kapitan
+  - bash.script
+
+
+parameters:
+  target_name: freeplane_plugin_grpc
+
+  freeplane_root: ${kapitan_root}/files/github.com/freeplane
+
+  grpc_ruby_docker:
+    repo: grpc/ruby
+    tag: latest
+
+  bash:
+    functions:
+      freeplane_build: |
+        cd ${freeplane_root}
+        bash ./gradle.sh build
+      freeplane_clean: |
+        cd ${freeplane_root}
+        bash ./gradle.sh clean
+
+      freeplane_grpc: |
+        (
+          cd ${compiled_dir}/grpc
+
+          # copy freeplane.proto to freeplane_plugin_grpc
+          cp -v freeplane.proto ${freeplane_root}/freeplane_plugin_grpc/src/main/proto/freeplane.proto
+
+          # ruby
+          test -d ruby_lib || mkdir ruby_lib/
+          docker run --rm 	\
+            -it 		\
+            -v `pwd`:/host 	\
+            -w /host            \
+            ${grpc_ruby_docker:repo}:${grpc_ruby_docker:tag} \
+            grpc_tools_ruby_protoc -I . --ruby_out=ruby_lib --grpc_out=ruby_lib ./freeplane.proto
+
+          cp -v ${compiled_dir}/grpc/ruby_lib/* ${kapitan_root}/files/grpc/freeplane_grpc/ruby/lib/
+
+          # python
+          protoc \
+            --python_out=${kapitan_root}/files/grpc/freeplane_grpc/python \
+            ./freeplane.proto
+
+          # protoc \
+          # --ruby_out=${kapitan_root}/files/grpc/freeplane_grpc/ruby/lib \
+          #  ./helloworld.proto
+        )
+
+
+
+  grpc:
+    freeplane:
+      protoc_raw: |
+        syntax = "proto3";
+
+        option java_multiple_files = true;
+        option java_package = "org.freeplane.plugin.grpc";
+        option java_outer_classname = "freeplane";
+        option objc_class_prefix = "FP";
+
+        package freeplane;
+
+        service Freeplane {
+          rpc CreateChild (CreateChildRequest) returns (CreateChildResponse) {};
+          rpc DeleteChild (DeleteChildRequest) returns (DeleteChildResponse) {};
+          rpc NodeAttributeAdd (NodeAttributeAddRequest) returns (NodeAttributeAddResponse) {};
+          rpc NodeLinkSet (NodeLinkSetRequest) returns (NodeLinkSetResponse) {};
+          rpc NodeDetailsSet (NodeDetailsSetRequest) returns (NodeDetailsSetResponse) {};
+          rpc Groovy (GroovyRequest) returns (GroovyResponse) {};
+          rpc NodeColorSet (NodeColorSetRequest) returns (NodeColorSetResponse) {};
+          rpc NodeBackgroundColorSet (NodeBackgroundColorSetRequest) returns (NodeBackgroundColorSetResponse) {};
+        }
+
+        message CreateChildRequest {
+          string name = 1;
+          string parent_node_id = 2;
+        }
+
+        message CreateChildResponse {
+          string node_id = 1;
+          string node_text = 2;
+        }
+
+        message DeleteChildRequest {
+          string node_id = 1;
+        }
+        message DeleteChildResponse {
+          bool success = 1;
+        }
+
+        message NodeAttributeAddRequest {
+          string node_id = 1;
+          string attribute_name = 2;
+          string attribute_value = 3;
+        }
+
+        message NodeAttributeAddResponse {
+          bool success = 1;
+        }
+
+        message NodeLinkSetRequest {
+          string node_id = 1;
+          string link = 2;
+        }
+
+        message NodeLinkSetResponse {
+          bool success = 1;
+        }
+
+        message NodeDetailsSetRequest {
+          string node_id = 1;
+          string details = 2;
+        }
+
+        message NodeDetailsSetResponse {
+          bool success = 1;
+        }
+
+        message GroovyRequest {
+          string groovy_code = 1;
+        }
+
+        message GroovyResponse {
+          bool success = 1;
+        }
+
+        message NodeColorSetRequest {
+          string node_id = 1;
+          // TODO(@metacoma) repeated color = 4 [pack=true] ?
+          int32 red = 2;
+          int32 green = 3;
+          int32 blue = 4;
+          int32 alpha = 5;
+        }
+
+        message NodeColorSetResponse {
+          bool success = 1;
+        }
+
+        message NodeBackgroundColorSetRequest {
+          string node_id = 1;
+          // TODO(@metacoma) repeated color = 4 [pack=true] ?
+          int32 red = 2;
+          int32 green = 3;
+          int32 blue = 4;
+          int32 alpha = 5;
+        }
+
+        message NodeBackgroundColorSetResponse {
+          bool success = 1;
+        }
+
+
+  tmuxinator:
+    windows:
+      freeplane:
+        pre:
+          - cd ${freeplane_root}
+          - . ${compiled_dir}/functions.bash
+        panes:
+          -
+            - nix-shell -p glibc
+          -
+            - nix-shell -p ruby
+            - cd ${kapitan_root}/files/grpc/freeplane_grpc/ruby
+      freeplane_plugin_grpc:
+        pre:
+          - cd ${freeplane_root}/
+          - . ${compiled_dir}/functions.bash
+        panes:
+          -
+            - cd freeplane_plugin_grpc
+          -
+            - vim -O freeplane_plugin_grpc/src/main/{proto,java/org/freeplane/plugin/grpc}/*
+      grpc:
+        pre:
+          - cd ${kapitan_root}/files/grpc/grpc
+          - . ${compiled_dir}/functions.bash
+        panes:
+          -
+          -
+
+      grpc_clients:
+        pre:
+          - cd ${kapitan_root}/files/grpc/freeplane_grpc
+          - . ${compiled_dir}/functions.bash
+        panes:
+          -
+            # python
+            - test -d python || mkdir python
+            - cd python
+          -
+            # ruby
+            - test -d ruby/lib || mkdir -p ruby/lib
+            - nix-shell -p ruby
+            - cd ruby
