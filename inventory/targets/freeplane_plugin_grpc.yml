@@ -45,10 +45,19 @@ parameters:
 
           cp -v ${compiled_dir}/grpc/ruby_lib/* ${kapitan_root}/files/grpc/freeplane_grpc/ruby/lib/
 
-          # python
-          protoc \
-            --python_out=${kapitan_root}/files/grpc/freeplane_grpc/python \
-            ./freeplane.proto
+          # python, needs to refact
+          test -d python_lib || mkdir python_lib
+          docker run  \
+                  -v ${compiled_dir}:/compiled 	                                \
+                  -w/compiled 							\
+                  --rm -it 							\
+                  --entrypoint /bin/sh 						\
+                  python:3.11-slim -c '
+                          pip3 install protobuf grpcio grpcio-tools
+                          python -m grpc_tools.protoc -I/compiled/grpc --python_out=/compiled/grpc/python_lib --pyi_out=/compiled/grpc/python_lib --grpc_python_out=/compiled/grpc/python_lib /compiled/grpc/freeplane.proto
+                  '
+
+           cp ${compiled_dir}/grpc/python_lib/* ${kapitan_root}/files/grpc/freeplane_grpc/python
 
           # protoc \
           # --ruby_out=${kapitan_root}/files/grpc/freeplane_grpc/ruby/lib \
@@ -203,3 +212,16 @@ parameters:
             - test -d ruby/lib || mkdir -p ruby/lib
             - nix-shell -p ruby
             - cd ruby
+
+      python_grpc_client:
+        pre:
+          - cd ${kapitan_root}/files/grpc/freeplane_grpc/python
+          - . ${compiled_dir}/functions.bash
+        panes:
+          -
+            - . .venv/bin/activate
+            - |
+              #docker run -v`pwd`:/grpc -w /grpc --rm -it --net=host --entrypoint /bin/sh mindwm/freeplane_grpc_client_python:latest -c "python3 /grpc/freeplane_grpc_client.py"
+          -
+            - . .venv/bin/activate
+
