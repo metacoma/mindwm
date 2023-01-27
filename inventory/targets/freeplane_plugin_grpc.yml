@@ -44,6 +44,8 @@ parameters:
             grpc_tools_ruby_protoc -I . --ruby_out=ruby_lib --grpc_out=ruby_lib ./freeplane.proto
 
           cp -v ${compiled_dir}/grpc/ruby_lib/* ${kapitan_root}/files/grpc/freeplane_grpc/ruby/lib/
+          test -d ${freeplane_root}/freeplane_plugin_grpc/grpc/ruby/lib || mkdir -p ${freeplane_root}/freeplane_plugin_grpc/grpc/ruby/lib
+          cp -v ${compiled_dir}/grpc/ruby_lib/* ${freeplane_root}/freeplane_plugin_grpc/grpc/ruby/lib
 
           # python, needs to refact
           test -d python_lib || mkdir python_lib
@@ -57,7 +59,10 @@ parameters:
                           python -m grpc_tools.protoc -I/compiled/grpc --python_out=/compiled/grpc/python_lib --pyi_out=/compiled/grpc/python_lib --grpc_python_out=/compiled/grpc/python_lib /compiled/grpc/freeplane.proto
                   '
 
-           cp ${compiled_dir}/grpc/python_lib/* ${kapitan_root}/files/grpc/freeplane_grpc/python
+          cp ${compiled_dir}/grpc/python_lib/* ${kapitan_root}/files/grpc/freeplane_grpc/python
+
+          test -d ${freeplane_root}/freeplane_plugin_grpc/grpc/python || mkdir -p ${freeplane_root}/freeplane_plugin_grpc/grpc/python
+          cp -v ${compiled_dir}/grpc/python_lib/* ${freeplane_root}/freeplane_plugin_grpc/grpc/python
 
           # protoc \
           # --ruby_out=${kapitan_root}/files/grpc/freeplane_grpc/ruby/lib \
