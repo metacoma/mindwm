@@ -21,7 +21,12 @@ parameters:
   bash:
     functions:
       grpcurl: |
-        docker run --network=host fullstorydev/grpcurl "$*"
+        docker run \
+          -i \
+          -v `pwd`:/host/ \
+          -w /host  \
+          --network=host \
+          fullstorydev/grpcurl $*
       freeplane_build: |
         cd ${freeplane_root}
         bash ./gradle.sh build
