@@ -1,0 +1,24 @@
+{% set p = inventory.parameters %}
+
+{% if "python" in consumer %}
+import re
+import json
+import pprint
+from kafka import KafkaConsumer
+from kafka import KafkaProducer
+
+# TODO(@metacoma) get bootstrap_servers from environment variable
+consumer = KafkaConsumer('{{ consumer.topic }}', bootstrap_servers=['mindwm-kafka-external-0.kafka:9092'])
+
+{% if "init" in consumer["python"] and consumer["python"]["init"] != None %}
+{{ consumer["python"]["init"] }}
+{% endif %}
+
+{% if "consumer" in consumer["python"] and consumer["python"]["consumer"] != None %}
+for message in consumer:
+{% for line in consumer["python"]["consumer"].split("\n") %}
+{{ " " * 2 }}{{ line }}
+{% endfor %}
+{% endif %}
+
+{% endif %}

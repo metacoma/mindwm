@@ -66,6 +66,12 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "freeplane.NodeBackgroundColorSetResponse" do
     optional :success, :bool, 1
   end
+  add_message "freeplane.StatusInfoSetRequest" do
+    optional :statusInfo, :string, 1
+  end
+  add_message "freeplane.StatusInfoSetResponse" do
+    optional :success, :bool, 1
+  end
 end
 
 module Freeplane
@@ -85,4 +91,6 @@ module Freeplane
   NodeColorSetResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeColorSetResponse").msgclass
   NodeBackgroundColorSetRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeBackgroundColorSetRequest").msgclass
   NodeBackgroundColorSetResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeBackgroundColorSetResponse").msgclass
+  StatusInfoSetRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.StatusInfoSetRequest").msgclass
+  StatusInfoSetResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.StatusInfoSetResponse").msgclass
 end

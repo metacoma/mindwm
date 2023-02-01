@@ -1,0 +1,61 @@
+classes:
+  - common
+  - vim
+  - mindwm
+  - tmuxinator
+  - bash.kapitan
+  - kapitan.bash.compile-fetch
+  - tmuxinator.kapitan
+  - kafka.k8s-consumer
+
+parameters:
+  target_name: kafka-consumer-strip-color
+
+  kafka:
+    consumers:
+      tmux-lines-strip-colors:
+        topic: tmux-pane-raw-linestream
+        python:
+          init: |
+            ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
+            def escape_ansi(line):
+              return ansi_escape.sub('', line)
+
+            producer = KafkaProducer(bootstrap_servers=['mindwm-kafka-external-0.kafka:9092'], value_serializer=lambda x: json.dumps(x).encode('utf-8'))
+          consumer: |
+            msg = json.loads(message.value)
+            msg["message"] = escape_ansi(msg["message"])
+            pprint.pprint(msg)
+            producer.send('tmux-pane-linestream', value = msg)
+
+      tmux-io-context-strip-colors:
+        topic: tmux-pane-raw-io-context
+        python:
+          init: |
+            ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
+            def escape_ansi(line):
+              return ansi_escape.sub('', line)
+            producer = KafkaProducer(bootstrap_servers=['mindwm-kafka-external-0.kafka:9092'], value_serializer=lambda x: json.dumps(x).encode('utf-8'))
+          consumer: |
+            msg = json.loads(message.value)
+            msg["message"]["output"] = escape_ansi(msg["message"]["output"])
+            pprint.pprint(msg)
+            producer.send('tmux-pane-io-context', value = msg)
+
+
+  tmuxinator:
+    windows:
+      logs:
+        panes:
+          -
+            - |
+              while :; do
+                kubectl -n mindwm logs -f deployment/tmux-lines-strip-colors
+                sleep 5;
+              done
+          -
+            -
+              while :; do
+                kubectl -n mindwm logs -f deployment/tmux-io-context-strip-colors
+                sleep 5;
+              done
