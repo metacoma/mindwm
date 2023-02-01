@@ -1,0 +1,18 @@
+local kap = import "lib/kapitan.libjsonnet";
+local inventory = kap.inventory();
+local p = inventory.parameters;
+
+local strimzi = import "files/github.com/jsonnet-libs/strimzi-libjsonnet/0.32/main.libsonnet";
+
+local kafka = strimzi.kafka.v1beta2.kafka;
+
+local aaa = { "bbb": "aaa" };
+
+{
+  //[consumer_name + "/deployment.yml"]: aaa for consumer_name in std.objectFieldsAll(p.kafka.consumers)
+
+}
+
+
+  //[consumer_name]: kubernetes_deployment(consumer_name) for consumer_name in std.objectFieldsAll(p.kafka.consumers)
+//  [consumer_name + "/deployment.yaml"]: kubernetes_deployment(consumer_name) for consumer_name in std.objectFieldsAll(p.kafka.consumers)
