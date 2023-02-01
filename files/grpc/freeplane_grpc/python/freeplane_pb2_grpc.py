@@ -54,6 +54,11 @@ class FreeplaneStub(object):
                 request_serializer=freeplane__pb2.NodeBackgroundColorSetRequest.SerializeToString,
                 response_deserializer=freeplane__pb2.NodeBackgroundColorSetResponse.FromString,
                 )
+        self.StatusInfoSet = channel.unary_unary(
+                '/freeplane.Freeplane/StatusInfoSet',
+                request_serializer=freeplane__pb2.StatusInfoSetRequest.SerializeToString,
+                response_deserializer=freeplane__pb2.StatusInfoSetResponse.FromString,
+                )
 
 
 class FreeplaneServicer(object):
@@ -107,6 +112,12 @@ class FreeplaneServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def StatusInfoSet(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_FreeplaneServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -149,6 +160,11 @@ def add_FreeplaneServicer_to_server(servicer, server):
                     servicer.NodeBackgroundColorSet,
                     request_deserializer=freeplane__pb2.NodeBackgroundColorSetRequest.FromString,
                     response_serializer=freeplane__pb2.NodeBackgroundColorSetResponse.SerializeToString,
+            ),
+            'StatusInfoSet': grpc.unary_unary_rpc_method_handler(
+                    servicer.StatusInfoSet,
+                    request_deserializer=freeplane__pb2.StatusInfoSetRequest.FromString,
+                    response_serializer=freeplane__pb2.StatusInfoSetResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -293,5 +309,22 @@ class Freeplane(object):
         return grpc.experimental.unary_unary(request, target, '/freeplane.Freeplane/NodeBackgroundColorSet',
             freeplane__pb2.NodeBackgroundColorSetRequest.SerializeToString,
             freeplane__pb2.NodeBackgroundColorSetResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def StatusInfoSet(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/freeplane.Freeplane/StatusInfoSet',
+            freeplane__pb2.StatusInfoSetRequest.SerializeToString,
+            freeplane__pb2.StatusInfoSetResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

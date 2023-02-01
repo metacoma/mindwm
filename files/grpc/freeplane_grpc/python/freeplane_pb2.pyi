@@ -127,3 +127,15 @@ class NodeLinkSetResponse(_message.Message):
     SUCCESS_FIELD_NUMBER: _ClassVar[int]
     success: bool
     def __init__(self, success: bool = ...) -> None: ...
+
+class StatusInfoSetRequest(_message.Message):
+    __slots__ = ["statusInfo"]
+    STATUSINFO_FIELD_NUMBER: _ClassVar[int]
+    statusInfo: str
+    def __init__(self, statusInfo: _Optional[str] = ...) -> None: ...
+
+class StatusInfoSetResponse(_message.Message):
+    __slots__ = ["success"]
+    SUCCESS_FIELD_NUMBER: _ClassVar[int]
+    success: bool
+    def __init__(self, success: bool = ...) -> None: ...
