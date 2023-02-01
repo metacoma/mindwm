@@ -2,6 +2,11 @@
 classes:
   - freeplane.scripts.fifo_control
 parameters:
+  bash:
+    functions:
+      capture_pane: |
+        tmux pipe-pane -IO "perl /home/bebebeko/mindwm/compiled/vector/pipe-pane2hexstream.pl | VECTOR_UPSTREAM=`minikube ip`:31399 TMUX_PANE_ID='$TMUX_PANE' vector -q --config /home/bebebeko/mindwm/compiled/vector/vector/tmux-bytestream.yaml"
+
   kapitan:
     compile:
       - input_type: jinja2
