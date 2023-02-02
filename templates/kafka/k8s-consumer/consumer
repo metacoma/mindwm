@@ -4,11 +4,12 @@
 import re
 import json
 import pprint
+import os
 from kafka import KafkaConsumer
 from kafka import KafkaProducer
 
 # TODO(@metacoma) get bootstrap_servers from environment variable
-consumer = KafkaConsumer('{{ consumer.topic }}', bootstrap_servers=['mindwm-kafka-external-0.kafka:9092'])
+consumer = KafkaConsumer('{{ consumer.topic }}', bootstrap_servers=[os.environ['KAFKA_BOOTSTRAP_SERVER']])
 
 {% if "init" in consumer["python"] and consumer["python"]["init"] != None %}
 {{ consumer["python"]["init"] }}
@@ -27,7 +28,7 @@ for message in consumer:
 require 'rdkafka'
 
 consumer_config = {
-  :"bootstrap.servers" => "mindwm-kafka-external-0.kafka:9092",
+  :"bootstrap.servers" => ENV['KAFKA_BOOTSTRAP_SERVER'],
   :"group.id" => "ruby-consumers",
   :"auto.offset.reset" => "earliest"
 }
