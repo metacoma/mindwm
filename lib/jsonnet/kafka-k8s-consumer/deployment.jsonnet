@@ -10,7 +10,10 @@ local k8s = import "files/github.com/jsonnet-libs/k8s-libsonnet/1.23/main.libson
 
 local k8s_deployment(name, consumer_spec) = 
   local deployment = k8s.apps.v1.deployment.new(name=name, containers=[
-    k8s.core.v1.container.new(name="consumer", image=p.consumer_image.repo_prefix + name)
+    k8s.core.v1.container.new(name="consumer", image=p.consumer_image.repo_prefix + name) + 
+        k8s.core.v1.container.withEnvMap({ 
+            'KAFKA_BOOTSTRAP_SERVER': p.kafka_cluster_name + "-kafka-external-bootstrap." + p.kafka_k8s_namespace + ":" + p.kafka_port
+        })
   ]);
   deployment + k8s.apps.v1.deployment.metadata.withNamespace(p.kafka.k8s.consumer_namespace);
 

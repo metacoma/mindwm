@@ -1,6 +1,7 @@
 ---
 classes:
  - kubernetes
+ - kafka
 parameters:
 
   base_image:
