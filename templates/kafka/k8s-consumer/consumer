@@ -22,3 +22,28 @@ for message in consumer:
 {% endif %}
 
 {% endif %}
+
+{% if "ruby" in consumer %}
+require 'rdkafka'
+
+consumer_config = {
+  :"bootstrap.servers" => "mindwm-kafka-external-0.kafka:9092",
+  :"group.id" => "ruby-consumers",
+  :"auto.offset.reset" => "earliest"
+}
+
+consumer = Rdkafka::Config.new(consumer_config).consumer
+consumer.subscribe("{{ consumer.topic }}")
+
+{% if "init" in consumer["ruby"] %}
+{{ consumer["ruby"]["init"] }}
+{% endif %}
+
+
+consumer.each do |message|
+{% if "consumer" in consumer["ruby"] %}
+  {{ consumer["ruby"]["consumer"] }}
+{% endif %}
+end
+{% endif %}
+
