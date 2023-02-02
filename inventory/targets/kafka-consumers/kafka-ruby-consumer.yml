@@ -1,0 +1,22 @@
+classes:
+  - common
+  - vim
+  - mindwm
+  - tmuxinator
+  - bash.kapitan
+  - kapitan.bash.compile-fetch
+  - tmuxinator.kapitan
+  - kafka.k8s-consumer
+
+parameters:
+  target_name: kafka-ruby-consumer
+
+  kafka:
+    consumers:
+      print-message:
+        topic: tmux-pane-raw-io-context
+        ruby:
+          init: |
+            puts "Init"
+          consumer: |
+            puts "Message received: #{message}"
