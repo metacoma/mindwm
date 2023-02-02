@@ -1,0 +1,7 @@
+---
+parameters:
+  kubernetes:
+    version:
+      major: 1
+      minor: 23
+
