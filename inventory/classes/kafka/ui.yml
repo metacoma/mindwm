@@ -28,7 +28,7 @@ parameters:
         local ns=${kafka_k8s_namespace}
         (
           cd ${kafka-ui:helm:local_chart}
-          helm upgrade ${kafka-ui:helm:release_name} --install -n \${ns} . -f ${compiled_dir}/kafka_ui/helm_values.yaml
+          helm upgrade ${kafka-ui:helm:release_name} --install -n \${ns} . -f ${compiled_dir}/helm/kafka-ui.yaml
         )
       kafka_ui_url: |
         echo `minikube ip`:${kafka-ui:helm:values:service:nodePort}
