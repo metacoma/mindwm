@@ -34,10 +34,10 @@ parameters:
         kubectl -n \${ns} delete $(kubectl get strimzi -n \${ns} -o name)
       strimzi_cluster_deploy: |
         local ns=\${1}
-        kubectl -n \${ns} apply -f ${compiled_dir}/strimzi/cluster
+        kubectl -n \${ns} apply -f ${compiled_dir}/strimzi/cluster/mindwm.yaml
       strimzi_topic_create: |
         local ns=\${1}
-        kubectl -n \${ns} apply -f ${compiled_dir}/strimzi/topic
+        kubectl -n \${ns} apply -f ${compiled_dir}/strimzi/topic/*.yaml
       strimzi_uninstall: |
         local ns=\${1}
         kubectl -n \${ns} delete configmap -l app.kubernetes.io/instance=${kafka_cluster_name} -l app.kubernetes.io/managed-by=strimzi-cluster-operator
@@ -71,16 +71,16 @@ parameters:
         panes:
           - 'kubectl run kafka-consumer -ti --image=quay.io/strimzi/kafka:0.32.0-kafka-3.3.1 --rm=true --restart=Never -- bin/kafka-console-consumer.sh --bootstrap-server ${kafka_cluster_name}-kafka-external-0.${kafka_k8s_namespace}:${kafka_port} --topic tmux-pane-bytestream --from-beginning'
           -
-      host-consumers:
-        pre:
-          - cd ${kapitan_root}/files/kafka
-          - . .venv/bin/activate
-        panes:
-          # this "host" consumer remove the color codes from the io-context events
-          -
-            - python ./kafka-tmux-pane-raw-io-context.py
-          # this "host" consumer remove the color codes from the lines events
-          -
-            - python ./kafka-tmux-pane-raw-linestream.py
+#      host-consumers:
+#        pre:
+#          - cd ${kapitan_root}/files/kafka
+#          - . .venv/bin/activate
+#        panes:
+#          # this "host" consumer remove the color codes from the io-context events
+#          -
+#            - python ./kafka-tmux-pane-raw-io-context.py
+#          # this "host" consumer remove the color codes from the lines events
+#          -
+#            - python ./kafka-tmux-pane-raw-linestream.py
 
 
