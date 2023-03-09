@@ -156,8 +156,7 @@ parameters:
               end
               function process(event, emit)
                 ch = event.log.message
-                tmux_pane_id = event.log.tmux_pane_id
-                -- event.log.tmux_pane_id = tmux_pane_id
+                tmux_pane_id = event.log.metadata.tmux.pane_id
                 -- newline
                 if ch == "0a" then
                   event.log.message = line[tmux_pane_id]
@@ -188,8 +187,7 @@ parameters:
               end
               function process(event, emit)
                 ch = event.log.message
-                tmux_pane_id = event.log.tmux_pane_id
-                -- event.log.tmux_pane_id = tmux_pane_id
+                tmux_pane_id = event.log.metadata.tmux.pane_id
                 --[[
                   FIXME (@metacoma) without this ugly hack, this pipeline will generate
                   empty io-context message like following:
@@ -201,9 +199,7 @@ parameters:
                     event.log.message = {
                       input = input[tmux_pane_id],
                       output = table.concat(data[tmux_pane_id]),
-                      metadata = {
-                        tmux_pane_id = tmux_pane_id,
-                      }
+                      metadata = event.log.metadata
                     }
                     emit(event)
                   end
@@ -252,9 +248,10 @@ parameters:
           console:
             type: console
             inputs:
+              # - tmux-pane-bytestream
               # - tmux-stream-split-line
               # - kafka-linestream-to-elasticsearch
-              - kafka-tmux-pane-linestream
+              # - kafka-tmux-pane-linestream
               - kafka-io-context-to-elasticsearch
             encoding:
               codec: json

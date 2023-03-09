@@ -17,7 +17,6 @@ parameters:
         SHELL_PID=$$
         TMUX_SESSION_NAME=`tmux display-message -p '#S'`
         VECTOR_UPSTREAM=`minikube ip`:${vector_aggregator_port}
-        VECTOR_UPSTREAM=127.0.0.1:9999
         TMUX_PANE_ID=`echo $TMUX_PANE | sed 's/[^0-9]//g'`
 
         tmux pipe-pane -IO "perl ${compiled_dir}/pipe-pane2hexstream.pl | VECTOR_UPSTREAM='$VECTOR_UPSTREAM' SHELL_PID='$SHELL_PID' TMUX_SESSION_NAME='$TMUX_SESSION_NAME' TMUX_PANE_ID='$TMUX_PANE_ID' vector -q --config ${compiled_dir}/vector/tmux-bytestream.yaml"
