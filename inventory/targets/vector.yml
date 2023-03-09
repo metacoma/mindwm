@@ -156,8 +156,8 @@ parameters:
               end
               function process(event, emit)
                 ch = event.log.message
-                tmux_pane_id = string.gsub(event.log.tmux_pane_id, "[^%0-9]", "")
-                event.log.tmux_pane_id = tmux_pane_id
+                tmux_pane_id = event.log.tmux_pane_id
+                -- event.log.tmux_pane_id = tmux_pane_id
                 -- newline
                 if ch == "0a" then
                   event.log.message = line[tmux_pane_id]
@@ -188,8 +188,8 @@ parameters:
               end
               function process(event, emit)
                 ch = event.log.message
-                tmux_pane_id = string.gsub(event.log.tmux_pane_id, " ", "")
-                event.log.tmux_pane_id = tmux_pane_id
+                tmux_pane_id = event.log.tmux_pane_id
+                -- event.log.tmux_pane_id = tmux_pane_id
                 --[[
                   FIXME (@metacoma) without this ugly hack, this pipeline will generate
                   empty io-context message like following:
