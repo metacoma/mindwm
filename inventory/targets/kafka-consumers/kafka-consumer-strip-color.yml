@@ -21,7 +21,7 @@ parameters:
             def escape_ansi(line):
               return ansi_escape.sub('', line)
 
-            producer = KafkaProducer(bootstrap_servers=['mindwm-kafka-external-0.kafka:9092'], value_serializer=lambda x: json.dumps(x).encode('utf-8'))
+            producer = KafkaProducer(bootstrap_servers=['${kafka_cluster_name}-kafka-external-0.${kafka_k8s_namespace}:${kafka_port}'], value_serializer=lambda x: json.dumps(x).encode('utf-8'))
           consumer: |
             msg = json.loads(message.value)
             msg["message"] = escape_ansi(msg["message"])
@@ -35,7 +35,7 @@ parameters:
             ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
             def escape_ansi(line):
               return ansi_escape.sub('', line)
-            producer = KafkaProducer(bootstrap_servers=['mindwm-kafka-external-0.kafka:9092'], value_serializer=lambda x: json.dumps(x).encode('utf-8'))
+            producer = KafkaProducer(bootstrap_servers=['${kafka_cluster_name}-kafka-external-0.${kafka_k8s_namespace}:${kafka_port}'], value_serializer=lambda x: json.dumps(x).encode('utf-8'))
           consumer: |
             msg = json.loads(message.value)
             msg["message"]["output"] = escape_ansi(msg["message"]["output"])
