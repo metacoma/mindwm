@@ -43,5 +43,5 @@ parameters:
       - output_path: ${kafka-ui:helm:local_chart}
         type: git
         source: https://github.com/provectus/kafka-ui/
-        ref: f4e6afed2b2f996920c9f588275bf5666aecbed8
+        ref: c5d6896ae1f61dea2ace3fdda6e78817eaca6c4b
         subdir: charts/kafka-ui
