@@ -28,6 +28,10 @@ parameters:
         output_path: .
         source: https://sourceforge.net/projects/freeplane/files/freeplane%20stable/freeplane_bin-${freeplane_version}.zip/download
         unpack: true
+      - type: http
+        source: https://github.com/metacoma/freeplane_plugin_grpc/releases/download/${freeplane_plugin_grpc_version}/org.freeplane.plugin.grpc.zip
+        output_path: ${freeplane_root}/plugins/
+        unpack: true
 
   tmuxinator:
     windows:
