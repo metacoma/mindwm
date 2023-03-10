@@ -201,9 +201,9 @@ parameters:
           - . ${compiled_dir}/functions.bash
         panes:
           -
-            - nix-shell -p glibc
+            -
           -
-            - nix-shell -p ruby
+            -
             - cd ${kapitan_root}/files/grpc/freeplane_grpc/ruby
       freeplane_plugin_grpc:
         pre:
@@ -234,7 +234,6 @@ parameters:
           -
             # ruby
             - test -d ruby/lib || mkdir -p ruby/lib
-            - nix-shell -p ruby
             - cd ruby
 
       python_grpc_client:
