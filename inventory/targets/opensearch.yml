@@ -20,12 +20,6 @@ classes:
 
 parameters:
 
-  docker_image_name: opensearchproject/opensearch
-  docker_image_tag: 2.4.1
-
-  docker_dashboards_image_name: opensearchproject/opensearch-dashboards
-  docker_dashboards_image_tag: 2.4.1
-
   target_name: opensearch
 
   opensearch_port: 31002
