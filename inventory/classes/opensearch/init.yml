@@ -2,6 +2,9 @@
 classes:
   - opensearch.index_patterns
 parameters:
+
+  opensearch_version: 2.6.0
+
   opensearch_k8s_namespace: opensearch
   opensearch_helm_release: opensearch
   opensearch_admin_username: admin

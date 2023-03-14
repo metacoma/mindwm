@@ -45,6 +45,8 @@ parameters:
   # default values for chart
   helm:
     opensearch:
+      image:
+        tag: ${opensearch_version}
       extraVars:
         - name:  DISABLE_INSTALL_DEMO_CONFIG
           value: "true"
