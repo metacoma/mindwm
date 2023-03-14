@@ -6,7 +6,7 @@ files/git
 files/github.com
 files/helm-charts
 files/logstash
-files/fluentd
+#files/fluentd
 inventory/targets/freeplane-node-sh
 components/*/__pycache__
 lib/__pycache__/
