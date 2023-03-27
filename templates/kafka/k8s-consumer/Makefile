@@ -4,12 +4,15 @@
 IMAGE_NAME = {{ image_name }}
 TAG = {{ p.consumer_image.tag }}
 
-build:
+minikube-env:
+	eval $(minikube docker-env)
+
+build: minikube-env
 	docker build -t $(IMAGE_NAME) .
 
-push: build
-	docker tag $(IMAGE_NAME) $(IMAGE_NAME):$(TAG)
-	docker push $(IMAGE_NAME):$(TAG)
+#push: build
+#	docker tag $(IMAGE_NAME) $(IMAGE_NAME):$(TAG)
+#	docker push $(IMAGE_NAME):$(TAG)
 
-deploy: push
+deploy: build
 	kubectl apply -f deployment.yaml
