@@ -9,7 +9,7 @@ parameters:
     tag: 3.17.1
 
   consumer_image:
-    repo_prefix: metacoma/mindwm-k8s-consumer-
+    repo_prefix: mindwm-k8s-consumer-
     tag: latest
 
   kafka:
