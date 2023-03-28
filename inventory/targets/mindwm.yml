@@ -21,15 +21,6 @@ classes:
 parameters:
   target_name: mindwm
 
-  kapitan:
-    compile:
-      - input_paths:
-          - templates/textfsm/code.py
-        output_path: textfsm
-        input_type: jinja2
-
-
-
   context:
     - input: '^ssh (?P<SSH_HOST>.*)$'
       groovy: |
