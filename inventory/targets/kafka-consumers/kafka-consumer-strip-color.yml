@@ -56,6 +56,6 @@ parameters:
           -
             -
               while :; do
-                kubectl -n mindwm logs -f deployment/tmux-io-context-strip-colors
+                kubectl -n mindwm logs deployment/tmux-io-context-strip-colors -f
                 sleep 5;
               done

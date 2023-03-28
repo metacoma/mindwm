@@ -4,6 +4,7 @@ classes:
   - vim
   - tmuxinator
   - tmuxinator.kapitan
+  - freeplane
   - grpc.protoc
   - bash.kapitan
   - bash.script

@@ -1,0 +1,35 @@
+---
+classes:
+  - alpine
+parameters:
+  kapitan:
+    compile:
+      - input_paths:
+          - templates/textfsm/
+        output_path: textfsm
+        input_type: jinja2
+
+      - input_paths:
+          - jsonnet/textfsm/deployment.jsonnet
+        output_path: textfsm
+        input_type: jsonnet
+
+    dependencies:
+      - source: https://github.com/jsonnet-libs/k8s-libsonnet
+        type: git
+        output_path: files/github.com/jsonnet-libs/k8s-libsonnet
+        ref: 85543e49238903ac14b486321bd3d60fef09d9ef
+
+
+  textfsm:
+    base_image:
+      repo: ${alpine:repo}
+      tag: ${alpine:tag}
+
+    # docker image
+    image:
+      repo: mindwm-textfsm
+      tag: latest
+
+    k8s_namespace: mindwm
+    k8s_deployment: ${target_name}-textfsm
