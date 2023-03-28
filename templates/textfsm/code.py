@@ -10,7 +10,12 @@ from tabulate import tabulate
 from kafka import KafkaConsumer
 from kafka import KafkaProducer
 
-consumer = KafkaConsumer('tmux-pane-io-context', bootstrap_servers=[os.environ['KAFKA_BOOTSTRAP_SERVER']])
+bootstrap_server = os.environ.get('KAFKA_BOOTSTRAP_SERVER', '{{ p.kafka_cluster_name }}-kafka-external-0.{{ p.kafka_k8s_namespace }}:{{ p.kafka_port }}')
+
+# TODO(@metacoma) parametrize input topic
+consumer = KafkaConsumer('tmux-pane-io-context', bootstrap_servers=[bootstrap_server])
+
+producer = KafkaProducer(bootstrap_servers=[bootstrap_server], value_serializer=lambda x: json.dumps(x).encode('utf-8'))
 
 patterns = dict()
 
@@ -31,6 +36,12 @@ for message in consumer:
         textfsm_template="""{{ ctx.textfsm }}"""
         re_table = textfsm.TextFSM(io.StringIO(textfsm_template))
         header = re_table.header
-        result = re_table.ParseText(output_data)
-        print(tabulate(result, headers=header))
+        try:
+            result = re_table.ParseText(output_data)
+            print(tabulate(result, headers=header))
+        except textfsm.parser.TextFSMError:
+            continue
+        msg.setdefault("metadata", {})['textfsm'] = result
+        # msg["metadata"]["textfsm"] = result
+        producer.send('mindwm-objects', value = msg)
 {% endfor %}
