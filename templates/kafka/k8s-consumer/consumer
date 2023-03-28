@@ -8,7 +8,6 @@ import os
 from kafka import KafkaConsumer
 from kafka import KafkaProducer
 
-# TODO(@metacoma) get bootstrap_servers from environment variable
 consumer = KafkaConsumer('{{ consumer.topic }}', bootstrap_servers=[os.environ['KAFKA_BOOTSTRAP_SERVER']])
 
 {% if "init" in consumer["python"] and consumer["python"]["init"] != None %}

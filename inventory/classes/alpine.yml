@@ -1,0 +1,6 @@
+---
+parameters:
+  alpine:
+    repo: alpine
+    tag: 3.17.1
+
