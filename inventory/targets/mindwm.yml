@@ -64,8 +64,10 @@ parameters:
            ^\s+link/\${TYPE}(?:\s+\${ADDRESS}\s+brd\s+\${BROADCAST})?.*$$
            ^\s+altname.*$$
            ^\s+inet\s+\${IP_ADDRESSES}/\${IP_MASKS}\s+(:?brd|scope).*$$
-           ^\s+inet6\s+\${IPV6_ADDRESSES}/\${IPV6_MASKS}\s+(?:brd|scope).*$$;;
+           ^\s+inet6\s+\${IPV6_ADDRESSES}/\${IPV6_MASKS}\s+(?:brd|scope).*$$
            ^\s+valid_lft.*$$
            ^\s*$$
            ^. -> Error
+
+
 
