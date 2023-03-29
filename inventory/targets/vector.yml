@@ -191,7 +191,7 @@ parameters:
                   empty io-context message like following:
                     {"host":"nixos","message":{"input":"","metadata":{"tmux_pane_id":"%59"}},"source_type":"file_descriptor","timestamp":"2023-01-10T13:46:19.760164430Z","tmux_pane_id":"%59"}
                 ]]
-                if ch == "20" and string.match(line[tmux_pane_id], ".*@.*") then
+                if ch == "20" and string.match(line[tmux_pane_id], "^%S+@%S+[$#%%>]") then
                   -- we found a space character and the line matches the prompt regex
                   if (data[tmux_pane_id] ~= nil and event.log.message.input ~= "" and data[tmux_pane_id] ~= {}) then
                     event.log.message = {
