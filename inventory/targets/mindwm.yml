@@ -38,7 +38,7 @@ parameters:
 #      name: ${target_name}
 
   io-context:
-    - input: "^ip a show$"
+    - input: "^ip a show"
       # https://github.com/networktocode/ntc-templates/blob/master/ntc_templates/templates/linux_ip_address_show.textfsm
       textfsm: |
          Value Required ID (\d+)

@@ -25,9 +25,10 @@ patterns["{{ ctx.input }}"] = re.compile("{{ ctx.input }}")
 
 for message in consumer:
     msg = json.loads(message.value)
+    pprint.pprint(msg)
     try:
-        input_data = msg['input']
-        output_data = msg['output']
+        input_data = msg['message']['input']
+        output_data = msg['message']['output']
     except KeyError:
         print("KeyError")
         continue
