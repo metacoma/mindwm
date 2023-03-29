@@ -163,11 +163,9 @@ parameters:
                   emit(event)
                   line[tmux_pane_id] = ""
                 else
-                  if line[tmux_pane_id] == nil then
-                      line[tmux_pane_id] =  string.format("%c", tonumber(ch, 16))
-                    else
-                      line[tmux_pane_id] = line[tmux_pane_id] .. string.format("%c", tonumber(ch, 16))
-                  end
+                  -- FIXME(@metacoma) Does this impose a limitation on using UTF-8/16/etc. encodings?
+                  symbol = string.format("%c", tonumber(ch, 16))
+                  line[tmux_pane_id] = (line[tmux_pane_id] == nil or line[tmux_pane_id] == "") and symbol or (line[tmux_pane_id] .. symbol)
                 end
               end
 
@@ -218,11 +216,9 @@ parameters:
                   end
                   line[tmux_pane_id] = ""
                 else
-                  if line[tmux_pane_id] == nil then
-                      line[tmux_pane_id] =  string.format("%c", tonumber(ch, 16))
-                    else
-                     line[tmux_pane_id] = line[tmux_pane_id] .. string.format("%c", tonumber(ch, 16))
-                  end
+                  -- FIXME(@metacoma) Does this impose a limitation on using UTF-8/16/etc. encodings?
+                  symbol = string.format("%c", tonumber(ch, 16))
+                  line[tmux_pane_id] = (line[tmux_pane_id] == nil or line[tmux_pane_id] == "") and symbol or (line[tmux_pane_id] .. symbol)
                 end
               end
 
