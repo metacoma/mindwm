@@ -204,6 +204,7 @@ parameters:
                   data[tmux_pane_id] = nil
                   line[tmux_pane_id] = ""
                   input[tmux_pane_id] = ""
+                  return
                 end
                 -- newline
                 if ch == "0a" then
