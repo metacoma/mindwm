@@ -1,0 +1,9 @@
+parameters:
+  freeplane_src_local_path: ${kapitan_root}/files/github.com/freeplane
+  kapitan:
+    dependencies:
+      - output_path: ${freeplane_src_local_path}
+        type: git
+        source: https://github.com/freeplane/freeplane
+        ref: 1.10.x
+        # ref: 1.11.x # default branch at this moment

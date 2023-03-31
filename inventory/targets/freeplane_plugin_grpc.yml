@@ -19,6 +19,12 @@ parameters:
     repo: grpc/ruby
     tag: latest
 
+  kapitan:
+    dependencies:
+      - source: https://github.com/metacoma/freeplane_plugin_grpc
+        type: git
+        output_path: ${freeplane_root}/freeplane_plugin_grpc
+        ref: main
   bash:
     functions:
       grpcurl: |
@@ -30,7 +36,8 @@ parameters:
           fullstorydev/grpcurl $*
       freeplane_build: |
         cd ${freeplane_root}
-        bash ./gradle.sh build
+        #bash ./gRAdle.sh build
+        docker run --rm -v "$(pwd)":/usr/src/myapp -w /usr/src/myapp gradle:7-jdk17 gradle build --no-build-cache --no-configuration-cache
       freeplane_clean: |
         cd ${freeplane_root}
         bash ./gradle.sh clean
@@ -104,6 +111,7 @@ parameters:
           rpc NodeColorSet (NodeColorSetRequest) returns (NodeColorSetResponse) {};
           rpc NodeBackgroundColorSet (NodeBackgroundColorSetRequest) returns (NodeBackgroundColorSetResponse) {};
           rpc StatusInfoSet (StatusInfoSetRequest) returns (StatusInfoSetResponse) {};
+          rpc TextFSM (TextFSMRequest) returns (TextFSMResponse) {};
         }
 
         message CreateChildRequest {
@@ -190,6 +198,14 @@ parameters:
         }
 
         message StatusInfoSetResponse {
+            bool success = 1;
+        }
+
+        message TextFSMRequest {
+            string json = 1;
+        }
+
+        message TextFSMResponse {
             bool success = 1;
         }
 
