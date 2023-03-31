@@ -23,5 +23,9 @@ delete:
 logs:
 	kubectl -n '{{ p.textfsm.k8s_namespace }}' logs -l name='{{ p.textfsm.k8s_deployment }}' -f --tail=5
 
+exec:
+	kubectl -n '{{ p.textfsm.k8s_namespace }}' exec -ti {{ p.textfsm.k8s_deployment }} -- /bin/sh
+
+
 deploy: build
 	kubectl apply -f deployment.yaml

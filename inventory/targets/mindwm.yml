@@ -21,6 +21,12 @@ classes:
 parameters:
   target_name: mindwm
 
+  bash:
+    functions:
+      mindwm-objects: |
+        KAFKA_NODE_PORT=`kubectl get svc -n kafka ${kafka_cluster_name}-kafka-external-0 --output='jsonpath={.spec.ports[0].nodePort}'`
+        docker run --rm -it --network host edenhill/kafkacat:1.6.0 -b $(minikube ip):$KAFKA_NODE_PORT -t mindwm-objects -C
+
   context:
     - input: '^ssh (?P<SSH_HOST>.*)$'
       groovy: |
@@ -39,6 +45,7 @@ parameters:
 
   io-context:
     - input: "^ip a show"
+      key: INTERFACE
       # https://github.com/networktocode/ntc-templates/blob/master/ntc_templates/templates/linux_ip_address_show.textfsm
       textfsm: |
          Value Required ID (\d+)

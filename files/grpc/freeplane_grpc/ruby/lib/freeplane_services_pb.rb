@@ -23,6 +23,7 @@ module Freeplane
       rpc :NodeColorSet, NodeColorSetRequest, NodeColorSetResponse
       rpc :NodeBackgroundColorSet, NodeBackgroundColorSetRequest, NodeBackgroundColorSetResponse
       rpc :StatusInfoSet, StatusInfoSetRequest, StatusInfoSetResponse
+      rpc :TextFSM, TextFSMRequest, TextFSMResponse
     end
 
     Stub = Service.rpc_stub_class
