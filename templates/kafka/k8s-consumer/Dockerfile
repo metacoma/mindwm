@@ -6,10 +6,17 @@ RUN apk add --update \
    python3           \
    py3-pip
 
-RUN pip3 install kafka-python grpcio
+RUN pip3 install kafka-python
 
-ADD ./consumer /usr/local/bin/entrypoint.py
-ENTRYPOINT ["python3", "/usr/local/bin/entrypoint.py"]
+RUN mkdir /consumer
+ADD ./consumer /consumer/consumer.py
+{% if "grpc" in p and p.grpc.freeplane %}
+RUN mkdir -p /consumer/
+ADD ./freeplane.proto /consumer/
+RUN pip3 install grpcio grpcio-tools
+RUN python -m grpc_tools.protoc -I/consumer --python_out=/consumer/ --pyi_out=/consumer/ --grpc_python_out=/consumer/ /consumer/freeplane.proto
+{% endif %}
+ENTRYPOINT ["python3", "/consumer/consumer.py"]
 {% endif %}
 {% if "ruby" in consumer %}
 RUN apk add --update \
