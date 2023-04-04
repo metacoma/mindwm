@@ -31,6 +31,7 @@ parameters:
           consumer: |
             msg = json.loads(message.value)
             pprint.pprint(msg)
+            fp.TextFSM(freeplane_pb2.TextFSMRequest(json=json.dumps(msg["metadata"]["textfsm"])))
 
 
   tmuxinator:
@@ -40,12 +41,6 @@ parameters:
           -
             - |
               while :; do
-                kubectl -n mindwm logs -f deployment/tmux-lines-strip-colors
-                sleep 5;
-              done
-          -
-            -
-              while :; do
-                kubectl -n mindwm logs deployment/tmux-io-context-strip-colors -f
+                kubectl -n mindwm logs -f deployment/mindwm-textfsm
                 sleep 5;
               done

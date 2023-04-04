@@ -20,3 +20,6 @@ build: minikube-env
 
 deploy: build
 	kubectl apply -f deployment.yaml
+
+restart:
+	kubectl -n mindwm delete pod -l name={{ consumer_name }}
