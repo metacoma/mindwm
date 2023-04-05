@@ -42,7 +42,11 @@ for message in consumer:
             print(tabulate(result, headers=header))
         except textfsm.parser.TextFSMError:
             continue
-        msg.setdefault("metadata", {})['textfsm'] = result
+        msg.setdefault("metadata", {})['textfsm'] = {
+            "index": "{{ ctx.key | default("") }}",
+            "header": header,
+            "result": result
+        }
         # msg["metadata"]["textfsm"] = result
         producer.send('mindwm-objects', value = msg)
 {% endfor %}

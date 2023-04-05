@@ -10,6 +10,7 @@ classes:
   - terminal.emulator.xterm
   - freeplane.lib.fp
   - freeplane.scripts.kapitan-node
+  - freeplane.src
 
 parameters:
   target_name: freeplane

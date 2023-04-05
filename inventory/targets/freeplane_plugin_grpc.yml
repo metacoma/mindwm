@@ -5,6 +5,7 @@ classes:
   - tmuxinator
   - tmuxinator.kapitan
   - freeplane
+  - freeplane.grpc
   - grpc.protoc
   - bash.kapitan
   - bash.script
@@ -19,6 +20,17 @@ parameters:
     repo: grpc/ruby
     tag: latest
 
+  kapitan:
+    dependencies:
+      - source: https://github.com/metacoma/freeplane_plugin_grpc
+        type: git
+        output_path: ${freeplane_root}/freeplane_plugin_grpc
+        ref: main
+
+  # for freeplane_build function
+  gradle_version: 7
+  jdk_version: 17
+
   bash:
     functions:
       grpcurl: |
@@ -29,8 +41,12 @@ parameters:
           --network=host \
           fullstorydev/grpcurl $*
       freeplane_build: |
+        (
         cd ${freeplane_root}
-        bash ./gradle.sh build
+        # bash ./gRAdle.sh build
+        # docker run --rm -v "$(pwd)":/usr/src/myapp -w /usr/src/myapp gradle:7-jdk17 gradle build --no-build-cache --no-configuration-cache
+        docker run --rm -v "$(pwd)":/app -w /app gradle:${gradle_version}-jdk${jdk_version} gradle build
+        )
       freeplane_clean: |
         cd ${freeplane_root}
         bash ./gradle.sh clean
@@ -79,120 +95,6 @@ parameters:
           # --ruby_out=${kapitan_root}/files/grpc/freeplane_grpc/ruby/lib \
           #  ./helloworld.proto
         )
-
-
-
-  grpc:
-    freeplane:
-      protoc_raw: |
-        syntax = "proto3";
-
-        option java_multiple_files = true;
-        option java_package = "org.freeplane.plugin.grpc";
-        option java_outer_classname = "freeplane";
-        option objc_class_prefix = "FP";
-
-        package freeplane;
-
-        service Freeplane {
-          rpc CreateChild (CreateChildRequest) returns (CreateChildResponse) {};
-          rpc DeleteChild (DeleteChildRequest) returns (DeleteChildResponse) {};
-          rpc NodeAttributeAdd (NodeAttributeAddRequest) returns (NodeAttributeAddResponse) {};
-          rpc NodeLinkSet (NodeLinkSetRequest) returns (NodeLinkSetResponse) {};
-          rpc NodeDetailsSet (NodeDetailsSetRequest) returns (NodeDetailsSetResponse) {};
-          rpc Groovy (GroovyRequest) returns (GroovyResponse) {};
-          rpc NodeColorSet (NodeColorSetRequest) returns (NodeColorSetResponse) {};
-          rpc NodeBackgroundColorSet (NodeBackgroundColorSetRequest) returns (NodeBackgroundColorSetResponse) {};
-          rpc StatusInfoSet (StatusInfoSetRequest) returns (StatusInfoSetResponse) {};
-        }
-
-        message CreateChildRequest {
-          string name = 1;
-          string parent_node_id = 2;
-        }
-
-        message CreateChildResponse {
-          string node_id = 1;
-          string node_text = 2;
-        }
-
-        message DeleteChildRequest {
-          string node_id = 1;
-        }
-        message DeleteChildResponse {
-          bool success = 1;
-        }
-
-        message NodeAttributeAddRequest {
-          string node_id = 1;
-          string attribute_name = 2;
-          string attribute_value = 3;
-        }
-
-        message NodeAttributeAddResponse {
-          bool success = 1;
-        }
-
-        message NodeLinkSetRequest {
-          string node_id = 1;
-          string link = 2;
-        }
-
-        message NodeLinkSetResponse {
-          bool success = 1;
-        }
-
-        message NodeDetailsSetRequest {
-          string node_id = 1;
-          string details = 2;
-        }
-
-        message NodeDetailsSetResponse {
-          bool success = 1;
-        }
-
-        message GroovyRequest {
-          string groovy_code = 1;
-        }
-
-        message GroovyResponse {
-          bool success = 1;
-        }
-
-        message NodeColorSetRequest {
-          string node_id = 1;
-          // TODO(@metacoma) repeated color = 4 [pack=true] ?
-          int32 red = 2;
-          int32 green = 3;
-          int32 blue = 4;
-          int32 alpha = 5;
-        }
-
-        message NodeColorSetResponse {
-          bool success = 1;
-        }
-
-        message NodeBackgroundColorSetRequest {
-          string node_id = 1;
-          // TODO(@metacoma) repeated color = 4 [pack=true] ?
-          int32 red = 2;
-          int32 green = 3;
-          int32 blue = 4;
-          int32 alpha = 5;
-        }
-
-        message NodeBackgroundColorSetResponse {
-          bool success = 1;
-        }
-
-        message StatusInfoSetRequest {
-            string statusInfo = 1;
-        }
-
-        message StatusInfoSetResponse {
-            bool success = 1;
-        }
-
 
   tmuxinator:
     windows:

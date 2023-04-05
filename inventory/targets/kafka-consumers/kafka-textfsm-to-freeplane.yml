@@ -1,0 +1,46 @@
+classes:
+  - common
+  - vim
+  - mindwm
+  - tmuxinator
+  - bash.kapitan
+  - kapitan.bash.compile-fetch
+  - tmuxinator.kapitan
+  - kafka.k8s-consumer
+
+  - freeplane.grpc
+  - grpc.protoc
+
+parameters:
+  target_name: kafka-textfsm-to-freeplane
+
+  kafka:
+    consumers:
+      textfsm-to-freeplane:
+        topic: mindwm-objects
+        python:
+          init: |
+            import grpc
+            import freeplane_pb2
+            import freeplane_pb2_grpc
+            # 192.168.49.1
+            pprint.pprint("init")
+            channel = grpc.insecure_channel('192.168.49.1:50051')
+            fp = freeplane_pb2_grpc.FreeplaneStub(channel)
+            fp.CreateChild(freeplane_pb2.CreateChildRequest(name='hello-from-kubernetes', parent_node_id = ""))
+          consumer: |
+            msg = json.loads(message.value)
+            pprint.pprint(msg)
+            fp.TextFSM(freeplane_pb2.TextFSMRequest(json=json.dumps(msg["metadata"]["textfsm"])))
+
+
+  tmuxinator:
+    windows:
+      logs:
+        panes:
+          -
+            - |
+              while :; do
+                kubectl -n mindwm logs -f deployment/mindwm-textfsm
+                sleep 5;
+              done

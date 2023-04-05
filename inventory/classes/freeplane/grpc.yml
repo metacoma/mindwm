@@ -1,0 +1,120 @@
+parameters:
+  grpc:
+    freeplane:
+      protoc_raw: |
+        syntax = "proto3";
+
+        option java_multiple_files = true;
+        option java_package = "org.freeplane.plugin.grpc";
+        option java_outer_classname = "freeplane";
+        option objc_class_prefix = "FP";
+
+        package freeplane;
+
+        service Freeplane {
+          rpc CreateChild (CreateChildRequest) returns (CreateChildResponse) {};
+          rpc DeleteChild (DeleteChildRequest) returns (DeleteChildResponse) {};
+          rpc NodeAttributeAdd (NodeAttributeAddRequest) returns (NodeAttributeAddResponse) {};
+          rpc NodeLinkSet (NodeLinkSetRequest) returns (NodeLinkSetResponse) {};
+          rpc NodeDetailsSet (NodeDetailsSetRequest) returns (NodeDetailsSetResponse) {};
+          rpc Groovy (GroovyRequest) returns (GroovyResponse) {};
+          rpc NodeColorSet (NodeColorSetRequest) returns (NodeColorSetResponse) {};
+          rpc NodeBackgroundColorSet (NodeBackgroundColorSetRequest) returns (NodeBackgroundColorSetResponse) {};
+          rpc StatusInfoSet (StatusInfoSetRequest) returns (StatusInfoSetResponse) {};
+          rpc TextFSM (TextFSMRequest) returns (TextFSMResponse) {};
+        }
+
+        message CreateChildRequest {
+          string name = 1;
+          string parent_node_id = 2;
+        }
+
+        message CreateChildResponse {
+          string node_id = 1;
+          string node_text = 2;
+        }
+
+        message DeleteChildRequest {
+          string node_id = 1;
+        }
+        message DeleteChildResponse {
+          bool success = 1;
+        }
+
+        message NodeAttributeAddRequest {
+          string node_id = 1;
+          string attribute_name = 2;
+          string attribute_value = 3;
+        }
+
+        message NodeAttributeAddResponse {
+          bool success = 1;
+        }
+
+        message NodeLinkSetRequest {
+          string node_id = 1;
+          string link = 2;
+        }
+
+        message NodeLinkSetResponse {
+          bool success = 1;
+        }
+
+        message NodeDetailsSetRequest {
+          string node_id = 1;
+          string details = 2;
+        }
+
+        message NodeDetailsSetResponse {
+          bool success = 1;
+        }
+
+        message GroovyRequest {
+          string groovy_code = 1;
+        }
+
+        message GroovyResponse {
+          bool success = 1;
+        }
+
+        message NodeColorSetRequest {
+          string node_id = 1;
+          // TODO(@metacoma) repeated color = 4 [pack=true] ?
+          int32 red = 2;
+          int32 green = 3;
+          int32 blue = 4;
+          int32 alpha = 5;
+        }
+
+        message NodeColorSetResponse {
+          bool success = 1;
+        }
+
+        message NodeBackgroundColorSetRequest {
+          string node_id = 1;
+          // TODO(@metacoma) repeated color = 4 [pack=true] ?
+          int32 red = 2;
+          int32 green = 3;
+          int32 blue = 4;
+          int32 alpha = 5;
+        }
+
+        message NodeBackgroundColorSetResponse {
+          bool success = 1;
+        }
+
+        message StatusInfoSetRequest {
+            string statusInfo = 1;
+        }
+
+        message StatusInfoSetResponse {
+            bool success = 1;
+        }
+
+        message TextFSMRequest {
+            string json = 1;
+        }
+
+        message TextFSMResponse {
+            bool success = 1;
+        }
