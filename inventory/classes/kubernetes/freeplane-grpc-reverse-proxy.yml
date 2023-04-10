@@ -1,0 +1,27 @@
+---
+classes:
+  - kubernetes.reverse-grpc-svc
+  - freeplane_plugin_grpc
+
+parameters:
+  kubernetes:
+    reverse-grpc-proxy4:
+      freeplane-grpc-proxy:
+        name: freeplane reverse proxy
+        namespace: mindwm
+        container_port: ${gproxy4_container_port}
+        env:
+          - name: MINIKUBE_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+          - name: DST_PORT
+            value: ${freeplane_grpc_listen4:port}
+        svc:
+          name: freeplane-grpc-reverse-proxy4
+          port: ${gproxy4_container_port}
+        proxy_to:
+          shell: |
+            export DST_ADDR=`echo $MINIKUBE_IP | awk -F. '{$4=""; print $1"."$2"."$3".1"}'`
+
+
