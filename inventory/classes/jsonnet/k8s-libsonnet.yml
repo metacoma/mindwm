@@ -1,0 +1,8 @@
+---
+parameters:
+  kapitan:
+    dependencies:
+      - source: https://github.com/jsonnet-libs/k8s-libsonnet
+        ref: 85543e49238903ac14b486321bd3d60fef09d9ef
+        type: git
+        output_path: files/github.com/jsonnet-libs/k8s-libsonnet
