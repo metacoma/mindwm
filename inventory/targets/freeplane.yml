@@ -11,6 +11,7 @@ classes:
   - freeplane.lib.fp
   - freeplane.scripts.kapitan-node
   - freeplane.src
+  - freeplane_plugin_grpc
 
 parameters:
   target_name: freeplane
@@ -20,6 +21,8 @@ parameters:
       freeplane_start: |
         cd ${freeplane_root}
         sed -i 's,^userfpdir=.*,userfpdir="${freeplane_root}",' ./freeplane.sh
+        export GRPC_LISTEN_ADDR=${freeplane_grpc_listen4:addr}
+        export GRPC_LISTEN_PORT=${freeplane_grpc_listen4:port}
         bash ./freeplane.sh
 
 
