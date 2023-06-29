@@ -27,7 +27,8 @@ parameters:
         panes:
           - |
             target_files
+            java -cp ./json-20210307.jar java_parser.java < input.json
           - |
             target_files
-
+            vim java_parser.java
 
