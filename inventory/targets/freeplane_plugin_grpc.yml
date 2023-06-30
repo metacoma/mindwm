@@ -157,6 +157,10 @@ parameters:
         panes:
           -
             - |
+              cd grpc
               docker run -v `pwd`:/host -w /host --network=host  fullstorydev/grpcurl -proto ./freeplane.proto -d '{"name": "grpcurl", "parent_node_id": ""}' -plaintext localhost:50051 freeplane.Freeplane/CreateChild
           -
             -
+              |
+              cd grpc
+              docker run -v `pwd`:/host -w /host --network=host  fullstorydev/grpcurl -proto ./freeplane.proto -d@./input.json -plaintext localhost:50051 freeplane.Freeplane/MindMapFromJSON

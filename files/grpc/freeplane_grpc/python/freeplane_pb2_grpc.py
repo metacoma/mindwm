@@ -64,10 +64,10 @@ class FreeplaneStub(object):
                 request_serializer=freeplane__pb2.TextFSMRequest.SerializeToString,
                 response_deserializer=freeplane__pb2.TextFSMResponse.FromString,
                 )
-        self.MindmapFromJSON = channel.unary_unary(
-                '/freeplane.Freeplane/MindmapFromJSON',
-                request_serializer=freeplane__pb2.MindmapFromJSONRequest.SerializeToString,
-                response_deserializer=freeplane__pb2.MindmapFromJSONResponse.FromString,
+        self.MindMapFromJSON = channel.unary_unary(
+                '/freeplane.Freeplane/MindMapFromJSON',
+                request_serializer=freeplane__pb2.MindMapFromJSONRequest.SerializeToString,
+                response_deserializer=freeplane__pb2.MindMapFromJSONResponse.FromString,
                 )
 
 
@@ -134,7 +134,7 @@ class FreeplaneServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def MindmapFromJSON(self, request, context):
+    def MindMapFromJSON(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -193,10 +193,10 @@ def add_FreeplaneServicer_to_server(servicer, server):
                     request_deserializer=freeplane__pb2.TextFSMRequest.FromString,
                     response_serializer=freeplane__pb2.TextFSMResponse.SerializeToString,
             ),
-            'MindmapFromJSON': grpc.unary_unary_rpc_method_handler(
-                    servicer.MindmapFromJSON,
-                    request_deserializer=freeplane__pb2.MindmapFromJSONRequest.FromString,
-                    response_serializer=freeplane__pb2.MindmapFromJSONResponse.SerializeToString,
+            'MindMapFromJSON': grpc.unary_unary_rpc_method_handler(
+                    servicer.MindMapFromJSON,
+                    request_deserializer=freeplane__pb2.MindMapFromJSONRequest.FromString,
+                    response_serializer=freeplane__pb2.MindMapFromJSONResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -379,7 +379,7 @@ class Freeplane(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def MindmapFromJSON(request,
+    def MindMapFromJSON(request,
             target,
             options=(),
             channel_credentials=None,
@@ -389,8 +389,8 @@ class Freeplane(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/freeplane.Freeplane/MindmapFromJSON',
-            freeplane__pb2.MindmapFromJSONRequest.SerializeToString,
-            freeplane__pb2.MindmapFromJSONResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/freeplane.Freeplane/MindMapFromJSON',
+            freeplane__pb2.MindMapFromJSONRequest.SerializeToString,
+            freeplane__pb2.MindMapFromJSONResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -78,10 +78,10 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "freeplane.TextFSMResponse" do
     optional :success, :bool, 1
   end
-  add_message "freeplane.MindmapFromJSONRequest" do
+  add_message "freeplane.MindMapFromJSONRequest" do
     optional :json, :string, 1
   end
-  add_message "freeplane.MindmapFromJSONResponse" do
+  add_message "freeplane.MindMapFromJSONResponse" do
     optional :success, :bool, 1
   end
 end
@@ -107,6 +107,6 @@ module Freeplane
   StatusInfoSetResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.StatusInfoSetResponse").msgclass
   TextFSMRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.TextFSMRequest").msgclass
   TextFSMResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.TextFSMResponse").msgclass
-  MindmapFromJSONRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.MindmapFromJSONRequest").msgclass
-  MindmapFromJSONResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.MindmapFromJSONResponse").msgclass
+  MindMapFromJSONRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.MindMapFromJSONRequest").msgclass
+  MindMapFromJSONResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.MindMapFromJSONResponse").msgclass
 end
