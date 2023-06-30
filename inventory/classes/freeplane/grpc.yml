@@ -22,7 +22,7 @@ parameters:
           rpc NodeBackgroundColorSet (NodeBackgroundColorSetRequest) returns (NodeBackgroundColorSetResponse) {};
           rpc StatusInfoSet (StatusInfoSetRequest) returns (StatusInfoSetResponse) {};
           rpc TextFSM (TextFSMRequest) returns (TextFSMResponse) {};
-          rpc MindmapFromJSON (MindmapFromJSONRequest) returns (MindmapFromJSONResponse) {};
+          rpc MindMapFromJSON (MindMapFromJSONRequest) returns (MindMapFromJSONResponse) {};
         }
 
         message CreateChildRequest {
@@ -119,10 +119,10 @@ parameters:
         message TextFSMResponse {
             bool success = 1;
         }
-        message MindmapFromJSONRequest {
+        message MindMapFromJSONRequest {
             string json = 1;
         }
 
-        message MindmapFromJSONResponse {
+        message MindMapFromJSONResponse {
             bool success = 1;
         }
