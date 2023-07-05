@@ -163,3 +163,15 @@ class MindMapFromJSONResponse(_message.Message):
     SUCCESS_FIELD_NUMBER: _ClassVar[int]
     success: bool
     def __init__(self, success: bool = ...) -> None: ...
+
+class MindMapToJSONRequest(_message.Message):
+    __slots__ = []
+    def __init__(self) -> None: ...
+
+class MindMapToJSONResponse(_message.Message):
+    __slots__ = ["success", "json"]
+    SUCCESS_FIELD_NUMBER: _ClassVar[int]
+    JSON_FIELD_NUMBER: _ClassVar[int]
+    success: bool
+    json: str
+    def __init__(self, success: bool = ..., json: _Optional[str] = ...) -> None: ...
