@@ -7,9 +7,9 @@ classes:
   - kapitan.bash.compile-fetch
   - tmuxinator.kapitan
   - kafka.k8s-consumer
-
   - freeplane.grpc
   - grpc.protoc
+  - kubernetes.freeplane-grpc-reverse-proxy
 
 parameters:
   target_name: kafka-textfsm-to-freeplane
@@ -18,14 +18,17 @@ parameters:
     consumers:
       textfsm-to-freeplane:
         topic: mindwm-objects
+        env:
+          FREEPLANE_GRPC4_ENDPOINT: "${kubernetes:reverse-grpc-proxy4:freeplane-grpc-proxy:svc:name}.${kubernetes:reverse-grpc-proxy4:freeplane-grpc-proxy:namespace}:${kubernetes:reverse-grpc-proxy4:freeplane-grpc-proxy:svc:port}"
         python:
           init: |
             import grpc
             import freeplane_pb2
             import freeplane_pb2_grpc
+            import os
             # 192.168.49.1
             pprint.pprint("init")
-            channel = grpc.insecure_channel('192.168.49.1:50051')
+            channel = grpc.insecure_channel(os.environ.get('FREEPLANE_GRPC4_ENDPOINT', 'freeplane-grpc-proxy4:80'))
             fp = freeplane_pb2_grpc.FreeplaneStub(channel)
             fp.CreateChild(freeplane_pb2.CreateChildRequest(name='hello-from-kubernetes', parent_node_id = ""))
           consumer: |

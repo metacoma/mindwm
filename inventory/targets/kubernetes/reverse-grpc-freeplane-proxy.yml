@@ -1,0 +1,12 @@
+---
+classes:
+  - common
+  - vim
+  - bash.kapitan
+  - tmuxinator
+  - tmuxinator.kapitan
+  - kubernetes.freeplane-grpc-reverse-proxy
+
+parameters:
+  target_name: reverse-grpc-freeplane-proxy
+
