@@ -2,5 +2,6 @@
 parameters:
   bash:
     functions:
-      editor:
-        vim $*
+      text_editor: |
+        export EDITOR=vim
+        $EDITOR $*

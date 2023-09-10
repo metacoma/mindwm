@@ -17,7 +17,7 @@ parameters:
       kapitan_edit_target: |
         (
           cd ${kapitan_root}
-          editor `find inventory/targets -type f -name ${target_name}.yml | head -n1`
+          text_editor `find inventory/targets -type f -name ${target_name}.yml | head -n1`
         )
 
       reload: |
