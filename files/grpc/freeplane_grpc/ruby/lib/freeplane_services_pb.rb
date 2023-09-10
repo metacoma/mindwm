@@ -24,6 +24,8 @@ module Freeplane
       rpc :NodeBackgroundColorSet, NodeBackgroundColorSetRequest, NodeBackgroundColorSetResponse
       rpc :StatusInfoSet, StatusInfoSetRequest, StatusInfoSetResponse
       rpc :TextFSM, TextFSMRequest, TextFSMResponse
+      rpc :MindMapFromJSON, MindMapFromJSONRequest, MindMapFromJSONResponse
+      rpc :MindMapToJSON, MindMapToJSONRequest, MindMapToJSONResponse
     end
 
     Stub = Service.rpc_stub_class

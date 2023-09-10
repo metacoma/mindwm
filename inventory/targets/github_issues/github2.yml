@@ -1,0 +1,34 @@
+---
+classes:
+  - common
+  - vim
+  - tmuxinator
+  - tmuxinator.kapitan
+  - bash.kapitan
+  - bash.script
+
+
+parameters:
+  target_name: github2
+
+  bash:
+    functions:
+      target_files: |
+        test -d ${kapitan_root}/files/${target_name} || mkdir -p ${kapitan_root}/files/${target_name}
+        cd ${kapitan_root}/files/${target_name}
+
+  tmuxinator:
+    name: ${target_name}
+    root: ${compiled_dir}
+
+    startup_window: files
+    windows:
+      files:
+        panes:
+          - |
+            target_files
+            java -cp ./json-20210307.jar java_parser.java < input.json
+          - |
+            target_files
+            vim java_parser.java
+

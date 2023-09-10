@@ -1,0 +1,33 @@
+---
+classes:
+  - jsonnet.k8s-libsonnet
+parameters:
+  gproxy4_container_port: 80
+  gproxy4_container_image: nginx:latest
+  gproxy4_container_entrypoint: |
+    cat<<EOF > /etc/nginx/conf.d/default.conf
+      upstream grpc_backend {
+        server $DST_ADDR:$DST_PORT;
+      }
+
+      server {
+        listen 80 http2;
+
+        location / {
+          grpc_pass grpc://grpc_backend;
+          error_log /dev/stderr;
+          access_log /dev/stdout;
+        }
+      }
+    EOF
+    exec nginx -g 'daemon off;'
+
+  kapitan:
+    compile:
+      - input_type: jsonnet
+        input_paths:
+          - jsonnet/reverse-proxy-grpc4.jsonnet
+          - jsonnet/reverse-proxy-svc.jsonnet
+        output_path: reverse-proxy-grpc4
+        output_type: yaml
+
