@@ -1,0 +1,31 @@
+---
+classes:
+  - common
+  - vim
+  - tmuxinator
+  - bash.kapitan
+  - tmuxinator.kapitan
+  - kapitan.bash.compile-fetch
+  - neo4j.k8s
+
+parameters:
+  target_name: neo4j
+  helm:
+    values:
+      image:
+        customImage: ${neo4j_image:repo}:${neo4j_image:tag}
+      neo4j:
+        name: ${neo4j_release_name}
+        password: ${neo4j_password}
+      volumes:
+        data:
+          mode: defaultStorageClass
+      services:
+        neo4j:
+          enabled: true
+          spec:
+            type: NodePort
+        admin:
+          enabled: true
+          spec:
+            type: NodePort
