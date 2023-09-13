@@ -19,6 +19,7 @@ parameters:
         username: ${rabbitmq_user}
         password: ${rabbitmq_password}
         securePassword: false
+      # temporarily way to create fanout exchange
       service:
         type: NodePort
         nodePorts:

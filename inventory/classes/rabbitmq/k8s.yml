@@ -3,9 +3,19 @@ classes:
   - rabbitmq.common
   - rabbitmq.helm
 parameters:
+  rabbitmq_exchanges:
+    io-context:
+      type: fanout
+
   rabbitmq_namespace: rabbitmq
   rabbitmq_manage_node_port: 32100
   rabbitmq_image:
     repo: bitnami/rabbitmq
     tag: ${rabbitmq_version}-debian-11-r0
 
+  kapitan:
+    compile:
+      - input_paths:
+          - templates/rabbitmq
+        output_path: rabbitmq
+        input_type: jinja2
