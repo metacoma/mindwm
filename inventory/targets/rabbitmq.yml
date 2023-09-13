@@ -1,0 +1,20 @@
+---
+classes:
+  - common
+  - vim
+  - tmuxinator
+  - bash.kapitan
+  - tmuxinator.kapitan
+  - kapitan.bash.compile-fetch
+  - rabbitmq.k8s
+
+parameters:
+  target_name: rabbitmq
+  helm:
+    values:
+      image:
+        repository: ${rabbitmq_image:repo}
+        tag: ${rabbitmq_image:tag}
+      auth:
+        username: rabbitmq
+        password: rabbitmq-password

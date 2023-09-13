@@ -1,0 +1,3 @@
+---
+parameters:
+  rabbitmq_version: 3.12.4

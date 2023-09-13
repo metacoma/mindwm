@@ -1,0 +1,10 @@
+---
+classes:
+  - rabbitmq.common
+  - rabbitmq.helm
+parameters:
+  rabbitmq_namespace: rabbitmq
+  rabbitmq_image:
+    repo: bitnami/rabbitmq
+    tag: ${rabbitmq_version}-debian-11-r0
+
