@@ -124,6 +124,8 @@ parameters:
               - kafka-tmux-pane-io-context
             source: |
               msg, err = parse_json(.message)
+              .ps1_start = msg.message.ps1_start
+              .ps1_end = msg.message.ps1_end
               .input = msg.message.input
               .output = msg.message.output
               .host = msg.host
@@ -182,6 +184,7 @@ parameters:
                 line = {}
                 data = {}
                 input = {}
+                ps1 = {}
               end
               function process(event, emit)
                 ch = event.log.message
@@ -192,15 +195,20 @@ parameters:
                     {"host":"nixos","message":{"input":"","metadata":{"tmux_pane_id":"%59"}},"source_type":"file_descriptor","timestamp":"2023-01-10T13:46:19.760164430Z","tmux_pane_id":"%59"}
                 ]]
                 if ch == "20" and string.match(line[tmux_pane_id], "^%S+@%S+[$#%%>]") then
+                  ps1_data = ps1[tmux_pane_id] or ""
                   -- we found a space character and the line matches the prompt regex
+                  -- skip sent mesage if ps1 is empty, usually it's a first io-context document in the stream
                   if (data[tmux_pane_id] ~= nil and event.log.message.input ~= "" and data[tmux_pane_id] ~= {}) then
                     event.log.message = {
+                      ps1_start = ps1_data,
+                      ps1_end = line[tmux_pane_id],
                       input = input[tmux_pane_id],
                       output = table.concat(data[tmux_pane_id]),
                       metadata = event.log.metadata
                     }
                     emit(event)
                   end
+                  ps1[tmux_pane_id] = line[tmux_pane_id]
                   data[tmux_pane_id] = nil
                   line[tmux_pane_id] = ""
                   input[tmux_pane_id] = ""
