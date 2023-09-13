@@ -1,0 +1,22 @@
+---
+classes:
+  - helm
+  - rabbitmq.common
+parameters:
+  rabbitmq_chart_version: 12.1.4
+  rabbitmq_release_name: rabbitmq
+  rabbitmq_helm_chart_path: files/helm-charts/rabbitmq
+
+  bash:
+    functions:
+      rabbitmq_helm_install: |
+        helm upgrade --install --namespace ${rabbitmq_namespace} ${rabbitmq_release_name} ${kapitan_root}/${rabbitmq_helm_chart_path} -f ${compiled_dir}/helm/values.yaml
+      rabbitmq_helm_delete: |
+        helm delete --namespace ${rabbitmq_namespace} ${rabbitmq_release_name}
+  kapitan:
+    dependencies:
+      - output_path: ${rabbitmq_helm_chart_path}
+        type: helm
+        source: https://charts.bitnami.com/bitnami
+        version: ${rabbitmq_chart_version}
+        chart_name: rabbitmq

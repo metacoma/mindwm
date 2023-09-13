@@ -1,0 +1,26 @@
+---
+classes:
+  - common
+  - vim
+  - tmuxinator
+  - bash.kapitan
+  - tmuxinator.kapitan
+  - kapitan.bash.compile-fetch
+  - rabbitmq.k8s
+
+parameters:
+  target_name: rabbitmq
+  helm:
+    values:
+      image:
+        repository: ${rabbitmq_image:repo}
+        tag: ${rabbitmq_image:tag}
+      auth:
+        username: ${rabbitmq_user}
+        password: ${rabbitmq_password}
+        securePassword: false
+      # temporarily way to create fanout exchange
+      service:
+        type: NodePort
+        nodePorts:
+          manager: "${rabbitmq_manage_node_port}"
