@@ -1,0 +1,10 @@
+---
+classes:
+  - neo4j.common
+  - neo4j.helm
+parameters:
+  neo4j_namespace: neo4j
+  neo4j_image:
+    repo: neo4j
+    tag: ${neo4j_version}
+
