@@ -16,5 +16,10 @@ parameters:
         repository: ${rabbitmq_image:repo}
         tag: ${rabbitmq_image:tag}
       auth:
-        username: rabbitmq
-        password: rabbitmq-password
+        username: ${rabbitmq_user}
+        password: ${rabbitmq_password}
+        securePassword: false
+      service:
+        type: NodePort
+        nodePorts:
+          manager: "${rabbitmq_manage_node_port}"

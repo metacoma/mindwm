@@ -4,6 +4,7 @@ classes:
   - rabbitmq.helm
 parameters:
   rabbitmq_namespace: rabbitmq
+  rabbitmq_manage_node_port: 32100
   rabbitmq_image:
     repo: bitnami/rabbitmq
     tag: ${rabbitmq_version}-debian-11-r0
