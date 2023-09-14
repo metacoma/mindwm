@@ -1,5 +1,9 @@
 ---
 parameters:
+  rabbitmq_exchanges:
+    io-context:
+      type: fanout
+      durable: true
   rabbitmq_version: 3.12.4
   rabbitmq_user: user
   rabbitmq_password: password
