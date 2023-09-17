@@ -390,7 +390,7 @@ parameters:
         panes:
           # tmux list-windows -a -F '#{window_id} #{pane_id}'
           -
-            - tmux pipe-pane -IO "perl ${compiled_dir}/pipe-pane2hexstream.pl | VECTOR_UPSTREAM=`minikube ip`:${vector_aggregator_port} TMUX_PANE_ID='$TMUX_PANE' vector -q --config ${compiled_dir}/vector/tmux-bytestream.yaml"
+            - tmux pipe-pane -IO "perl ${compiled_dir}/pipe-pane2hexstream.pl | VECTOR_UPSTREAM=`minikube ip`:${vector_aggregator_port} TMUX_SESSION_NAME=`tmux display-message -p '#S'` TMUX_PANE_ID='$TMUX_PANE' vector -q --config ${compiled_dir}/vector/tmux-bytestream.yaml"
           -
             - vector_logs -f
 
