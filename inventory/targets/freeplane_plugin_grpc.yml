@@ -44,8 +44,8 @@ parameters:
         (
         cd ${freeplane_root}
         # bash ./gRAdle.sh build
-        docker run --rm -v "$(pwd)":/usr/src/myapp -w /usr/src/myapp gradle:7-jdk17 gradle build --no-build-cache --no-configuration-cache
-        # docker run --rm -v "$(pwd)":/app -w /app gradle:${gradle_version}-jdk${jdk_version} gradle build
+        #docker run --rm -v "$(pwd)":/usr/src/myapp -w /usr/src/myapp gradle:7-jdk17 gradle build --no-build-cache --no-configuration-cache
+        docker run --rm -v "$(pwd)":/app -w /app gradle:${gradle_version}-jdk${jdk_version} gradle build
         )
       freeplane_clean: |
         cd ${freeplane_root}
