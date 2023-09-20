@@ -5,6 +5,7 @@ classes:
   - vim
   - tmuxinator
   - bash.kapitan
+  - bash.script
   - tmuxinator
   - tmuxinator.kapitan
   - logstash
