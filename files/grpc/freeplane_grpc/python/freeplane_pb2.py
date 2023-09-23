@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x66reeplane.proto\x12\tfreeplane\":\n\x12\x43reateChildRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x16\n\x0eparent_node_id\x18\x02 \x01(\t\"9\n\x13\x43reateChildResponse\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x11\n\tnode_text\x18\x02 \x01(\t\"%\n\x12\x44\x65leteChildRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\"&\n\x13\x44\x65leteChildResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"[\n\x17NodeAttributeAddRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x16\n\x0e\x61ttribute_name\x18\x02 \x01(\t\x12\x17\n\x0f\x61ttribute_value\x18\x03 \x01(\t\"+\n\x18NodeAttributeAddResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"3\n\x12NodeLinkSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0c\n\x04link\x18\x02 \x01(\t\"&\n\x13NodeLinkSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"9\n\x15NodeDetailsSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0f\n\x07\x64\x65tails\x18\x02 \x01(\t\")\n\x16NodeDetailsSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"$\n\rGroovyRequest\x12\x13\n\x0bgroovy_code\x18\x01 \x01(\t\"!\n\x0eGroovyResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"_\n\x13NodeColorSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0b\n\x03red\x18\x02 \x01(\x05\x12\r\n\x05green\x18\x03 \x01(\x05\x12\x0c\n\x04\x62lue\x18\x04 \x01(\x05\x12\r\n\x05\x61lpha\x18\x05 \x01(\x05\"\'\n\x14NodeColorSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"i\n\x1dNodeBackgroundColorSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0b\n\x03red\x18\x02 \x01(\x05\x12\r\n\x05green\x18\x03 \x01(\x05\x12\x0c\n\x04\x62lue\x18\x04 \x01(\x05\x12\r\n\x05\x61lpha\x18\x05 \x01(\x05\"1\n\x1eNodeBackgroundColorSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"*\n\x14StatusInfoSetRequest\x12\x12\n\nstatusInfo\x18\x01 \x01(\t\"(\n\x15StatusInfoSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\x1e\n\x0eTextFSMRequest\x12\x0c\n\x04json\x18\x01 \x01(\t\"\"\n\x0fTextFSMResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"&\n\x16MindMapFromJSONRequest\x12\x0c\n\x04json\x18\x01 \x01(\t\"*\n\x17MindMapFromJSONResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\x16\n\x14MindMapToJSONRequest\"6\n\x15MindMapToJSONResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0c\n\x04json\x18\x02 \x01(\t2\x84\x08\n\tFreeplane\x12N\n\x0b\x43reateChild\x12\x1d.freeplane.CreateChildRequest\x1a\x1e.freeplane.CreateChildResponse\"\x00\x12N\n\x0b\x44\x65leteChild\x12\x1d.freeplane.DeleteChildRequest\x1a\x1e.freeplane.DeleteChildResponse\"\x00\x12]\n\x10NodeAttributeAdd\x12\".freeplane.NodeAttributeAddRequest\x1a#.freeplane.NodeAttributeAddResponse\"\x00\x12N\n\x0bNodeLinkSet\x12\x1d.freeplane.NodeLinkSetRequest\x1a\x1e.freeplane.NodeLinkSetResponse\"\x00\x12W\n\x0eNodeDetailsSet\x12 .freeplane.NodeDetailsSetRequest\x1a!.freeplane.NodeDetailsSetResponse\"\x00\x12?\n\x06Groovy\x12\x18.freeplane.GroovyRequest\x1a\x19.freeplane.GroovyResponse\"\x00\x12Q\n\x0cNodeColorSet\x12\x1e.freeplane.NodeColorSetRequest\x1a\x1f.freeplane.NodeColorSetResponse\"\x00\x12o\n\x16NodeBackgroundColorSet\x12(.freeplane.NodeBackgroundColorSetRequest\x1a).freeplane.NodeBackgroundColorSetResponse\"\x00\x12T\n\rStatusInfoSet\x12\x1f.freeplane.StatusInfoSetRequest\x1a .freeplane.StatusInfoSetResponse\"\x00\x12\x42\n\x07TextFSM\x12\x19.freeplane.TextFSMRequest\x1a\x1a.freeplane.TextFSMResponse\"\x00\x12Z\n\x0fMindMapFromJSON\x12!.freeplane.MindMapFromJSONRequest\x1a\".freeplane.MindMapFromJSONResponse\"\x00\x12T\n\rMindMapToJSON\x12\x1f.freeplane.MindMapToJSONRequest\x1a .freeplane.MindMapToJSONResponse\"\x00\x42-\n\x19org.freeplane.plugin.grpcB\tfreeplaneP\x01\xa2\x02\x02\x46Pb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x66reeplane.proto\x12\tfreeplane\":\n\x12\x43reateChildRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x16\n\x0eparent_node_id\x18\x02 \x01(\t\"9\n\x13\x43reateChildResponse\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x11\n\tnode_text\x18\x02 \x01(\t\"%\n\x12\x44\x65leteChildRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\"&\n\x13\x44\x65leteChildResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"[\n\x17NodeAttributeAddRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x16\n\x0e\x61ttribute_name\x18\x02 \x01(\t\x12\x17\n\x0f\x61ttribute_value\x18\x03 \x01(\t\"+\n\x18NodeAttributeAddResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"3\n\x12NodeLinkSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0c\n\x04link\x18\x02 \x01(\t\"&\n\x13NodeLinkSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"9\n\x15NodeDetailsSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0f\n\x07\x64\x65tails\x18\x02 \x01(\t\")\n\x16NodeDetailsSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"3\n\x12NodeNoteSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0c\n\x04note\x18\x02 \x01(\t\"&\n\x13NodeNoteSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"$\n\rGroovyRequest\x12\x13\n\x0bgroovy_code\x18\x01 \x01(\t\"!\n\x0eGroovyResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"_\n\x13NodeColorSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0b\n\x03red\x18\x02 \x01(\x05\x12\r\n\x05green\x18\x03 \x01(\x05\x12\x0c\n\x04\x62lue\x18\x04 \x01(\x05\x12\r\n\x05\x61lpha\x18\x05 \x01(\x05\"\'\n\x14NodeColorSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"i\n\x1dNodeBackgroundColorSetRequest\x12\x0f\n\x07node_id\x18\x01 \x01(\t\x12\x0b\n\x03red\x18\x02 \x01(\x05\x12\r\n\x05green\x18\x03 \x01(\x05\x12\x0c\n\x04\x62lue\x18\x04 \x01(\x05\x12\r\n\x05\x61lpha\x18\x05 \x01(\x05\"1\n\x1eNodeBackgroundColorSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"*\n\x14StatusInfoSetRequest\x12\x12\n\nstatusInfo\x18\x01 \x01(\t\"(\n\x15StatusInfoSetResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\x1e\n\x0eTextFSMRequest\x12\x0c\n\x04json\x18\x01 \x01(\t\"\"\n\x0fTextFSMResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"&\n\x16MindMapFromJSONRequest\x12\x0c\n\x04json\x18\x01 \x01(\t\"*\n\x17MindMapFromJSONResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"\x16\n\x14MindMapToJSONRequest\"6\n\x15MindMapToJSONResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0c\n\x04json\x18\x02 \x01(\t2\xd4\x08\n\tFreeplane\x12N\n\x0b\x43reateChild\x12\x1d.freeplane.CreateChildRequest\x1a\x1e.freeplane.CreateChildResponse\"\x00\x12N\n\x0b\x44\x65leteChild\x12\x1d.freeplane.DeleteChildRequest\x1a\x1e.freeplane.DeleteChildResponse\"\x00\x12]\n\x10NodeAttributeAdd\x12\".freeplane.NodeAttributeAddRequest\x1a#.freeplane.NodeAttributeAddResponse\"\x00\x12N\n\x0bNodeLinkSet\x12\x1d.freeplane.NodeLinkSetRequest\x1a\x1e.freeplane.NodeLinkSetResponse\"\x00\x12N\n\x0bNodeNoteSet\x12\x1d.freeplane.NodeNoteSetRequest\x1a\x1e.freeplane.NodeNoteSetResponse\"\x00\x12W\n\x0eNodeDetailsSet\x12 .freeplane.NodeDetailsSetRequest\x1a!.freeplane.NodeDetailsSetResponse\"\x00\x12?\n\x06Groovy\x12\x18.freeplane.GroovyRequest\x1a\x19.freeplane.GroovyResponse\"\x00\x12Q\n\x0cNodeColorSet\x12\x1e.freeplane.NodeColorSetRequest\x1a\x1f.freeplane.NodeColorSetResponse\"\x00\x12o\n\x16NodeBackgroundColorSet\x12(.freeplane.NodeBackgroundColorSetRequest\x1a).freeplane.NodeBackgroundColorSetResponse\"\x00\x12T\n\rStatusInfoSet\x12\x1f.freeplane.StatusInfoSetRequest\x1a .freeplane.StatusInfoSetResponse\"\x00\x12\x42\n\x07TextFSM\x12\x19.freeplane.TextFSMRequest\x1a\x1a.freeplane.TextFSMResponse\"\x00\x12Z\n\x0fMindMapFromJSON\x12!.freeplane.MindMapFromJSONRequest\x1a\".freeplane.MindMapFromJSONResponse\"\x00\x12T\n\rMindMapToJSON\x12\x1f.freeplane.MindMapToJSONRequest\x1a .freeplane.MindMapToJSONResponse\"\x00\x42-\n\x19org.freeplane.plugin.grpcB\tfreeplaneP\x01\xa2\x02\x02\x46Pb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -42,34 +42,38 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _globals['_NODEDETAILSSETREQUEST']._serialized_end=516
   _globals['_NODEDETAILSSETRESPONSE']._serialized_start=518
   _globals['_NODEDETAILSSETRESPONSE']._serialized_end=559
-  _globals['_GROOVYREQUEST']._serialized_start=561
-  _globals['_GROOVYREQUEST']._serialized_end=597
-  _globals['_GROOVYRESPONSE']._serialized_start=599
-  _globals['_GROOVYRESPONSE']._serialized_end=632
-  _globals['_NODECOLORSETREQUEST']._serialized_start=634
-  _globals['_NODECOLORSETREQUEST']._serialized_end=729
-  _globals['_NODECOLORSETRESPONSE']._serialized_start=731
-  _globals['_NODECOLORSETRESPONSE']._serialized_end=770
-  _globals['_NODEBACKGROUNDCOLORSETREQUEST']._serialized_start=772
-  _globals['_NODEBACKGROUNDCOLORSETREQUEST']._serialized_end=877
-  _globals['_NODEBACKGROUNDCOLORSETRESPONSE']._serialized_start=879
-  _globals['_NODEBACKGROUNDCOLORSETRESPONSE']._serialized_end=928
-  _globals['_STATUSINFOSETREQUEST']._serialized_start=930
-  _globals['_STATUSINFOSETREQUEST']._serialized_end=972
-  _globals['_STATUSINFOSETRESPONSE']._serialized_start=974
-  _globals['_STATUSINFOSETRESPONSE']._serialized_end=1014
-  _globals['_TEXTFSMREQUEST']._serialized_start=1016
-  _globals['_TEXTFSMREQUEST']._serialized_end=1046
-  _globals['_TEXTFSMRESPONSE']._serialized_start=1048
-  _globals['_TEXTFSMRESPONSE']._serialized_end=1082
-  _globals['_MINDMAPFROMJSONREQUEST']._serialized_start=1084
-  _globals['_MINDMAPFROMJSONREQUEST']._serialized_end=1122
-  _globals['_MINDMAPFROMJSONRESPONSE']._serialized_start=1124
-  _globals['_MINDMAPFROMJSONRESPONSE']._serialized_end=1166
-  _globals['_MINDMAPTOJSONREQUEST']._serialized_start=1168
-  _globals['_MINDMAPTOJSONREQUEST']._serialized_end=1190
-  _globals['_MINDMAPTOJSONRESPONSE']._serialized_start=1192
-  _globals['_MINDMAPTOJSONRESPONSE']._serialized_end=1246
-  _globals['_FREEPLANE']._serialized_start=1249
-  _globals['_FREEPLANE']._serialized_end=2277
+  _globals['_NODENOTESETREQUEST']._serialized_start=561
+  _globals['_NODENOTESETREQUEST']._serialized_end=612
+  _globals['_NODENOTESETRESPONSE']._serialized_start=614
+  _globals['_NODENOTESETRESPONSE']._serialized_end=652
+  _globals['_GROOVYREQUEST']._serialized_start=654
+  _globals['_GROOVYREQUEST']._serialized_end=690
+  _globals['_GROOVYRESPONSE']._serialized_start=692
+  _globals['_GROOVYRESPONSE']._serialized_end=725
+  _globals['_NODECOLORSETREQUEST']._serialized_start=727
+  _globals['_NODECOLORSETREQUEST']._serialized_end=822
+  _globals['_NODECOLORSETRESPONSE']._serialized_start=824
+  _globals['_NODECOLORSETRESPONSE']._serialized_end=863
+  _globals['_NODEBACKGROUNDCOLORSETREQUEST']._serialized_start=865
+  _globals['_NODEBACKGROUNDCOLORSETREQUEST']._serialized_end=970
+  _globals['_NODEBACKGROUNDCOLORSETRESPONSE']._serialized_start=972
+  _globals['_NODEBACKGROUNDCOLORSETRESPONSE']._serialized_end=1021
+  _globals['_STATUSINFOSETREQUEST']._serialized_start=1023
+  _globals['_STATUSINFOSETREQUEST']._serialized_end=1065
+  _globals['_STATUSINFOSETRESPONSE']._serialized_start=1067
+  _globals['_STATUSINFOSETRESPONSE']._serialized_end=1107
+  _globals['_TEXTFSMREQUEST']._serialized_start=1109
+  _globals['_TEXTFSMREQUEST']._serialized_end=1139
+  _globals['_TEXTFSMRESPONSE']._serialized_start=1141
+  _globals['_TEXTFSMRESPONSE']._serialized_end=1175
+  _globals['_MINDMAPFROMJSONREQUEST']._serialized_start=1177
+  _globals['_MINDMAPFROMJSONREQUEST']._serialized_end=1215
+  _globals['_MINDMAPFROMJSONRESPONSE']._serialized_start=1217
+  _globals['_MINDMAPFROMJSONRESPONSE']._serialized_end=1259
+  _globals['_MINDMAPTOJSONREQUEST']._serialized_start=1261
+  _globals['_MINDMAPTOJSONREQUEST']._serialized_end=1283
+  _globals['_MINDMAPTOJSONRESPONSE']._serialized_start=1285
+  _globals['_MINDMAPTOJSONRESPONSE']._serialized_end=1339
+  _globals['_FREEPLANE']._serialized_start=1342
+  _globals['_FREEPLANE']._serialized_end=2450
 # @@protoc_insertion_point(module_scope)

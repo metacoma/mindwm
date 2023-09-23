@@ -16,6 +16,7 @@ parameters:
           rpc DeleteChild (DeleteChildRequest) returns (DeleteChildResponse) {};
           rpc NodeAttributeAdd (NodeAttributeAddRequest) returns (NodeAttributeAddResponse) {};
           rpc NodeLinkSet (NodeLinkSetRequest) returns (NodeLinkSetResponse) {};
+          rpc NodeNoteSet (NodeNoteSetRequest) returns (NodeNoteSetResponse) {};
           rpc NodeDetailsSet (NodeDetailsSetRequest) returns (NodeDetailsSetResponse) {};
           rpc Groovy (GroovyRequest) returns (GroovyResponse) {};
           rpc NodeColorSet (NodeColorSetRequest) returns (NodeColorSetResponse) {};
@@ -68,6 +69,15 @@ parameters:
         }
 
         message NodeDetailsSetResponse {
+          bool success = 1;
+        }
+
+        message NodeNoteSetRequest {
+          string node_id = 1;
+          string note = 2;
+        }
+
+        message NodeNoteSetResponse {
           bool success = 1;
         }
 

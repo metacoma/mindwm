@@ -34,6 +34,11 @@ class FreeplaneStub(object):
                 request_serializer=freeplane__pb2.NodeLinkSetRequest.SerializeToString,
                 response_deserializer=freeplane__pb2.NodeLinkSetResponse.FromString,
                 )
+        self.NodeNoteSet = channel.unary_unary(
+                '/freeplane.Freeplane/NodeNoteSet',
+                request_serializer=freeplane__pb2.NodeNoteSetRequest.SerializeToString,
+                response_deserializer=freeplane__pb2.NodeNoteSetResponse.FromString,
+                )
         self.NodeDetailsSet = channel.unary_unary(
                 '/freeplane.Freeplane/NodeDetailsSet',
                 request_serializer=freeplane__pb2.NodeDetailsSetRequest.SerializeToString,
@@ -98,6 +103,12 @@ class FreeplaneServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def NodeLinkSet(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def NodeNoteSet(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -173,6 +184,11 @@ def add_FreeplaneServicer_to_server(servicer, server):
                     servicer.NodeLinkSet,
                     request_deserializer=freeplane__pb2.NodeLinkSetRequest.FromString,
                     response_serializer=freeplane__pb2.NodeLinkSetResponse.SerializeToString,
+            ),
+            'NodeNoteSet': grpc.unary_unary_rpc_method_handler(
+                    servicer.NodeNoteSet,
+                    request_deserializer=freeplane__pb2.NodeNoteSetRequest.FromString,
+                    response_serializer=freeplane__pb2.NodeNoteSetResponse.SerializeToString,
             ),
             'NodeDetailsSet': grpc.unary_unary_rpc_method_handler(
                     servicer.NodeDetailsSet,
@@ -289,6 +305,23 @@ class Freeplane(object):
         return grpc.experimental.unary_unary(request, target, '/freeplane.Freeplane/NodeLinkSet',
             freeplane__pb2.NodeLinkSetRequest.SerializeToString,
             freeplane__pb2.NodeLinkSetResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def NodeNoteSet(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/freeplane.Freeplane/NodeNoteSet',
+            freeplane__pb2.NodeNoteSetRequest.SerializeToString,
+            freeplane__pb2.NodeNoteSetResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
