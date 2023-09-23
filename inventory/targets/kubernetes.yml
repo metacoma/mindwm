@@ -20,7 +20,7 @@ parameters:
         kubectl get svc -n $* --output='jsonpath="{.spec.ports[0].nodePort}"'
 
       minikube_start: |
-        minikube start --driver=docker
+        minikube start --driver=docker --cpus max --memory max
 
   wtf:
     mods:
