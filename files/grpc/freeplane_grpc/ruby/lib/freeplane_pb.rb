@@ -40,6 +40,13 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   add_message "freeplane.NodeDetailsSetResponse" do
     optional :success, :bool, 1
   end
+  add_message "freeplane.NodeNoteSetRequest" do
+    optional :node_id, :string, 1
+    optional :note, :string, 2
+  end
+  add_message "freeplane.NodeNoteSetResponse" do
+    optional :success, :bool, 1
+  end
   add_message "freeplane.GroovyRequest" do
     optional :groovy_code, :string, 1
   end
@@ -103,6 +110,8 @@ module Freeplane
   NodeLinkSetResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeLinkSetResponse").msgclass
   NodeDetailsSetRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeDetailsSetRequest").msgclass
   NodeDetailsSetResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeDetailsSetResponse").msgclass
+  NodeNoteSetRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeNoteSetRequest").msgclass
+  NodeNoteSetResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeNoteSetResponse").msgclass
   GroovyRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.GroovyRequest").msgclass
   GroovyResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.GroovyResponse").msgclass
   NodeColorSetRequest = Google::Protobuf::DescriptorPool.generated_pool.lookup("freeplane.NodeColorSetRequest").msgclass

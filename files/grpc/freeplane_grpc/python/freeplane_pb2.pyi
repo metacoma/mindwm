@@ -76,6 +76,20 @@ class NodeDetailsSetResponse(_message.Message):
     success: bool
     def __init__(self, success: bool = ...) -> None: ...
 
+class NodeNoteSetRequest(_message.Message):
+    __slots__ = ["node_id", "note"]
+    NODE_ID_FIELD_NUMBER: _ClassVar[int]
+    NOTE_FIELD_NUMBER: _ClassVar[int]
+    node_id: str
+    note: str
+    def __init__(self, node_id: _Optional[str] = ..., note: _Optional[str] = ...) -> None: ...
+
+class NodeNoteSetResponse(_message.Message):
+    __slots__ = ["success"]
+    SUCCESS_FIELD_NUMBER: _ClassVar[int]
+    success: bool
+    def __init__(self, success: bool = ...) -> None: ...
+
 class GroovyRequest(_message.Message):
     __slots__ = ["groovy_code"]
     GROOVY_CODE_FIELD_NUMBER: _ClassVar[int]

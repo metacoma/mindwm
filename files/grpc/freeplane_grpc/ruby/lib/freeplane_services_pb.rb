@@ -18,6 +18,7 @@ module Freeplane
       rpc :DeleteChild, DeleteChildRequest, DeleteChildResponse
       rpc :NodeAttributeAdd, NodeAttributeAddRequest, NodeAttributeAddResponse
       rpc :NodeLinkSet, NodeLinkSetRequest, NodeLinkSetResponse
+      rpc :NodeNoteSet, NodeNoteSetRequest, NodeNoteSetResponse
       rpc :NodeDetailsSet, NodeDetailsSetRequest, NodeDetailsSetResponse
       rpc :Groovy, GroovyRequest, GroovyResponse
       rpc :NodeColorSet, NodeColorSetRequest, NodeColorSetResponse
