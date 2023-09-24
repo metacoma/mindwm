@@ -1,0 +1,10 @@
+Value Key POD_NAME ([^ ]+)
+Value Required NOT_READY ([0-9])
+Value Required TOTAL ([0-9])
+Value Required STATUS (\S+)
+Value Required RESTARTS ([0-9]+)
+Value Required AGE ([0-9]+[a-z])
+
+Start
+  ^${POD_NAME}\s+${NOT_READY}/${TOTAL}\s+${STATUS}\s+${RESTARTS} \([0-9a-z]+ ago\)\s+${AGE} -> Continue.Record
+
