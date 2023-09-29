@@ -351,10 +351,19 @@ parameters:
             type: amqp
             inputs:
               - tmux-pane-raw-io-context
-            #connection: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
             connection:
               connection_string: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
             exchange: io-context
+            encoding:
+              codec: json
+
+          rabbitmq-tmux-exchange:
+            type: amqp
+            inputs:
+              - http_server
+            connection:
+              connection_string: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
+            exchange: tmux
             encoding:
               codec: json
 
