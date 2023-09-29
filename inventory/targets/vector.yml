@@ -56,6 +56,7 @@ parameters:
         )
 
   vector_aggregator_port: 31399
+  vector_http_server_port: 31398
 
 
 
@@ -75,6 +76,11 @@ parameters:
             port: ${vector_aggregator_port}
             targetPort: ${vector_aggregator_port}
             nodePort: ${vector_aggregator_port}
+          - name: http-server
+            protocol: TCP
+            port: ${vector_http_server_port}
+            targetPort: ${vector_http_server_port}
+            nodePort: ${vector_http_server_port}
       customConfig:
 #
 #
@@ -86,6 +92,11 @@ parameters:
 #
 
         sources:
+
+          http_server:
+            type: http_server
+            address: 0.0.0.0:${vector_http_server_port}
+
           tmux-pane-bytestream:
             type: vector
             address: 0.0.0.0:${vector_aggregator_port}
