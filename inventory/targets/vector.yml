@@ -56,6 +56,7 @@ parameters:
         )
 
   vector_aggregator_port: 31399
+  vector_http_server_port: 31398
 
 
 
@@ -75,6 +76,11 @@ parameters:
             port: ${vector_aggregator_port}
             targetPort: ${vector_aggregator_port}
             nodePort: ${vector_aggregator_port}
+          - name: http-server
+            protocol: TCP
+            port: ${vector_http_server_port}
+            targetPort: ${vector_http_server_port}
+            nodePort: ${vector_http_server_port}
       customConfig:
 #
 #
@@ -86,6 +92,13 @@ parameters:
 #
 
         sources:
+
+          http_server:
+            type: http_server
+            address: 0.0.0.0:${vector_http_server_port}
+            path: "/event"
+            encoding: json
+
           tmux-pane-bytestream:
             type: vector
             address: 0.0.0.0:${vector_aggregator_port}
@@ -266,16 +279,17 @@ parameters:
 #            compression: "none"
 #            encoding:
 #              codec: json
-#          console:
-#            type: console
-#            inputs:
+          console:
+            type: console
+            inputs:
+              - http_server
 #              # - tmux-pane-bytestream
 #              # - tmux-stream-split-line
 #              # - kafka-linestream-to-elasticsearch
 #              # - kafka-tmux-pane-linestream
 #              # - kafka-io-context-to-elasticsearch
-#            encoding:
-#              codec: json
+            encoding:
+              codec: json
 #          kafka-tmux-pane-raw-linestream:
 #            type: kafka
 #            inputs:
@@ -337,10 +351,19 @@ parameters:
             type: amqp
             inputs:
               - tmux-pane-raw-io-context
-            #connection: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
             connection:
               connection_string: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
             exchange: io-context
+            encoding:
+              codec: json
+
+          rabbitmq-tmux-exchange:
+            type: amqp
+            inputs:
+              - http_server
+            connection:
+              connection_string: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
+            exchange: tmux
             encoding:
               codec: json
 

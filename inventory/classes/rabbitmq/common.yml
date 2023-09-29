@@ -7,6 +7,9 @@ parameters:
     io-document:
       type: fanout
       durable: true
+    tmux:
+      type: fanout
+      durable: true
   rabbitmq_version: 3.12.4
   rabbitmq_user: user
   rabbitmq_password: password
