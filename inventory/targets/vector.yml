@@ -96,6 +96,8 @@ parameters:
           http_server:
             type: http_server
             address: 0.0.0.0:${vector_http_server_port}
+            path: "/event"
+            encoding: json
 
           tmux-pane-bytestream:
             type: vector
@@ -277,16 +279,17 @@ parameters:
 #            compression: "none"
 #            encoding:
 #              codec: json
-#          console:
-#            type: console
-#            inputs:
+          console:
+            type: console
+            inputs:
+              - http_server
 #              # - tmux-pane-bytestream
 #              # - tmux-stream-split-line
 #              # - kafka-linestream-to-elasticsearch
 #              # - kafka-tmux-pane-linestream
 #              # - kafka-io-context-to-elasticsearch
-#            encoding:
-#              codec: json
+            encoding:
+              codec: json
 #          kafka-tmux-pane-raw-linestream:
 #            type: kafka
 #            inputs:
