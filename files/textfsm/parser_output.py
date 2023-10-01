@@ -87,11 +87,28 @@ class IoContextDocument:
         self.__io_document = document
         pprint.pprint(document)
         print(f"IoContextDocument: {self.getHost()}->{self.getTmuxSessionName()}")
-
-def fpDrawTable(fp_node_id, header, table_body):
+def fpDrawTable(fp_node_id, tmux_pane_id, session_name, header, table_body):
     for item in table_body:
         fp_node = fp.CreateChild(freeplane_pb2.CreateChildRequest(name=item[0], parent_node_id = fp_node_id))
         name = item[0]
+
+        cmd = "kubectl -n mindwm exec -ti %s -- /bin/sh" % (item[0])
+
+        groovy_code = """
+def post = new URL("http://192.168.49.2:31398/event").openConnection();
+def message = '{"cmd":"%s", "tmux_pane_id": "%s", "session_name": "%s"}'
+post.setRequestMethod("POST")
+post.setDoOutput(true)
+post.setRequestProperty("Content-Type", "application/json")
+post.getOutputStream().write(message.getBytes("UTF-8"));
+def postRC = post.getResponseCode();
+println(postRC);
+if (postRC.equals(200)) {
+    println(post.getInputStream().getText());
+    }
+""" % (cmd,tmux_pane_id,session_name)
+
+        fp.NodeAttributeAdd(freeplane_pb2.NodeAttributeAddRequest(node_id=fp_node.node_id, attribute_name='script1', attribute_value=groovy_code))
         for i in range(1, len(item)):
             fp.NodeAttributeAdd(freeplane_pb2.NodeAttributeAddRequest(node_id=fp_node.node_id, attribute_name=header[i], attribute_value=item[i]))
             print(f"{header[i]}: {item[i]}\n")
@@ -108,7 +125,9 @@ def callback(ch, method, properties, body):
     result_string = "\n".join(non_empty_lines)
 
     header, result = do_textfsm(result_string)
-    fpDrawTable(data['_fp_node_id'], header, result)
+    tmux_pane_id = data['metadata']['tmux']['pane_id']
+    session_name = data['metadata']['tmux']['session_name']
+    fpDrawTable(data['_fp_node_id'], tmux_pane_id, session_name, header, result)
 
 rabbitmq_channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
 print("Waiting for messages. To exit, press Ctrl+C")
