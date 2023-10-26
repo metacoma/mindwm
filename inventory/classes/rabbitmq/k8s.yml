@@ -4,7 +4,7 @@ classes:
   - rabbitmq.helm
 parameters:
 
-  rabbitmq_namespace: rabbitmq
+  rabbitmq_namespace: ${rabbitmq_k8s_namespace}
   rabbitmq_manage_node_port: 32100
   rabbitmq_image:
     repo: bitnami/rabbitmq

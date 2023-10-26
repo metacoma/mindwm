@@ -4,7 +4,7 @@ classes:
   - rabbitmq.common
 parameters:
   rabbitmq_chart_version: 12.1.4
-  rabbitmq_release_name: rabbitmq
+#  rabbitmq_release_name: rabbitmq
   rabbitmq_helm_chart_path: files/helm-charts/rabbitmq
 
   bash:
