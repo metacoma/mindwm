@@ -4,7 +4,6 @@ classes:
   - neo4j.common
 parameters:
   neo4j_chart_version: 5.11.0
-  neo4j_release_name: neo4j
   neo4j_helm_chart_path: files/helm-charts/neo4j
 
   bash:

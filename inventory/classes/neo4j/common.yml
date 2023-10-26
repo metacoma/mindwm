@@ -1,5 +1,8 @@
 ---
 parameters:
+  neo4j_ip4_port: 7687
+  neo4j_release_name: neo4j
+  neo4j_namespace: neo4j
   neo4j_version: 5.11.0
   neo4j_user: neo4j
   neo4j_password: password
