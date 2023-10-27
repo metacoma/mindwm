@@ -284,6 +284,7 @@ parameters:
             type: console
             inputs:
               - http_server
+#              - io-context
 #              # - tmux-pane-bytestream
 #              # - tmux-stream-split-line
 #              # - kafka-linestream-to-elasticsearch
@@ -355,6 +356,16 @@ parameters:
             connection:
               connection_string: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
             exchange: io-context
+            encoding:
+              codec: json
+
+          rabbitmq-tmux-pane-raw-io-context:
+            type: amqp
+            inputs:
+              - tmux-stream-split-line
+            connection:
+              connection_string: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
+            exchange: io-line
             encoding:
               codec: json
 

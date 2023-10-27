@@ -4,6 +4,10 @@ parameters:
   rabbitmq_default_port: 5672
   rabbitmq_k8s_namespace: rabbitmq
   rabbitmq_exchanges:
+    io-line:
+      name: io-line
+      type: fanout
+      durable: true
     io-context:
       name: io-context
       type: fanout
