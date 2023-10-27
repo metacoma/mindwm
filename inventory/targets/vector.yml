@@ -21,6 +21,7 @@ classes:
   - vector.config
   - helm
   - vector.helm
+  - mindwm.k8s
 
 parameters:
 
@@ -55,7 +56,7 @@ parameters:
           kubectl -n vector logs -f statefulset.apps/vector
         )
 
-  vector_aggregator_port: 31399
+  vector_aggregator_port: ${mindwm:k8s:vector_aggregator_port}
   vector_http_server_port: 31398
 
 

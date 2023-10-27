@@ -3,3 +3,4 @@ parameters:
   mindwm:
     k8s:
       consumer_namespace: mindwm-consumers
+      vector_aggregator_port: 31399
