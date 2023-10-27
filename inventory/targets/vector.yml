@@ -172,12 +172,15 @@ parameters:
               function init()
                 line = {}
               end
+              local function remove_unicode_ansi_sequences(input)
+                return input:gsub('%[%?[0-9][0-9][0-9][0-9][a-z]', ''):gsub('\27', '')
+              end
               function process(event, emit)
                 ch = event.log.message
                 tmux_pane_id = event.log.metadata.tmux.pane_id
                 -- newline
                 if ch == "0a" then
-                  event.log.message = line[tmux_pane_id]
+                  event.log.message = remove_unicode_ansi_sequences(line[tmux_pane_id])
                   emit(event)
                   line[tmux_pane_id] = ""
                 else
@@ -186,6 +189,7 @@ parameters:
                   line[tmux_pane_id] = (line[tmux_pane_id] == nil or line[tmux_pane_id] == "") and symbol or (line[tmux_pane_id] .. symbol)
                 end
               end
+
 
           tmux-pane-raw-io-context:
             type: "lua"
