@@ -1,0 +1,5 @@
+---
+parameters:
+  mindwm:
+    k8s:
+      consumer_namespace: mindwm-consumers

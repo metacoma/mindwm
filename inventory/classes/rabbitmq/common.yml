@@ -5,12 +5,15 @@ parameters:
   rabbitmq_k8s_namespace: rabbitmq
   rabbitmq_exchanges:
     io-context:
+      name: io-context
       type: fanout
       durable: true
     io-document:
+      name: io-document
       type: fanout
       durable: true
     tmux:
+      name: tmux
       type: fanout
       durable: true
   rabbitmq_version: 3.12.4

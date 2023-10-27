@@ -1,0 +1,46 @@
+---
+classes:
+  - common
+  - vim
+  - mindwm.k8s
+  - tmuxinator
+  - bash.kapitan
+  - tmuxinator.kapitan
+  - kapitan.bash.compile-fetch
+  - freeplane.grpc
+  - grpc.protoc
+  - kubernetes.freeplane-grpc-reverse-proxy
+  - rabbitmq.common
+  - neo4j.common
+  - mindwm.consumer
+
+parameters:
+  target_name: freeplane-io-context
+
+  # hack
+  consumer_image:
+    # mindwm-consumer-alice
+    # mindwm-consumer-bob
+    repo_prefix: "mindwm-consumer-"
+    tag: "latest"
+
+  mindwm:
+    consumers:
+      freeplane_io_context:
+        base_image: "alpine:latest"
+        env:
+          FREEPLANE_GRPC4_ENDPOINT: "${kubernetes:reverse-grpc-proxy4:freeplane-grpc-proxy:svc:name}.${kubernetes:reverse-grpc-proxy4:freeplane-grpc-proxy:namespace}:${kubernetes:reverse-grpc-proxy4:freeplane-grpc-proxy:svc:port}"
+          RABBITMQ_URL: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}:${rabbitmq_k8s_namespace}:${rabbitmq_default_port}/%2f"
+          NEO4J_URL: "bolt://${neo4j_release_name}.${neo4j_namespace}:${neo4j_ip4_port}"
+          NEO4J_USER: "${neo4j_user}"
+          NEO4J_PASSWORD: "${neo4j_password}"
+          EXCHANGE_NAME: ${rabbitmq_exchanges:io-context:name}
+        #python: |
+        #  println("hello world")
+        python_code: files/freeplane-io-context/freeplane-io-context.py
+
+        python_requirements:
+          - pika
+          - neo4j
+          - grpcio
+          - protobuf
