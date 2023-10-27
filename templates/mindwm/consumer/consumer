@@ -1,0 +1,6 @@
+{% if "python" in consumer %}
+{{ consumer.python }}
+{% endif %}
+{% if "python_code" in consumer %}
+{% include 'files/freeplane-io-context/freeplane-io-context.py' %}
+{% endif %}

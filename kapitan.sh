@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-KAPITAN_IMAGE="kapicorp/kapitan:v0.31.0"
+KAPITAN_IMAGE="kapicorp/kapitan:v0.32.0"
 #KAPITAN_IMAGE="metacoma/kapitan:latest"
 
 kapitan() {
