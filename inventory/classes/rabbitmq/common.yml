@@ -1,5 +1,38 @@
 ---
 parameters:
+  bash:
+    functions:
+      rabbitmq_payload_prepare: |
+        cat<<EOF
+        {
+           "vhost": "/",
+            "name": "",
+            "properties": {
+        	"delivery_mode": 2,
+        	"headers": {}
+            },
+            "routing_key": "key",
+            "delivery_mode": "1",
+            "payload":`jq @json`,
+            "headers": {},
+            "props": {},
+            "payload_encoding": "string"
+        }
+        EOF
+      rabbitmq_publish_data: |
+        local exchange=$1
+        user=user
+        pass=password
+        rmq_url="`minikube ip`:32100"
+        curl -vu "$user:$pass" -H "Accept: application/json" -H "Content-Type:application/json" -X POST -d @- http://$rmq_url/api/exchanges/%2f/$exchange/publish
+
+      # . functions.bash
+      # cat json | rabbitmq_publish_json exchange_name
+      rabbitmq_publish_json: |
+        local exchange=$1
+        rabbitmq_payload_prepare | rabbitmq_publish_data $exchange
+
+
   rabbitmq_release_name: rabbitmq
   rabbitmq_default_port: 5672
   rabbitmq_k8s_namespace: rabbitmq
@@ -20,6 +53,11 @@ parameters:
       name: tmux
       type: fanout
       durable: true
+    openai:
+      name: openai-exchange
+      type: fanout
+      durable: true
+
   rabbitmq_version: 3.12.4
   rabbitmq_user: user
   rabbitmq_password: password
