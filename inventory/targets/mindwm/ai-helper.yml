@@ -1,0 +1,59 @@
+---
+classes:
+  - common
+  - vim
+  - mindwm.k8s
+  - tmux.pipe-stream
+  - tmuxinator
+  - bash.kapitan
+  - tmuxinator.kapitan
+  - kapitan.bash.compile-fetch
+  - freeplane.grpc
+  - grpc.protoc
+  - kubernetes.freeplane-grpc-reverse-proxy
+  - rabbitmq.common
+  - neo4j.common
+#  - mindwm.consumer
+
+parameters:
+  target_name: ai-helper
+
+  # hack
+  consumer_image:
+    # mindwm-consumer-alice
+    # mindwm-consumer-bob
+    repo_prefix: "mindwm-consumer-"
+    tag: "latest"
+
+  tmuxinator:
+    windows:
+      ai-helper:
+        panes:
+          -
+            - cd ${kapitan_root}/files/ai-helper
+            - . venv/bin/activate
+            - python3 ./ai-helper.py
+          -
+            - cd ${kapitan_root}/files/ai-helper
+            - . venv/bin/activate
+      openai:
+        panes:
+          -
+            - cd ${kapitan_root}/files/openai-io-context/
+            - . venv/bin/activate
+            - . ./.env
+            - python3 ./openai-io-context.py
+          -
+            - cd ${kapitan_root}/files/openai-io-context/
+            - . venv/bin/activate
+            - . ./.env
+      tmux-manager:
+        panes:
+          -
+            - cd ${kapitan_root}/files/tmux-manager
+            - . .venv/bin/activate
+            - python3 ./rabbitmq-tmux-manager.py
+          -
+            - cd ${kapitan_root}/files/tmux-manager
+            - . .venv/bin/activate
+            - python3 ./rabbitmq-tmux-manager.py
