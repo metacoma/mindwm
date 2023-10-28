@@ -21,8 +21,9 @@ parameters:
         EOF
       rabbitmq_publish_data: |
         local exchange=$1
-        user=user
-        pass=password
+        user=${rabbitmq_user}
+        pass=${rabbitmq_password}
+        #TODO(@metacoma) fix hardcode
         rmq_url="`minikube ip`:32100"
         curl -vu "$user:$pass" -H "Accept: application/json" -H "Content-Type:application/json" -X POST -d @- http://$rmq_url/api/exchanges/%2f/$exchange/publish
 
@@ -54,7 +55,7 @@ parameters:
       type: fanout
       durable: true
     openai:
-      name: openai-exchange
+      name: openai
       type: fanout
       durable: true
 
