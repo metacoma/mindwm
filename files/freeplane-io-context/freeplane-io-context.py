@@ -1,4 +1,3 @@
-{%- raw -%}
 import pika
 import pprint
 import json
@@ -29,6 +28,7 @@ rabbitmq_channel = connection.channel()
 output_queue_name = "io-document"
 
 exchange_name = os.getenv('EXCHANGE_NAME')
+exchange_name = "io-context"
 result = rabbitmq_channel.queue_declare(queue="", exclusive=True)
 queue_name = result.method.queue
 
@@ -473,4 +473,3 @@ rabbitmq_channel.basic_consume(queue=queue_name, on_message_callback=callback, a
 
 print("Waiting for messages. To exit, press Ctrl+C")
 rabbitmq_channel.start_consuming()
-{%- endraw -%}
