@@ -21,6 +21,7 @@ classes:
   - vector.config
   - helm
   - vector.helm
+  - mindwm.k8s
 
 parameters:
 
@@ -55,7 +56,7 @@ parameters:
           kubectl -n vector logs -f statefulset.apps/vector
         )
 
-  vector_aggregator_port: 31399
+  vector_aggregator_port: ${mindwm:k8s:vector_aggregator_port}
   vector_http_server_port: 31398
 
 
@@ -171,12 +172,15 @@ parameters:
               function init()
                 line = {}
               end
+              local function remove_unicode_ansi_sequences(input)
+                return input:gsub('%[%?[0-9][0-9][0-9][0-9][a-z]', ''):gsub('\27', '')
+              end
               function process(event, emit)
                 ch = event.log.message
                 tmux_pane_id = event.log.metadata.tmux.pane_id
                 -- newline
                 if ch == "0a" then
-                  event.log.message = line[tmux_pane_id]
+                  event.log.message = remove_unicode_ansi_sequences(line[tmux_pane_id])
                   emit(event)
                   line[tmux_pane_id] = ""
                 else
@@ -185,6 +189,7 @@ parameters:
                   line[tmux_pane_id] = (line[tmux_pane_id] == nil or line[tmux_pane_id] == "") and symbol or (line[tmux_pane_id] .. symbol)
                 end
               end
+
 
           tmux-pane-raw-io-context:
             type: "lua"
@@ -270,82 +275,13 @@ parameters:
 #
 
         sinks:
-#          kafka-tmux-pane-bytestream:
-#            type: kafka
-#            inputs:
-#              - tmux-pane-bytestream
-#            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
-#            topic: "${kafka_topic_tmux_bytestream}"
-#            compression: "none"
-#            encoding:
-#              codec: json
           console:
             type: console
             inputs:
               - http_server
-#              # - tmux-pane-bytestream
-#              # - tmux-stream-split-line
-#              # - kafka-linestream-to-elasticsearch
-#              # - kafka-tmux-pane-linestream
-#              # - kafka-io-context-to-elasticsearch
+              - tmux-pane-raw-io-context
             encoding:
               codec: json
-#          kafka-tmux-pane-raw-linestream:
-#            type: kafka
-#            inputs:
-#              -  tmux-stream-split-line
-#            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
-#            # topic: "${kafka_topic_tmux_linestream}"
-#            topic: "${kafka_topic_tmux_raw_linestream}" # linestream with shell color codes
-#            compression: "none"
-#            encoding:
-#              codec: json
-#          opensearch-raw-tmux-lines:
-#            type: elasticsearch
-#            inputs:
-#              - tmux-stream-split-line
-#            endpoint: https://${opensearch_helm_release}-cluster-master.${opensearch_k8s_namespace}:9200
-#            api_version: "v7" # https://opensearch.org/faq/
-#            auth: # TODO (@metacoma) use opensearch credentials from opensearch class
-#              user: ${opensearch_vector_user}
-#              password: ${opensearch_vector_password}
-#              strategy: basic
-#            tls:
-#              verify_certificate: false
-#              verify_hostname: false
-#            healthcheck:
-#              enabled: false
-#            bulk:
-#              index: "${opensearch_raw_tmux_lines_index}-%F"
-
-#          opensearch-raw-tmux-io-context:
-#            type: elasticsearch
-#            inputs:
-#              - tmux-pane-raw-io-context
-#            endpoint: https://${opensearch_helm_release}-cluster-master.${opensearch_k8s_namespace}:9200
-#            api_version: "v7" # https://opensearch.org/faq/
-#            auth: # TODO (@metacoma) use opensearch credentials from opensearch class
-#              user: ${opensearch_vector_user}
-#              password: ${opensearch_vector_password}
-#              strategy: basic
-#            tls:
-#              verify_certificate: false
-#              verify_hostname: false
-#            healthcheck:
-#              enabled: false
-#            bulk:
-#              index: "${opensearch_raw_tmux_io_context_index}-%F"
-
-#          kafka-tmux-pane-raw-io-context:
-#            type: kafka
-#            inputs:
-#              - tmux-pane-raw-io-context
-#              # - tmux-pane-io-context
-#            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
-#            topic: "${kafka_topic_tmux_raw_io_context}"
-#            compression: "none"
-#            encoding:
-#              codec: json
 
           rabbitmq-tmux-pane-raw-io-context:
             type: amqp
@@ -354,6 +290,16 @@ parameters:
             connection:
               connection_string: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
             exchange: io-context
+            encoding:
+              codec: json
+
+          rabbitmq-tmux-pane-raw-io-line:
+            type: amqp
+            inputs:
+              - tmux-stream-split-line
+            connection:
+              connection_string: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
+            exchange: io-line
             encoding:
               codec: json
 

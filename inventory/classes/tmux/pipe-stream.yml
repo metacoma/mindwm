@@ -1,0 +1,95 @@
+---
+classes:
+  - mindwm.k8s
+parameters:
+  kapitan:
+    compile:
+      - input_paths:
+          - files/vector/pipe-pane2hexstream.pl
+        output_path: .
+        input_type: copy
+
+      - input_paths:
+          - jsonnet/vector-conf.jsonnet
+        output_path: vector/
+        input_type: jsonnet
+        output_type: yaml
+  bash:
+    functions:
+      tmux-pipe-stream: |
+        # PARENT_PID=`ps -o ppid= $$ | tr -d '[:space:]'`
+        SHELL_PID=$$
+        TMUX_SESSION_NAME=`tmux display-message -p '#S'`
+        VECTOR_UPSTREAM=`minikube ip`:${mindwm:k8s:vector_aggregator_port}
+        TMUX_PANE_ID=`echo $TMUX_PANE`
+
+        if [ -z "$TMUX_PANE_ID" ]; then
+          TMUX_PANE_ID=`tmux list-panes -t $TMUX_SESSION_NAME -F '#{pane_id} #{pane_active}' | awk '/1$/ {print $1}'`
+        fi
+
+        TMUX_PANE_ID=`echo $TMUX_PANE_ID | sed 's/[^0-9]//g'`
+
+
+        tmux pipe-pane -IO "perl ${compiled_dir}/pipe-pane2hexstream.pl | VECTOR_UPSTREAM='$VECTOR_UPSTREAM' SHELL_PID='$SHELL_PID' TMUX_SESSION_NAME='$TMUX_SESSION_NAME' TMUX_PANE_ID='$TMUX_PANE_ID' vector -q --config ${compiled_dir}/vector/tmux-bytestream.yaml"
+
+  vector:
+    config:
+      tmux-bytestream:
+        sources:
+          tmux-raw-bytestream:
+            type: "file_descriptor"
+            fd: 0
+            decoding:
+              codec: "bytes"
+        transforms:
+          tmux-bytestream:
+            type: remap
+  bash:
+    functions:
+      tmux-pipe-stream: |
+        # PARENT_PID=`ps -o ppid= $$ | tr -d '[:space:]'`
+        SHELL_PID=$$
+        TMUX_SESSION_NAME=`tmux display-message -p '#S'`
+        VECTOR_UPSTREAM=`minikube ip`:${mindwm:k8s:vector_aggregator_port}
+        TMUX_PANE_ID=`echo $TMUX_PANE`
+
+        if [ -z "$TMUX_PANE_ID" ]; then
+          TMUX_PANE_ID=`tmux list-panes -t $TMUX_SESSION_NAME -F '#{pane_id} #{pane_active}' | awk '/1$/ {print $1}'`
+        fi
+
+        TMUX_PANE_ID=`echo $TMUX_PANE_ID | sed 's/[^0-9]//g'`
+
+
+        tmux pipe-pane -IO "perl ${compiled_dir}/pipe-pane2hexstream.pl | VECTOR_UPSTREAM='$VECTOR_UPSTREAM' SHELL_PID='$SHELL_PID' TMUX_SESSION_NAME='$TMUX_SESSION_NAME' TMUX_PANE_ID='$TMUX_PANE_ID' vector -q --config ${compiled_dir}/vector/tmux-bytestream.yaml"
+
+  vector:
+    config:
+      tmux-bytestream:
+        sources:
+          tmux-raw-bytestream:
+            type: "file_descriptor"
+            fd: 0
+            decoding:
+              codec: "bytes"
+        transforms:
+          tmux-bytestream:
+            type: remap
+            inputs:
+              - tmux-raw-bytestream
+            source: |
+              .metadata.shell.pid = "\${SHELL_PID}"
+              .metadata.tmux.pane_id = "\${TMUX_PANE_ID}"
+              .metadata.tmux.session_name = "\${TMUX_SESSION_NAME}"
+              .metadata.window.id = "0x1abcdfegh"
+              .metadata.window.name = "WAYLAND_WORKAROUND"
+        sinks:
+          tmux-to-vector:
+            type: vector
+
+            inputs:
+              - tmux-bytestream
+            address: \${VECTOR_UPSTREAM}
+            version: "2"
+            acknowledgements:
+              enabled: false
+
