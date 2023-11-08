@@ -467,7 +467,7 @@ def callback(ch, method, properties, body):
     # TODO (@metacoma)
     #   split io-context consumer to the two consumers :
     #   io-context (neo4j part) and freeplane-io-context consumer (mindmap based on rabbitmq events)
-    if neo4j_node['N'].exists('_fp_node_id'):
+    if '_fp_node_id' in neo4j_node['N']:
         data['_fp_node_id'] = neo4j_node['N'].get('_fp_node_id')
 
     rabbitmq_channel.basic_publish(exchange='io-document', routing_key='io-document', body=json.dumps(data))

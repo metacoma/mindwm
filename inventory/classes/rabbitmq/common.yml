@@ -58,6 +58,42 @@ parameters:
       name: openai
       type: fanout
       durable: true
+    mindwm-context:
+      name: &mindwm_context_exchange mindwm-context
+      type: fanout
+      durable: true
+    mindwm-document:
+      name: &mindwm_document_exchange mindwm-document
+      type: fanout
+      durable: true
+    freeplane-track-context:
+      name: freeplane-track-context
+      type: fanout
+      durable: true
+
+  rabbitmq_queues:
+    mindwm-context:
+      name: *mindwm_context_exchange
+      durable: true
+    mindwm-document:
+      name: *mindwm_document_exchange
+      durable: true
+
+
+  rabbitmq_bindings:
+    mindwm-context:
+      exchange_name: *mindwm_context_exchange
+      queue_name: *mindwm_context_exchange
+      data:
+        routing_key: ""
+        arguments: {}
+
+    mindwm-document:
+      exchange_name: *mindwm_document_exchange
+      queue_name: *mindwm_document_exchange
+      data:
+        routing_key: ""
+        arguments: {}
 
   rabbitmq_version: 3.12.4
   rabbitmq_user: user
