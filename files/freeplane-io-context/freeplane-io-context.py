@@ -336,15 +336,16 @@ class IoContext:
         if len(output) > FP_DETAILS_MAX_LINE:
             fp_node_details = "\r".join(output[:FP_DETAILS_MAX_LINE]) + "\r..."
 
-        fp_node = self._fp.CreateChild(freeplane_pb2.CreateChildRequest(name=input_data, parent_node_id = self.sessionGetCurrentContextNode()['N'].get('_fp_node_id')))
+        #
+        #fp_node = self._fp.CreateChild(freeplane_pb2.CreateChildRequest(name=input_data, parent_node_id = self.sessionGetCurrentContextNode()['N'].get('_fp_node_id')))
         # fp_node = self._fp.CreateChild(freeplane_pb2.CreateChildRequest(name=input_data, parent_node_id = self.getIODocumentParentNode())
-        self._fp.NodeBackgroundColorSet(freeplane_pb2.NodeBackgroundColorSetRequest(node_id = fp_node.node_id, red =  176, green = 188, blue = 245, alpha = 255))
-        self._fp.NodeDetailsSet(freeplane_pb2.NodeDetailsSetRequest(node_id=fp_node.node_id, details=fp_node_details))
+        #self._fp.NodeBackgroundColorSet(freeplane_pb2.NodeBackgroundColorSetRequest(node_id = fp_node.node_id, red =  176, green = 188, blue = 245, alpha = 255))
+        #self._fp.NodeDetailsSet(freeplane_pb2.NodeDetailsSetRequest(node_id=fp_node.node_id, details=fp_node_details))
 
-        self._fp.NodeNoteSet(freeplane_pb2.NodeNoteSetRequest(node_id=fp_node.node_id, note="<BR>".join(output_data.split("\r"))))
+        #self._fp.NodeNoteSet(freeplane_pb2.NodeNoteSetRequest(node_id=fp_node.node_id, note="<BR>".join(output_data.split("\r"))))
 
 
-        current_io_document = self.__node_create(input_data, 'io_document', {"_fp_node_id": fp_node.node_id, "output_data": output_data })
+        current_io_document = self.__node_create(input_data, 'io_document', { "output_data": output_data })
         self.sessionSetCurrentIODocument(current_io_document)
 
         source_node = self.sessionGetCurrentContextNode()['N'].element_id
@@ -462,7 +463,12 @@ def callback(ch, method, properties, body):
 
     neo4j_node = ioContext.document(io_context_document)
     data['neo4j_element_id'] = neo4j_node['N'].element_id
-    data['_fp_node_id'] = neo4j_node['N'].get('_fp_node_id')
+
+    # TODO (@metacoma)
+    #   split io-context consumer to the two consumers :
+    #   io-context (neo4j part) and freeplane-io-context consumer (mindmap based on rabbitmq events)
+    if neo4j_node['N'].exists('_fp_node_id'):
+        data['_fp_node_id'] = neo4j_node['N'].get('_fp_node_id')
 
     rabbitmq_channel.basic_publish(exchange='io-document', routing_key='io-document', body=json.dumps(data))
     print(f"Published data to {output_queue_name}: {json.dumps(data)}")

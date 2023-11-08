@@ -12,7 +12,7 @@ classes:
   - kubernetes.freeplane-grpc-reverse-proxy
   - rabbitmq.common
   - neo4j.common
-  - mindwm.consumer
+#  - mindwm.consumer
 
 parameters:
   target_name: freeplane-io-context
@@ -23,6 +23,18 @@ parameters:
     # mindwm-consumer-bob
     repo_prefix: "mindwm-consumer-"
     tag: "latest"
+
+  tmuxinator:
+    windows:
+      ai-helper:
+        panes:
+          -
+            - &activate_venv |
+              cd ${kapitan_root}/files/
+              venv/bin/activate
+            - python3 ./ai-helper.py
+          -
+            - test
 
   mindwm:
     consumers:
