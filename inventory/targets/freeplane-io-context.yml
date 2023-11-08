@@ -34,7 +34,7 @@ parameters:
               venv/bin/activate
             - python3 ./ai-helper.py
           -
-            - test
+            - *activate_env
 
   mindwm:
     consumers:
