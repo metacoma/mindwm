@@ -18,6 +18,7 @@ classes:
 #  - vector.tmux-kafka
 #  - vector.console-output
   - opensearch
+  - vector.common
   - vector.config
   - helm
   - vector.helm
@@ -57,7 +58,6 @@ parameters:
         )
 
   vector_aggregator_port: ${mindwm:k8s:vector_aggregator_port}
-  vector_http_server_port: 31398
 
 
 
@@ -310,6 +310,16 @@ parameters:
             connection:
               connection_string: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
             exchange: tmux
+            encoding:
+              codec: json
+
+          events:
+            type: amqp
+            inputs:
+              - http_server
+            connection:
+              connection_string: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
+            exchange: ${rabbitmq_exchanges:events:name}
             encoding:
               codec: json
 

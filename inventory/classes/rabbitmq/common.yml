@@ -58,6 +58,14 @@ parameters:
       name: openai
       type: fanout
       durable: true
+    clipboard:
+      name: clipboard
+      type: fanout
+      durable: true
+    events:
+      name: events
+      type: fanout
+      durable: true
 
   rabbitmq_version: 3.12.4
   rabbitmq_user: user

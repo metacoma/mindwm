@@ -1,0 +1,80 @@
+---
+classes:
+  - vim
+  - bash.functions
+  - bash.kapitan
+  - bash.script
+  - common
+  - tmuxinator
+  - tmuxinator.kapitan
+  - vector.common
+parameters:
+  target_name: fvwm
+
+  bash:
+    functions:
+      aosd_show: |
+        aosd_cat -x 700 -y -600 -e 1 -f 0 -u 1000
+      fvwm_send: |
+        FvwmCommand -c -f /tmp/fvwm_mfl.sock
+      clipnotify_run: |
+        clipboard_type=$1
+        while ${clipnotify_bin} -s $clipboard_type; do
+          cat<<EOF | jq | curl -X POST -d@- http://`minikube ip`:${vector_http_server_port}/event
+            {
+              "event": {
+                "type": "clipboard",
+                "clipboard_type": "$clipboard_type",
+                "clipboard": "$(xclip -out -selection $clipboard_type | base64 -w0)"
+              }
+            }
+        EOF
+          xclip -out -selection $clipboard_type 2>/dev/null
+        done
+      clipnotify_primary:
+        clipnotify_run primary
+      clipnotify_secondary:
+        clipnotify_run secondary
+      clipnotify_clipboard:
+        clipnotify_run clipboard
+
+
+  clipnotify_path: ${kapitan_root}/files/github.com/cdown/clipnotify
+  clipnotify_bin: ${clipnotify_path}/clipnotify
+
+  kapitan:
+    dependencies:
+      - source: https://github.com/cdown/clipnotify
+        type: git
+        output_path: ${clipnotify_path}
+        ref: 25ba143c7da8ae0f196cb0db2797d30e6d04e15c
+
+  tmuxinator:
+    windows:
+      fvwm:
+        panes:
+          -
+            - cd ${kapitan_root}/files/fvwm
+          -
+            - cd ${kapitan_root}/files/fvwm
+          -
+            - cd ${kapitan_root}/files/fvwm
+      clipnotify:
+        panes:
+          -
+            - cd ${clipnotify_path}
+            - # make
+          -
+            - cd ${clipnotify_path}
+          -
+            - clipnotify_primary
+          -
+            - clipnotify_secondary
+          -
+            - clipnotify_clipboard
+      aosd-debug:
+        panes:
+          -
+            - cd ${kapitan_root}/files/fvwm/
+            - . venv/bin/activate
+            - python3 ./rabbitmq-osd-debug.py
