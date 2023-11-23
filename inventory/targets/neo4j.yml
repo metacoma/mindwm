@@ -17,6 +17,24 @@ parameters:
       neo4j:
         name: ${neo4j_release_name}
         password: ${neo4j_password}
+      config:
+        server.directories.plugins: "/var/lib/neo4j/labs"
+        dbms.security.procedures.unrestricted: "apoc.*"
+        server.config.strict_validation.enabled: "false"
+        dbms.security.procedures.allowlist: "apoc.*"
+      apoc_config:
+        apoc.export.file.enabled: "true"
+        apoc.trigger.enabled: "true"
+        apoc.import.file.enabled: "true"
+      env:
+        NEO4J_apoc_export_file_enabled: "true"
+        NEO4J_apoc_import_file_enabled: "true"
+        NEO4J_apoc_import_file_use__neo4j__config: "true"
+        NEO4J_PLUGINS: '["apoc-extended"]'
+      serviceMonitor:
+        enabled: false
+      podDisruptionBudget:
+        enabled: false
       volumes:
         data:
           mode: defaultStorageClass
