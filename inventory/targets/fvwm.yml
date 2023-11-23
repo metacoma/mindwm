@@ -14,18 +14,18 @@ parameters:
   bash:
     functions:
       aosd_show: |
-        aosd_cat -x 700 -y -600 -e 1 -f 0 -u 500
+        aosd_cat -x 700 -y -600 -e 1 -f 0 -u 1000
       fvwm_send: |
         FvwmCommand -c -f /tmp/fvwm_mfl.sock
       clipnotify_run: |
         clipboard_type=$1
         while ${clipnotify_bin} -s $clipboard_type; do
-          cat<<EOF | jq | curl -X POST `minikube ip`:${vector_http_server_port}/event
+          cat<<EOF | jq | curl -X POST -d@- http://`minikube ip`:${vector_http_server_port}/event
             {
               "event": {
                 "type": "clipboard",
                 "clipboard_type": "$clipboard_type",
-                "clipboard": "$(xclip -out -selection $clipboard_type | base64)"
+                "clipboard": "$(xclip -out -selection $clipboard_type | base64 -w0)"
               }
             }
         EOF
@@ -72,3 +72,9 @@ parameters:
             - clipnotify_secondary
           -
             - clipnotify_clipboard
+      aosd-debug:
+        panes:
+          -
+            - cd ${kapitan_root}/files/fvwm/
+            - . venv/bin/activate
+            - python3 ./rabbitmq-osd-debug.py
