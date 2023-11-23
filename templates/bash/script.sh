@@ -6,4 +6,3 @@ set -eo pipefail
 . {{ p.compiled_dir }}/functions.bash
 
 {{ script }}
-
