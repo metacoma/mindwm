@@ -1,0 +1,4 @@
+---
+parameters:
+  vector_http_server_port: 31398
+
