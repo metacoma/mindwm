@@ -49,11 +49,15 @@ def updateFvwmDock():
     *FvwmButtons: Padding 2 2
     """
     fvwmBody = ""
+    i = 0
     for element in my_queue.get_elements():
         decoded_string = base64.b64decode(element['event']['clipboard']).decode("utf-8")
+        with open(f"/tmp/buffer{i}.txt", 'w') as file:
+          file.write(decoded_string)
         fvwmBody = fvwmBody + f"""
-        *FvwmButtons: (Title {decoded_string[:15]}, Icon /tmp/buttons/icon-clipboard-512.png,  Action Resize)
+        *FvwmButtons: (Title {decoded_string[:15]}, Icon /tmp/buttons/icon-clipboard-512.png,  Action exec exec xterm -e "vim -R /tmp/buffer{i}.txt")
         """
+        i = i + 1
     fvwmDataEnd = """
     KillModule FvwmButtons FvwmButtons
     Module FvwmButtons FvwmButtons
