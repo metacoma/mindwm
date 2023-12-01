@@ -9,6 +9,7 @@ classes:
   - tmuxinator.kapitan
   - util.files
   - vector.common
+  - tmux.pipe-stream
 parameters:
   target_name: fvwm
 
@@ -26,7 +27,9 @@ parameters:
           cat<<EOF | jq | curl -X POST -d@- http://`minikube ip`:${vector_http_server_port}/event
             {
               "event": {
-                "type": "clipboard",
+                "type": "clipboard"
+              },
+              "payload": {
                 "clipboard_type": "$clipboard_type",
                 "clipboard": "$(xclip -out -selection $clipboard_type | base64 -w0)"
               }
