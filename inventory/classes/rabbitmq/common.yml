@@ -70,6 +70,14 @@ parameters:
       name: freeplane-track-context
       type: fanout
       durable: true
+    clipboard:
+      name: clipboard
+      type: fanout
+      durable: true
+    events:
+      name: events
+      type: fanout
+      durable: true
 
   rabbitmq_queues:
     mindwm-context:
@@ -94,6 +102,8 @@ parameters:
       data:
         routing_key: ""
         arguments: {}
+
+
 
   rabbitmq_version: 3.12.4
   rabbitmq_user: user

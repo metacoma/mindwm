@@ -3,7 +3,9 @@ classes:
   - helm
   - neo4j.common
 parameters:
-  neo4j_chart_version: 5.11.0
+  neo4j_chart_version: 5.13.0
+  neo4j_chart_name: neo4j
+  # neo4j_chart_version: 4.4.27
   neo4j_helm_chart_path: files/helm-charts/neo4j
 
   bash:
@@ -18,4 +20,4 @@ parameters:
         type: helm
         source: https://helm.neo4j.com/neo4j
         version: ${neo4j_chart_version}
-        chart_name: neo4j
+        chart_name: ${neo4j_chart_name}

@@ -1,0 +1,171 @@
+---
+classes:
+  - common
+  - mindwm
+  - vim
+  - tmuxinator
+  - bash.kapitan
+  - bash.script
+  - tmuxinator
+  - tmuxinator.kapitan
+  - kapitan.bash.compile-fetch
+
+parameters:
+
+  bash:
+    functions:
+      session_record_send: |
+        TMUX_HOST="\${1:-sun}"
+        TMUX_SESSION_NAME="\${2:-test}"
+        TMUX_PANE_ID="\${3:-42}"
+        SHELL_PID="\${4:-8484}"
+        sh -c "perl /home/bebebeko/mindwm/compiled/vector/pipe-pane2hexstream.pl | VECTOR_UPSTREAM='"`minikube ip`":31399' SHELL_PID='"\${SHELL_PID}"' TMUX_SESSION_NAME='"\${TMUX_SESSION_NAME}"' TMUX_PANE_ID='"\${TMUX_PANE_ID}"' vector --config /home/bebebeko/mindwm/compiled/vector/vector/tmux-bytestream.yaml"
+
+      export_json: |
+        curl -X POST -H 'Accept:application/json' -H 'Content-Type:application/json' -d "{\"statements\":[{\"statement\":\"MATCH (n) RETURN n\"}]}" -u neo4j:password -v http://`minikube ip`:31527/db/neo4j/tx/commit  | jq
+
+  target_name: neomodel
+
+
+  knowledge_graph:
+    IoDocument:
+      input:
+        type: string
+        required: true
+      output:
+        type: string
+        required: True
+      io_context: &io_context_rel_to
+        rel_to:
+          class: IoContext
+          type: HAS_IO_CONTEXT
+
+    IoContext:
+      name:
+        type: string
+        required: True
+        unique_index: True
+      io_context: *io_context_rel_to
+      io_document:
+        rel_to:
+          class: IoDocument
+          type: HAS_IO_DOCUMENT
+
+  mindwm2:
+    knowledge-graph-io-context:
+      requirements:
+        - neomodel
+        - pika
+        - neo4j
+        - neographviz
+        - py2neo
+        - ipython
+        - jinja2
+        - pygraphviz
+        - pydot
+        - networkx
+        - matplotlib
+      import:
+        - pika
+        - pprint
+        - json
+        - os
+        - from neomodel import config
+        - from neo4j import GraphDatabase
+      in:
+        rabbitmq:
+          io-context: # exchange
+            - io-context # queue-name
+
+      code: |
+        data = json.loads(body.decode())
+        pprint.pprint(data)
+
+        host = TmuxHost.get_or_create(
+            {
+                "name": data['host']
+            }
+        )[0]
+
+        tmux_session = host.session.get_or_none(name = data['metadata']['tmux']['session_name'])
+
+        if (tmux_session is None):
+            tmux_session = TmuxSession(name = data['metadata']['tmux']['session_name']).save()
+            host.session.connect(tmux_session)
+
+        pane = tmux_session.pane.get_or_none(pane_id = int(data['metadata']['tmux']['pane_id']))
+
+        if (pane is None):
+            pane = TmuxPane(pane_id = int(data['metadata']['tmux']['pane_id'])).save()
+            tmux_session.pane.connect(pane)
+
+        io_context = pane.getActiveIoContext()
+
+        if io_context is None:
+            io_context = IoContext(name = data['message']['ps1_start']).save()
+            pane.io_context.connect(io_context)
+
+
+
+        io_document = IoDocument(
+            input = data['message']['input'],
+            output = data['message']['output']
+        ).save()
+
+
+        if (data['message']['ps1_start'] != data['message']['ps1_end']):
+            new_io_context = IoContext(name = data['message']['ps1_end']).save()
+            pane.switchActiveIoContext(new_io_context)
+            io_document.io_context.connect(new_io_context)
+        else:
+            pane.switchActiveIoContext(io_context)
+
+        pane.getActiveIoContext().io_document.connect(io_document)
+
+  kapitan:
+    compile:
+      - input_type: jinja2
+        input_paths:
+          - templates/neomodel/classes.py
+        output_path: knowledge_graph
+      - input_type: jsonnet
+        output_path: knowledge_graph
+        input_paths:
+          - jsonnet/processing/dockerfile.jsonnet
+          - jsonnet/processing/processing.jsonnet
+          - jsonnet/processing/requirements.jsonnet
+          - jsonnet/processing/makefile.jsonnet
+        output_type: plain
+
+
+  tmuxinator:
+    windows:
+      neomodel-consumer:
+        panes:
+          -
+            - cd ${kapitan_root}/files/neomodel
+            - . venv/bin/activate
+            - . ./env
+            - vim context-graph-model.py
+          -
+            - cd ${kapitan_root}/files/neomodel
+            - . venv/bin/activate
+            - . ./env
+            - |
+              while :; do
+                python ./context-graph-model.py
+                sleep 5
+              done
+          -
+            - cd ${kapitan_root}/compiled/vector/
+            - . functions.bash
+            - tmux-pipe-stream
+            - id
+
+      neo4j_docker:
+        pre:
+          - cd ${kapitan_root}/files/neomodel
+        panes:
+          -
+            - bash ./docker_run.sh
+          -
