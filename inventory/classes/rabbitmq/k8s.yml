@@ -10,6 +10,7 @@ parameters:
     repo: bitnami/rabbitmq
     tag: ${rabbitmq_version}-debian-11-r0
 
+  # TODO @metacoma use https://registry.terraform.io/providers/cyrilgdn/rabbitmq/latest/docs/resources/binding instead of curl
   kapitan:
     compile:
       - input_paths:
