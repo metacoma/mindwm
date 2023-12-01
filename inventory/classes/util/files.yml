@@ -1,0 +1,10 @@
+---
+parameters:
+  kapitan:
+    compile:
+      - input_paths:
+          - lib/jsonnet/files.jsonnet
+        output_path: .
+        input_type: jsonnet
+        output_type: plain
+
