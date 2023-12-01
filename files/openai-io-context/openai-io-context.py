@@ -56,22 +56,22 @@ def callback(ch, method, properties, body):
     for i in range(len(response['choices'])):
       chat_message = response['choices'][i]['message']['content']
       print(f"Bot: #{i} {chat_message}")
-#      tmux_cmd = {
-#        "tmux_pane_id": "{tmux_pane_id}",
-#        "session_name": "{tmux_session_name}",
-#        "cmd": f"""cat<<OPENAI_EOF
-#*************
-#{chat_message}
-#*************
-#OPENAI_EOF
-#"""
-#      }
-
       tmux_cmd = {
         "tmux_pane_id": tmux_pane_id,
         "session_name": tmux_session_name,
-        "cmd": f"""echo{chat_message}"""
+        "cmd": f"""cat<<'OPENAI_EOF'
+*************
+{chat_message}
+*************
+OPENAI_EOF
+"""
       }
+
+#      tmux_cmd = {
+#        "tmux_pane_id": tmux_pane_id,
+#        "session_name": tmux_session_name,
+#        "cmd": f"""echo{chat_message}"""
+#      }
       rabbitmq_channel.basic_publish(exchange='tmux', routing_key='tmux', body=json.dumps(tmux_cmd))
       break
 
