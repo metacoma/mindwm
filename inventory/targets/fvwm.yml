@@ -7,6 +7,7 @@ classes:
   - common
   - tmuxinator
   - tmuxinator.kapitan
+  - util.files
   - vector.common
 parameters:
   target_name: fvwm
@@ -48,6 +49,11 @@ parameters:
         type: git
         output_path: ${clipnotify_path}
         ref: 25ba143c7da8ae0f196cb0db2797d30e6d04e15c
+
+  files:
+    - path: fvwm_config
+      body: |
+        Module FvwmMLF
 
   tmuxinator:
     windows:
