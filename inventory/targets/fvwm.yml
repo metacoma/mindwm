@@ -78,6 +78,20 @@ parameters:
             - clipnotify_secondary
           -
             - clipnotify_clipboard
+      fvwm-dock:
+        pre:
+          - cd ${kapitan_root}/files/fvwm
+          - . venv/bin/activate
+
+        panes:
+          -
+            - |
+              while :; do
+                python3 rabbitmq-event-dock.py
+                sleep 5
+              done
+          -
+            -
       aosd-debug:
         panes:
           -
