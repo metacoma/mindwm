@@ -55,12 +55,14 @@ def updateFvwmDock():
         with open(f"/tmp/buffer{i}.txt", 'w') as file:
           file.write(decoded_string)
         fvwmBody = fvwmBody + f"""
-        *FvwmButtons: (Title {decoded_string[:15]}, Icon /tmp/buttons/icon-clipboard-512.png,  Action exec exec xterm -e "vim -R /tmp/buffer{i}.txt")
+        *FvwmButtons: (Title {decoded_string[15:]}, Icon /tmp/buttons/copy.png,  Action exec exec xterm -e "vim -R /tmp/buffer{i}.txt")
         """
+        print("XXX " + decoded_string[15:])
         i = i + 1
     fvwmDataEnd = """
     KillModule FvwmButtons FvwmButtons
     Module FvwmButtons FvwmButtons
+    Style FvwmButtons NoTitle
     """
 
     fvwmData = fvwmDataHead + fvwmBody + fvwmDataEnd
