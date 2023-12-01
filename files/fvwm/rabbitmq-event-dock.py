@@ -8,6 +8,8 @@ import subprocess
 import base64
 from collections import deque
 
+FVWM_RESOURCES_PATH=os.getenv('FVWM_RESOURCES_PATH')
+
 class FixedSizeQueue:
       def __init__(self, max_size):
           self.queue = deque(maxlen=max_size)
@@ -55,7 +57,7 @@ def updateFvwmDock():
         with open(f"/tmp/buffer{i}.txt", 'w') as file:
           file.write(decoded_string)
         fvwmBody = fvwmBody + f"""
-        *FvwmButtons: (Title {decoded_string[15:]}, Icon /tmp/buttons/copy.png,  Action exec exec xterm -e "vim -R /tmp/buffer{i}.txt")
+        *FvwmButtons: (Title {decoded_string[15:]}, Icon {FVWM_RESOURCES_PATH}/icons/copy.png,  Action exec exec xterm -e "vim -R /tmp/buffer{i}.txt")
         """
         print("XXX " + decoded_string[15:])
         i = i + 1
@@ -66,6 +68,7 @@ def updateFvwmDock():
     """
 
     fvwmData = fvwmDataHead + fvwmBody + fvwmDataEnd
+    print(fvwmData)
 
     process = subprocess.Popen(["bash", "/home/bebebeko/mindwm/compiled/fvwm/bin/fvwm_send.sh"], stdin=subprocess.PIPE)
     process.communicate(input = fvwmData.encode())

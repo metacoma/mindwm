@@ -12,6 +12,8 @@ classes:
 parameters:
   target_name: fvwm
 
+  fvwm_resources_path: "fvwm_resources"
+
   bash:
     functions:
       aosd_show: |
@@ -44,6 +46,12 @@ parameters:
   clipnotify_bin: ${clipnotify_path}/clipnotify
 
   kapitan:
+    compile:
+      - input_type: copy
+        input_paths:
+          - files/resources/fvwm
+            # output_path: ${fvwm_resources_path}
+        output_path: fvwm_resources
     dependencies:
       - source: https://github.com/cdown/clipnotify
         type: git
@@ -85,6 +93,7 @@ parameters:
 
         panes:
           -
+            - export FVWM_RESOURCES_PATH="${compiled_dir}/${fvwm_resources_path}"
             - |
               while :; do
                 python3 rabbitmq-event-dock.py
