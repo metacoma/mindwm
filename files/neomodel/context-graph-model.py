@@ -118,6 +118,7 @@ def callback(ch, method, properties, body):
 
 
     pane.getActiveIoContext().io_document.connect(io_document)
+    rabbitmq_channel.basic_publish(exchange='mindwm-document', routing_key='mindwm-document', body=json.dumps(data))
 
 rabbitmq_channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=True)
 print("Waiting for messages. To exit, press Ctrl+C")

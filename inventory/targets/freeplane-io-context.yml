@@ -12,7 +12,8 @@ classes:
   - kubernetes.freeplane-grpc-reverse-proxy
   - rabbitmq.common
   - neo4j.common
-  - mindwm.consumer
+  - tmux.pipe-stream
+#  - mindwm.consumer
 
 parameters:
   target_name: freeplane-io-context
@@ -23,6 +24,19 @@ parameters:
     # mindwm-consumer-bob
     repo_prefix: "mindwm-consumer-"
     tag: "latest"
+
+  tmuxinator:
+    windows:
+      freeplane-io-context:
+        panes:
+          -
+            - &activate_venv |
+              cd ${kapitan_root}/files/freeplane-io-context
+              . venv/bin/activate
+              . ./env
+            - python3 ./freeplane-io-context.py
+          -
+            - *activate_venv
 
   mindwm:
     consumers:

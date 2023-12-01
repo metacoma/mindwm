@@ -107,23 +107,25 @@ parameters:
             acknowledgements:
               enabled: false
 
-#          kafka-tmux-pane-io-context:
-#            type: kafka
-#            acknowledgements:
-#              enabled: false
-#            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
-#            group_id: vector_kafka
-#            topics:
-#              - ${kafka_topic_tmux_io_context}
-#
-#          kafka-tmux-pane-linestream:
-#            type: kafka
-#            acknowledgements:
-#              enabled: false
-#            bootstrap_servers: "${kafka_cluster_name}-kafka-external-bootstrap.${kafka_k8s_namespace}:${kafka_port}"
-#            group_id: vector_kafka
-#            topics:
-#              - ${kafka_topic_tmux_linestream}
+          mindwm-context:
+            type: amqp
+            consumer: "vector-main"
+            decoding:
+              codec: "json"
+            exchange_key: ${rabbitmq_bindings:mindwm-context:exchange_name}
+            queue: ${rabbitmq_bindings:mindwm-context:queue_name}
+            connection:
+              connection_string: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
+
+          mindwm-document:
+            type: amqp
+            consumer: "vector-main"
+            decoding:
+              codec: "json"
+            exchange_key: ${rabbitmq_bindings:mindwm-document:exchange_name}
+            queue: ${rabbitmq_bindings:mindwm-document:queue_name}
+            connection:
+              connection_string: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
 
 #              _                        __
 #             | |                      / _|
@@ -135,6 +137,16 @@ parameters:
 #
 
         transforms:
+          mindwm-document-event:
+            type: "remap"
+            inputs:
+              - mindwm-document
+            source: |
+              msg, err = parse_json(.message)
+              .event.type = "mindwm-io-document-event"
+              .payload = .message
+              del(.message)
+
 #          kafka-io-context-to-elasticsearch:
 #            type: "remap"
 #            inputs:
@@ -278,8 +290,10 @@ parameters:
           console:
             type: console
             inputs:
-              - http_server
-              - tmux-pane-raw-io-context
+              - mindwm-context
+              - mindwm-document
+              #- http_server
+              # - tmux-pane-raw-io-context
             encoding:
               codec: json
 
@@ -316,6 +330,7 @@ parameters:
           events:
             type: amqp
             inputs:
+              - mindwm-document-event
               - http_server
             connection:
               connection_string: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
