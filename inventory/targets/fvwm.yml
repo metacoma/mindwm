@@ -77,4 +77,9 @@ parameters:
           -
             - cd ${kapitan_root}/files/fvwm/
             - . venv/bin/activate
-            - python3 ./rabbitmq-osd-debug.py
+            - |
+              while :; do
+                python3 ./rabbitmq-osd-debug.py
+                sleep 5
+              done
+
