@@ -56,10 +56,10 @@ def updateFvwmDock():
         decoded_string = base64.b64decode(element['event']['clipboard']).decode("utf-8")
         with open(f"/tmp/buffer{i}.txt", 'w') as file:
           file.write(decoded_string)
+        button_title = decoded_string[0:15].lstrip().replace('"', '\\"')
         fvwmBody = fvwmBody + f"""
-        *FvwmButtons: (Title {decoded_string[15:]}, Icon {FVWM_RESOURCES_PATH}/icons/copy.png,  Action exec exec xterm -e "vim -R /tmp/buffer{i}.txt")
+        *FvwmButtons: (Title "{button_title}", Icon {FVWM_RESOURCES_PATH}/icons/copy.png,  Action exec exec xterm -e "vim -R /tmp/buffer{i}.txt")
         """
-        print("XXX " + decoded_string[15:])
         i = i + 1
     fvwmDataEnd = """
     KillModule FvwmButtons FvwmButtons
