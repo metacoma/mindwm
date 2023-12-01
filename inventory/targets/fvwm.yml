@@ -53,7 +53,7 @@ parameters:
   files:
     - path: fvwm_config
       body: |
-        Module FvwmMLF
+        Module FvwmMFL
 
   tmuxinator:
     windows:
