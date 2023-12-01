@@ -53,13 +53,24 @@ def updateFvwmDock():
     fvwmBody = ""
     i = 0
     for element in my_queue.get_elements():
-        decoded_string = base64.b64decode(element['event']['clipboard']).decode("utf-8")
-        with open(f"/tmp/buffer{i}.txt", 'w') as file:
-          file.write(decoded_string)
-        button_title = decoded_string[0:15].lstrip().replace('"', '\\"')
-        fvwmBody = fvwmBody + f"""
-        *FvwmButtons: (Title "{button_title}", Icon {FVWM_RESOURCES_PATH}/icons/copy.png,  Action exec exec xterm -e "vim -R /tmp/buffer{i}.txt")
-        """
+        if element['event']['type'] == 'clipboard':
+            decoded_string = base64.b64decode(element['payload']['clipboard']).decode("utf-8")
+            with open(f"/tmp/buffer{i}.txt", 'w') as file:
+                file.write(decoded_string)
+            button_title = decoded_string[0:15].lstrip().replace('"', '\\"')
+            fvwmBody = fvwmBody + f"""
+            *FvwmButtons: (Title "{button_title}", Icon {FVWM_RESOURCES_PATH}/icons/copy.png,  Action exec exec xterm -e "vim -R /tmp/buffer{i}.txt")
+            """
+        if element['event']['type'] == 'mindwm-io-document-event':
+            input_cmd = element['payload']['input']
+            output = element['payload']['output']
+            with open(f"/tmp/buffer{i}.txt", 'w') as file:
+                file.write(input_cmd + "\n")
+                file.write(output)
+            button_title = input_cmd[0:15].lstrip().replace('"', '\\"')
+            fvwmBody = fvwmBody + f"""
+            *FvwmButtons: (Title "{button_title}", Icon {FVWM_RESOURCES_PATH}/icons/mindwm-io-document.png,  Action exec exec xterm -e "vim -R /tmp/buffer{i}.txt")
+            """
         i = i + 1
     fvwmDataEnd = """
     KillModule FvwmButtons FvwmButtons
@@ -76,8 +87,10 @@ def updateFvwmDock():
 
 def callback(ch, method, properties, body):
     global idx
-    pprint.pprint(body.decode())
-    print(json.loads(body.decode())['event'])
+    j = json.loads(body.decode())
+    pprint.pprint(j['payload'])
+    #pprint.pprint(body.decode())
+    #print(json.loads(body.decode())['event'])
     my_queue.add_element(json.loads(body.decode()))
     updateFvwmDock()
 
