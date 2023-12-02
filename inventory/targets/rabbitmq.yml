@@ -6,7 +6,9 @@ classes:
   - bash.kapitan
   - tmuxinator.kapitan
   - kapitan.bash.compile-fetch
+  - rabbitmq.common
   - rabbitmq.k8s
+  - rabbitmq.helm
 
 parameters:
   target_name: rabbitmq

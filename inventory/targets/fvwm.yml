@@ -65,6 +65,7 @@ parameters:
     - path: fvwm_config
       body: |
         Module FvwmMFL
+        exec exec setxkbmap -layout 'us,ru' -option 'grp:caps_toggle,grp_led:caps'
 
   tmuxinator:
     windows:

@@ -1,7 +1,6 @@
 ---
 classes:
   - rabbitmq.common
-  - rabbitmq.helm
 parameters:
 
   rabbitmq_namespace: ${rabbitmq_k8s_namespace}

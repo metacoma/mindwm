@@ -170,6 +170,19 @@ parameters:
 #              .host = msg.host
 #              .tmux_pane_id = msg.tmux_pane.id
 #              del(.message)
+#
+          clipboard:
+            type: "lua"
+            version: "2"
+            inputs:
+              - http_server
+            hooks:
+              process: process
+            source: |
+              function process(event, emit)
+                print("clipboard")
+                emit(event)
+              end
 
 
           tmux-stream-split-line:
@@ -324,6 +337,16 @@ parameters:
             connection:
               connection_string: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
             exchange: tmux
+            encoding:
+              codec: json
+
+          clipboard-event:
+            type: amqp
+            inputs:
+              - clipboard
+            connection:
+              connection_string: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f?timeout=10"
+            exchange: ${rabbitmq_exchanges:clipboard:name}
             encoding:
               codec: json
 
