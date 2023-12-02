@@ -4,9 +4,9 @@ classes:
   - nushell
   - mindwm.shell
 
-  - mindwm.context
+    # - mindwm.context
 
-  - mindwm.docker.context
+    #- mindwm.docker.context
 
   - vim
   - tmuxinator
@@ -17,7 +17,10 @@ classes:
   - mindwm.textfsm
   - kafka
 
-
+  - mindwm.clipboard
+  - rabbitmq.common
+  - mindwm.k8s
+  - rabbitmq.k8s
 parameters:
   target_name: mindwm
 
@@ -26,6 +29,32 @@ parameters:
       mindwm-objects: |
         KAFKA_NODE_PORT=`kubectl get svc -n kafka ${kafka_cluster_name}-kafka-external-0 --output='jsonpath={.spec.ports[0].nodePort}'`
         docker run --rm -it --network host edenhill/kafkacat:1.6.0 -b $(minikube ip):$KAFKA_NODE_PORT -t mindwm-objects -C
+
+  #amqp_url: "amqp://${rabbitmq_user}:${rabbitmq_password}@${rabbitmq_release_name}.${rabbitmq_namespace}:5672/%2f"
+  amqp_url: 'amqp://user:password@192.168.49.2:30466/%2f'
+
+  mindwm_clipboard:
+    env:
+      RABBITMQ_URL: ${amqp_url}
+      QUEUE_NAME: clipboard
+
+
+  mindwm:
+    clipboard:
+      detect_url:
+        name: url
+        requirements:
+          - urlextract
+        import:
+          - from urlextract import URLExtract
+        init: |
+          extractor = URLExtract()
+        callback: |
+          clipboard_text = event['payload']['clipboard']
+          for url in extractor.find_urls(clipboard_text):
+            event_payload = event['payload']
+            event_payload['url'] = url
+            new_event(clipboard_url, url)
 
   context:
     - input: '^ssh (?P<SSH_HOST>.*)$'

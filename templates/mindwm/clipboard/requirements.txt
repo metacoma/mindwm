@@ -1,0 +1,13 @@
+{% set p = inventory.parameters %}
+{% set mindwm_consumer = p.mindwm.clipboard %}
+{% for requirement_line in p.mindwm_clipboard.requirements %}
+{{ requirement_line }}
+{% endfor %}
+{% for consumer_name, consumer in mindwm_consumer.items() %}
+# requirement from {{ consumer_name }}
+{% if "requirements" in consumer %}
+{% for requirement_line in consumer.requirements %}
+{{ requirement_line }}
+{% endfor %}
+{% endif %}
+{% endfor %}

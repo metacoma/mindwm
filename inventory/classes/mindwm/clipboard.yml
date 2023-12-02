@@ -1,0 +1,25 @@
+---
+parameters:
+  mindwm_clipboard:
+    requirements:
+      - pika
+    import:
+      - import json
+      - import pika
+      - import pprint
+      - import re
+      - import os
+      - import base64
+      - import subprocess
+    init: |
+      rabbitmq_url = os.getenv('RABBITMQ_URL')
+      exchange_name = os.getenv('EXCHANGE_NAME')    
+      queue_name = os.getenv('QUEUE_NAME')
+  kapitan:
+
+    compile:
+      - input_paths:
+          - templates/mindwm/clipboard/
+        input_type: jinja2
+        output_path: clipboard/
+

@@ -71,7 +71,7 @@ parameters:
       type: fanout
       durable: true
     clipboard:
-      name: clipboard
+      name: &clipboard_exchange clipboard
       type: fanout
       durable: true
     events:
@@ -86,6 +86,10 @@ parameters:
     mindwm-document:
       name: *mindwm_document_exchange
       durable: true
+    clipboard:
+      name: &clipboard_queue clipboard
+      durable: true
+
 
 
   rabbitmq_bindings:
@@ -102,6 +106,15 @@ parameters:
       data:
         routing_key: ""
         arguments: {}
+
+    clipboard:
+      exchange_name: *clipboard_exchange
+      queue_name: *clipboard_queue
+      data:
+        routing_key: ""
+        arguments: {}
+
+
 
 
 
