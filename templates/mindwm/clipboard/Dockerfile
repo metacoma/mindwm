@@ -12,11 +12,9 @@ ENV TWITCH_DL_VERSION=2.1.3-1-g268c99d
 RUN apt-get update
 RUN apt-get install -y python3 python3-pip build-essential python3-venv
 
-ADD ./code.py /usr/local/bin/code.py
 ADD ./requirements.txt /tmp/requirements.txt
-
-RUN chmod +x /usr/local/bin/code.py
 RUN pip3 install -r /tmp/requirements.txt
+ADD ./code.py /usr/local/bin/code.py
 
 CMD python3 /usr/local/bin/code.py
 

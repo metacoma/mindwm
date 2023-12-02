@@ -23,6 +23,12 @@ rabbitmq_channel = connection.channel()
 def new_event(exchange_name, queue_name, payload):
     return rabbitmq_channel.basic_publish(exchange=exchange_name, routing_key=queue_name, body=json.dumps(payload))
 
+def getClipboardText(event):
+    return base64.b64decode(event['payload']['clipboard']).decode('utf-8')
+
+def debug(msg):
+    print(msg)
+
 {% for consumer_name, consumer in mindwm_consumer.items() %}
 # init from {{ consumer_name }}
 {% if "init" in consumer %}

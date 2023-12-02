@@ -74,6 +74,10 @@ parameters:
       name: &clipboard_exchange clipboard
       type: fanout
       durable: true
+    clipboard_url:
+      name: &clipboard_url_exchange clipboard_url
+      type: fanout
+      durable: true
     events:
       name: events
       type: fanout
@@ -88,6 +92,9 @@ parameters:
       durable: true
     clipboard:
       name: &clipboard_queue clipboard
+      durable: true
+    clipboard_url:
+      name: &clipboard_url_queue clipboard_url
       durable: true
 
 
@@ -110,6 +117,13 @@ parameters:
     clipboard:
       exchange_name: *clipboard_exchange
       queue_name: *clipboard_queue
+      data:
+        routing_key: ""
+        arguments: {}
+
+    clipboard_url:
+      exchange_name: *clipboard_url_exchange
+      queue_name: *clipboard_url_queue
       data:
         routing_key: ""
         arguments: {}

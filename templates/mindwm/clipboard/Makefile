@@ -10,6 +10,7 @@ image:
 	docker build -t mindwm/clipboard:latest .
 docker_run: image
 	docker run \
+        -ti 	   \
 	--network=host \
 {% if "env" in p.mindwm_clipboard %}
 {% for env_name, env_key in p.mindwm_clipboard.env.items() %}

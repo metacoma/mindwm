@@ -50,8 +50,9 @@ parameters:
         init: |
           extractor = URLExtract()
         callback: |
-          clipboard_text = event['payload']['clipboard']
+          clipboard_text = getClipboardText(event)
           for url in extractor.find_urls(clipboard_text):
+            debug(f"found {url}")
             event_payload = event['payload']
             event_payload['url'] = url
             new_event(clipboard_url, url)
