@@ -51,11 +51,14 @@ parameters:
           extractor = URLExtract()
         callback: |
           clipboard_text = getClipboardText(event)
+          pprint.pprint(clipboard_text)
           for url in extractor.find_urls(clipboard_text):
             debug(f"found {url}")
             event_payload = event['payload']
             event_payload['url'] = url
-            new_event(clipboard_url, url)
+            new_event("clipboard_url", "clipboard_url", event_payload)
+
+  # http://twitch.tv/abc
 
   context:
     - input: '^ssh (?P<SSH_HOST>.*)$'

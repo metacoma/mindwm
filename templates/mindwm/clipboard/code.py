@@ -18,6 +18,11 @@
 
 
 connection = pika.BlockingConnection(pika.URLParameters(rabbitmq_url))
+
+#properties = pika.BasicProperties(
+#            app_id="clipboard-consumer"
+#)
+
 rabbitmq_channel = connection.channel()
 
 def new_event(exchange_name, queue_name, payload):
@@ -44,7 +49,7 @@ def {{ consumer_name }}_callback(ch, method, properties, body):
   pprint.pprint(event)
   {{ consumer.callback | indent(2) }}
 
-rabbitmq_channel.basic_consume(queue=queue_name, on_message_callback={{ consumer_name }}_callback, auto_ack=True)
+rabbitmq_channel.basic_consume(queue=queue_name, on_message_callback={{ consumer_name }}_callback, auto_ack=True, consumer_tag = "clipboard")
 {% endfor %}
 
 

@@ -180,6 +180,7 @@ parameters:
               process: process
             source: |
               function process(event, emit)
+                print("clipboard")
                 emit(event)
               end
 
