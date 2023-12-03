@@ -1,0 +1,1 @@
+curl -sSL https://cli.openfaas.com | sudo sh

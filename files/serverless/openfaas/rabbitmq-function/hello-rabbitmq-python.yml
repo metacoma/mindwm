@@ -1,0 +1,12 @@
+version: 1.0
+provider:
+  name: openfaas
+  gateway: http://192.168.49.2:32687
+functions:
+  rabbitmq-hello-python:
+    lang: python
+    handler: ./hello-python
+    image: metacoma/hello-python:latest
+    annotations:
+      topic: clipboard_url2
+
