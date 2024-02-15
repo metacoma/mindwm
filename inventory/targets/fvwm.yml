@@ -66,6 +66,8 @@ parameters:
       body: |
         Module FvwmMFL
         exec exec setxkbmap -layout 'us,ru' -option 'grp:caps_toggle,grp_led:caps'
+        Key L A M Exec exec i3lock
+        Key F12 A A exec exec import /home/bebebeko/Downloads/screenshot.png
 
   tmuxinator:
     windows:

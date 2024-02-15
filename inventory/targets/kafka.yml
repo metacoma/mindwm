@@ -60,7 +60,7 @@ parameters:
         strimzi_uninstall \${ns}
 
       kafka_helm_install: |
-        helm upgrade --install --namespace ${kafka_k8s_namespace} ${kafka_cluster_name} ${kapitan_root}/files/helm-charts/strimzi-kafka-operator
+        helm upgrade --install --create-namespace --namespace ${kafka_k8s_namespace} ${kafka_cluster_name} ${kapitan_root}/files/helm-charts/strimzi-kafka-operator
 
       kafka_helm_deinstall:
         helm uninstall --namespace ${kafka_k8s_namespace} ${kafka_cluster_name}

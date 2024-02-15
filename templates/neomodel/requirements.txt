@@ -1,0 +1,4 @@
+{% for requirement in processing.requirements %}
+{{ requirement }}
+{% endfor %}
+
